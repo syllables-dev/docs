@@ -1,8 +1,8 @@
 {
   "title": "Vault",
-  "description": "歌词规范与贡献指南",
+  "description": "歌词规范、文件格式与贡献指南",
   "pagesIndex": "index",
   "icon": "Vault",
   "root": true,
-  "pages": ["index", "lyrics-guidelines", "contributing"]
+  "pages": ["index", "lyrics-guidelines", "ttml", "contributing"]
 }

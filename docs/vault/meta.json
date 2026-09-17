@@ -1,8 +1,8 @@
 {
   "title": "Vault",
-  "description": "Lyrics and contributions",
+  "description": "Lyrics, formats, and contributions",
   "pagesIndex": "index",
   "icon": "Vault",
   "root": true,
-  "pages": ["index", "lyrics-guidelines", "contributing"]
+  "pages": ["index", "lyrics-guidelines", "ttml", "contributing"]
 }

@@ -3,4 +3,117 @@ title: Line and syllable splits
 description: Where to break lines and syllables in English
 ---
 
-TODO
+Break lyrics into phrases that listeners can follow as they hear them. Use line breaks for vocal phrases and blank lines for larger sections of the song.
+
+## Follow the vocal phrase
+
+Start a new line when a melodic or rhythmic phrase ends, a distinct response begins, or the delivery moves into a new thought. Listen to the words in context rather than splitting the text at every breath.
+
+A lyric line can contain a complete sentence, part of a sentence, or a single word. Do not add words to turn a fragment into a sentence, or join clearly separate sung phrases just to complete the grammar.
+
+## Keep connected words together
+
+When the performance allows more than one reasonable break, choose the one that keeps a grammatical phrase together. Avoid separating an article from its noun, an adjective from the word it describes, or the words in a person's name without a musical reason.
+
+When either break fits the delivery:
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`I left my coat
+By the open door`}
+  incorrect={`I left my coat by the
+Open door`}
+/>
+
+Musical phrasing can justify a break within a grammatical phrase. Do not automatically move a word to the next line just because it is an article or preposition.
+
+Here the final words form their own sung phrase:
+
+<AppleMusicQuote
+  region="us"
+  songId="388151901"
+  quote={`I'll think of you every step of
+The way`}
+/>
+
+Keep the continuation on its own line when that reflects the performance. Capitalize its first word, even though the sentence began earlier.
+
+## Questions across lines
+
+Read the entire question before placing its question mark. Put the mark at the end of the question, not at the end of every line it occupies.
+
+<CodeComparison
+  correct={`Do you ever feel like a plastic bag
+Drifting through the wind, wanting to start again?`}
+  incorrect={`Do you ever feel like a plastic bag?
+Drifting through the wind, wanting to start again?`}
+  source={{ region: "us", songId: "716192625" }}
+/>
+
+The second line continues the same question. It needs a capital letter, but the first line does not need a question mark or a trailing comma.
+
+Apply the same principle to quotations: keep them open until the quoted passage ends. See [Quotation marks](./text.mdx#quotation-marks).
+
+## Keep line lengths natural
+
+Use the length of the sung phrase to guide the line. Do not force every line to have the same number of words or characters.
+
+- Keep a short hook or response short when it is performed as a separate phrase.
+- Split a long passage at a clear musical or grammatical boundary.
+- Do not break a word across lyric lines to make it fit.
+- Do not insert line breaks solely to match the width of an editor or phone screen. Automatic text wrapping belongs to the display.
+
+Compare repeated passages. Keep their line breaks consistent when the words and delivery are the same, and preserve changes in phrasing when the performance changes.
+
+## Separate sections with a blank line
+
+Use one blank line between verses, choruses, bridges, and other distinct sections. A change in tempo or a clear shift from singing to rapping can also mark a section boundary.
+
+Within a section, place each lyric line directly below the previous one.
+
+<CodeComparison
+  correct={`I left my coat
+By the open door
+I heard your footsteps
+Coming down the hall
+
+Stay with me Until the morning`}   incorrect={`I left my coat
+
+By the open door
+
+I heard your footsteps
+
+Coming down the hall`} />
+
+Do not put a blank line after every sentence, breath, or change of singer. Do not force every section into four lines. Keep unsung section labels outside the lyric text.
+
+## Separate vocal parts
+
+Identify the lead and backing phrases before deciding their line breaks. A backing phrase can overlap the lead or continue after it; it does not have to complete the lead singer's sentence.
+
+For line-synced lyrics, place a short backing phrase in parentheses after the associated lead line. For word-synced lyrics, put it on its own subline and preserve its independent word timing. See [Background vocals](./text.mdx#background-vocals) for formatting examples.
+
+A handoff to another singer may start a new line without starting a new section. Use a section break only when the musical passage also changes.
+
+## Word and syllable splits
+
+Keep written words intact when adding timing. A boundary between timed syllables does not create a space, a hyphen, or a new lyric line.
+
+For a word sung with three syllables, the timing boundaries can be represented as follows. The vertical bars show boundaries only; they are not part of the lyric.
+
+```text
+Beau | ti | ful
+```
+
+The displayed word remains:
+
+```text
+Beautiful
+```
+
+Use the pronunciation in the recording. Some words can be compressed or stretched into different numbers of sung syllables. A syllable held over several notes is still one syllable; do not add letters or invent extra syllables for each note.
+
+Keep contractions as single written words. An apostrophe is not a space and does not automatically mark a syllable boundary. For words spelled out in the performance, time the spoken letter names while preserving the hyphens between letters and the spaces between words.
+
+For encoding lines, words, and syllables in a file, see [Timing in TTML](../../ttml/timing.mdx).

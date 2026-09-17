@@ -1,0 +1,89 @@
+---
+title: Timing
+description: Apply timestamps to lyric lines, words, and syllables
+---
+
+Timing connects lyric text to the recording. Line-level timing identifies when a whole line is performed. Word-level timing adds intervals within that line so the player can follow individual words or syllables.
+
+Always time lyrics against the exact recording they accompany. A different edit, introduction, or performance can shift the timing even when the words are unchanged.
+
+## Read timestamps
+
+Apple's lyrics profile uses clock values containing minutes and seconds, with optional hours and up to three decimal places for fractions of a second.
+
+```text
+00:10.000
+01:23.450
+01:02:03.000
+```
+
+These represent ten seconds, one minute and 23.45 seconds, and one hour, two minutes, and three seconds. The examples in this guide use Apple's track-position timing convention.
+
+Use `begin` for the start of an interval and `end` for its end. The end value is a timestamp, not a duration to add to the start.
+
+## Line-level timing
+
+Put the line's timing on its `<p>` element:
+
+```xml
+<p begin="00:10.000" end="00:12.000">I left my coat</p>
+```
+
+This describes one interval for the entire line. It does not tell the player when each word starts.
+
+## Word and syllable timing
+
+Keep the line's timing on `<p>` and add timed `<span>` elements inside it:
+
+```xml
+<p begin="00:10.000" end="00:12.000">
+  <span begin="00:10.000" end="00:10.300">I</span>
+  <span begin="00:10.300" end="00:10.700">left</span>
+  <span begin="00:10.700" end="00:11.000">my</span>
+  <span begin="00:11.000" end="00:12.000">coat</span>
+</p>
+```
+
+Each word now has its own interval. Preserve the spaces between words when joining the spans.
+
+A span does not have to contain a whole word. To time syllables separately, split the word into adjacent spans without inserting spaces or visible hyphens:
+
+```xml
+<p begin="00:10.000" end="00:12.000">
+  <span begin="00:10.000" end="00:10.700">Beau</span><span begin="00:10.700" end="00:11.200">ti</span><span begin="00:11.200" end="00:12.000">ful</span>
+</p>
+```
+
+The displayed word remains:
+
+```text
+Beautiful
+```
+
+Use the sung pronunciation to determine syllable boundaries. A syllable held over several notes does not become several written syllables.
+
+## Keep intervals consistent
+
+- Give each timed element both a start and an end.
+- Set the start before the end.
+- Keep a word's interval within its containing line and section.
+- Include the full backing-vocal interval when setting the end of a line with a backing subline.
+- Keep all timestamps within the recording's duration.
+- Keep section intervals from overlapping when using Apple's delivery profile.
+- Preserve real pauses and vocal overlaps. Do not stretch every word until the next word begins just to fill a gap.
+
+Timing describes the performance. It does not replace the editorial decision about where a lyric line should break.
+
+## Timing markers do not supply timestamps
+
+Some Apple Music files include an internal marker indicating word-level timing:
+
+```xml
+itunes:timing="Word"
+```
+
+Changing that marker does not create timed words. Word synchronization comes from the timed spans within each line. Follow the target profile's timestamp and namespace rules when authoring or converting a file.
+
+## Reference
+
+[Apple Video and Audio Asset Guide: Timing](https://help.apple.com/itc/videoaudioassetguide/en.lproj/static.html#itcd1f730b22)

@@ -3,4 +3,496 @@ title: Text, spacing, and punctuation
 description: Writing English lyrics text correctly
 ---
 
-TODO
+Transcribe the words as performed. Use spelling, capitalization, and punctuation to make them clear without changing their meaning or delivery.
+
+## Grammar and spelling
+
+Keep intentional slang, fragments, omitted words, and nonstandard grammar. Do not add missing verbs, remove double negatives, or replace unusual phrasing just to make a lyric read like formal prose.
+
+For example, this line should retain its wordplay:
+
+<AppleMusicQuote
+  region="us"
+  songId="1752214923"
+  quote={"That's that me espresso"}
+/>
+
+Correct spelling mistakes that do not belong to the performance. For words that sound alike, use the meaning of the phrase to choose the spelling.
+
+<CodeComparison
+  correct={"You're only happy when your sorry head is filled with dope"}
+  incorrect={"Your only happy when you're sorry head is filled with dope"}
+  source={{ region: "us", songId: "1440827631" }}
+/>
+
+When a word is unclear, replay the recording and consult an artist- or publisher-provided lyric source. Do not substitute a word solely because it produces a more grammatical sentence.
+
+## Contractions and apostrophes
+
+### Contractions
+
+Keep contractions when they are sung. Use an apostrophe where letters are omitted, and keep it attached to the word.
+
+<CodeComparison
+  correct={"I know it'll kill me when it's over"}
+  incorrect={"I know itll kill me when it 's over"}
+  source={{ region: "us", songId: "1170698158" }}
+/>
+
+### Shortened words
+
+Use established spellings for shortened words. A missing initial letter does not remove the need to capitalize a line's first word.
+
+```text
+'Cause
+'Bout
+'Em
+Lovin'
+```
+
+Here `'Cause` keeps its apostrophe and is still capitalized as the first word of the line:
+
+<AppleMusicQuote
+  region="us"
+  songId="1031416179"
+  quote={"'Cause you know, I just wanna see you smile"}
+/>
+
+A dropped final letter takes the apostrophe at the end instead:
+
+<AppleMusicQuote
+  region="us"
+  songId="1031416179"
+  quote={"Now don't you worry, it won't be long, darlin'"}
+/>
+
+The same applies to a word that is only partly sung, even when it is not an established short form. Write the part performed and mark the missing opening with an apostrophe. Do not restore the rest of the word because another line, another voice, or the written phrase contains it in full.
+
+<AppleMusicQuote
+  region="us"
+  songId="1523763061"
+  quote={`I make it known I fuck with you, not undercover
+('Cover)`}
+/>
+
+The full word is sung once. The echo picks up only its final syllables, so it is written `'Cover`, not `Undercover`.
+
+### Forms written without an apostrophe
+
+Some informal forms are written without apostrophes. Do not add one simply because a word is informal, or expand the word into a different sung phrase.
+
+```text
+Gonna
+Wanna
+Gotta
+Tryna
+```
+
+Both forms stay as sung, with no apostrophe added:
+
+<AppleMusicQuote
+  region="us"
+  songId="1170698158"
+  quote={"I don't wanna think about it, I just wanna love you now, oh yeah"}
+/>
+
+### Plurals and possessives
+
+Distinguish an ordinary plural from a possessive. The apostrophe indicates ownership, not just the presence of more than one person.
+
+**Plural**
+
+<AppleMusicQuote
+  region="us"
+  songId="91989806"
+  quote={"The lights are on, but there's no one home"}
+/>
+
+**Possessive**
+
+<AppleMusicQuote
+  region="us"
+  songId="1657869393"
+  quote={"You was at the farmers' market with your perfect peach"}
+/>
+
+The second line is a plural possessive, so its apostrophe follows the `s`. It also keeps the nonstandard `You was`, which belongs to the performance.
+
+### Apostrophe style
+
+Use a consistent apostrophe style throughout the song. Do not mix straight and curly apostrophes or use a backtick in their place.
+
+## Capitalization
+
+Begin every lyric line with a capital letter, including a line that continues the previous sentence. Use normal capitalization for the rest of the line.
+
+<CodeComparison
+  correct={`We don't talk anymore
+Like we used to do`}
+  incorrect={`We don't talk anymore
+like we used to do`}
+  source={{ region: "us", songId: "1031416185" }}
+/>
+
+The second line cannot stand alone as a sentence, but it still begins with a capital letter.
+
+Capitalize:
+
+- The first-person pronoun.
+- Proper names, brands, and places.
+- Acronyms.
+- Names for deities, gods, and goddesses, along with pronouns that refer to them.
+- Titles of sacred texts and named religious events.
+
+Preserve the established capitalization of names. Do not capitalize every word or use all capitals to indicate loud singing.
+
+<CodeComparison
+  correct="I got a California king"
+  incorrect={`I Got A California King
+I GOT A CALIFORNIA KING`}
+  source={{ region: "us", songId: "1698723208" }}
+/>
+
+Do not copy a track title's lowercase or uppercase styling into the lyric text. Capitalize a quoted title according to the title itself.
+
+Do not extend divine capitalization to ordinary references to another person.
+
+## Punctuation
+
+### Line endings
+
+Do not add a period or comma at the end of a lyric line, even when the sentence is complete. Keep question marks, exclamation points, and closing quotation marks when the meaning requires them.
+
+<CodeComparison
+  correct={`When you said you were passing through
+Was I even on your way?`}
+  incorrect={`When you said you were passing through,
+Was I even on your way.`}
+  source={{ region: "us", songId: "1564531202" }}
+/>
+
+Preserve punctuation that belongs to the spelling of a name or abbreviation. Do not add an extra sentence-ending period after it.
+
+### Commas
+
+Use commas within a line to separate list items, set off a direct address, or clarify a clause. Do not insert a comma at every breath or beat.
+
+**Direct address**
+
+<AppleMusicQuote
+  region="us"
+  songId="1698723208"
+  quote={"So, baby, let's get freaky, get kinky"}
+/>
+
+**List**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440827631"
+  quote={"His pills, his hands, his jeans"}
+/>
+
+**Introductory clause**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440620921"
+  quote={"When you come around, I get paralyzed"}
+/>
+
+Do not separate a subject from its verb just because the singer pauses between them.
+
+<CodeComparison
+  correct="The lights are on, but there's no one home"
+  incorrect="The lights, are on, but there's no one home"
+  source={{ region: "us", songId: "91989806" }}
+/>
+
+### Questions and exclamations
+
+Put a question mark where the question ends. If it continues onto another line, wait until that line to close it. See [Questions across lines](./splits.mdx#questions-across-lines).
+
+A question mark can also appear inside a line when another thought follows it:
+
+<AppleMusicQuote
+  region="us"
+  songId="1752214923"
+  quote={"Is it that sweet? I guess so"}
+/>
+
+Do not add a question mark merely because a phrase contains a question word. An indirect question can be part of a statement.
+
+**Direct question**
+
+<AppleMusicQuote
+  region="us"
+  songId="1696819855"
+  quote={"What was I made for?"}
+/>
+
+**Statement containing an indirect question**
+
+<AppleMusicQuote
+  region="us"
+  songId="1696819855"
+  quote={"What I was made for"}
+/>
+
+Those two lines are adjacent in the same song. Only the word order tells them apart, so the question mark has to follow the grammar rather than the vocabulary.
+
+Use an exclamation point for an exclamation. Do not add repeated punctuation to represent volume or emphasis.
+
+### Quotation marks
+
+Use quotation marks for words quoted within the lyric. Do not wrap the entire lyric in quotation marks.
+
+<AppleMusicQuote
+  region="us"
+  songId="1468058171"
+  quote={"Said, \"I'm fine,\" but it wasn't true"}
+/>
+
+Keep a quotation open across line breaks until the quoted passage ends. Place a question mark inside the closing quotation mark when the quoted words are the question.
+
+<AppleMusicQuote
+  region="us"
+  songId="269573364"
+  quote={`I said, "Don't mind, but what do you mean I am the one
+Who will dance on the floor in the round?"`}
+/>
+
+### Hyphens and interruptions
+
+Use hyphens for ordinary compounds, repeated word fragments, and letters sung individually. Do not add spaces around a word-internal hyphen.
+
+**Compound**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440862803"
+  quote={"Hope is a four-letter word"}
+/>
+
+**Repeated onset**:
+
+<AppleMusicQuote region="us" songId="1440818663" quote={"We're c-coming out"} />
+
+**Spelled-out words**:
+
+<AppleMusicQuote region="us" songId="1698723221" quote={"H-O-T T-O G-O"} />
+
+Keep spaces between separate spelled-out words. Preserve the letters actually performed, even if the spelling is unconventional.
+
+Use a trailing hyphen for an audibly cut-off word. Do not complete a word the singer never finishes.
+
+<AppleMusicQuote
+  region="us"
+  songId="1411629089"
+  quote={"Thunder, thunder, thun-"}
+/>
+
+Do not add ellipses to mark a breath, an instrumental break, or a sentence continuing onto the next line. A held note alone does not require extra letters or hyphens.
+
+## Spacing and numbers
+
+Use one space between words. Put a space after a comma, question mark, or exclamation point when another word follows. Do not put a space before those marks or immediately inside parentheses and quotation marks.
+
+<CodeComparison correct="Stay, baby (Stay)" incorrect="Stay ,baby ( Stay )" />
+
+Write quantities in words when that makes the sung phrase clear. Use familiar numeric forms for years, clock times, and names that contain digits. Keep the treatment consistent for repeated references to the same number.
+
+**Quantities in words**
+
+<AppleMusicQuote
+  region="us"
+  songId="1491987858"
+  quote={"Nineteen, but you act twenty-five now"}
+/>
+
+**A year**
+
+<AppleMusicQuote
+  region="us"
+  songId="1621817894"
+  quote={"Keeping dreams alive, 1999, heroes"}
+/>
+
+**A clock time**
+
+<AppleMusicQuote region="us" songId="1381582728" quote={"Maybe it's 6:45"} />
+
+Preserve accents and other marks in names and words. Keep passages in other languages in their original language and follow that language's writing rules.
+
+## Repeated lyrics
+
+Write every repeated word and line in full. Do not replace a chorus with a repetition instruction or assume that later choruses have identical words.
+
+<CodeComparison
+  correct={`Please, please, please (Please)
+Please, please, please (Please)
+Please, please, please (Please, please)`}
+  incorrect="Please, please, please (Repeat x3)"
+  source={{ region: "us", songId: "1750307080" }}
+/>
+
+The three lines above carry different backing vocals, so a repetition instruction would lose the last one.
+
+Use commas for separate repetitions of complete words within a phrase. Use hyphens for repeated fragments that belong to one word. Both appear in this line, first the complete word, then the fragment:
+
+<AppleMusicQuote
+  region="us"
+  songId="529843559"
+  quote={"Tonight we're going hard, hard, h-h-h-hard"}
+/>
+
+## Background vocals
+
+### Line-synced lyrics
+
+For line-based synchronization only, put a short backing phrase in parentheses at the end of the associated lead line, following the [Apple Music for Artists convention](https://artists.apple.com/support/1111-lyrics-guidelines). Capitalize its first word and keep any punctuation that belongs to it inside the parentheses.
+
+<AppleMusicQuote
+  region="us"
+  songId="1440843077"
+  quote={"Won't you come and put it down on me? (Down on me)"}
+/>
+
+### Word-synced lyrics
+
+Put the backing phrase on its own subline beneath the associated lead line. Keep its words and timing separate from the lead, including where the vocals overlap. Do not append the backing phrase to the lead text in parentheses.
+
+The same passage, with the second line as the backing subline. Its first word begins before the lead line's last word ends, and the timings stay separate:
+
+<AppleMusicQuote
+  region="us"
+  songId="1440843077"
+  quote={`Won't you come and put it down on me?
+Down on me`}
+/>
+
+See [Background vocals in TTML](../../ttml/background-vocals.mdx) for the file structure and timing of a backing subline.
+
+For either synchronization type, an interjection sung by the lead vocalist stays in the lead text. Do not mark it as a backing vocal just because it is short.
+
+## Non-word vocals
+
+Include recognizable non-word vocals when they form part of the melody, hook, or a meaningful response. Choose the spelling by listening to the vowel, the way the sound begins and ends, and the energy of the delivery.
+
+Judge the sound by ear. The duration of a timed word or syllable does not determine its spelling. A long breathy ending can follow a short vowel, and a connected vocal phrase can contain several different sounds.
+
+### Oh and Ooh
+
+Use Ooh when the vowel itself is drawn out. Use Oh when the vowel is short, even if the following breathy sound lasts longer. Do not change Oh to Ooh simply because its timing interval is long.
+
+The standalone vocalization:
+
+<AppleMusicQuote region="us" songId="1657869393" quote={"Oh"} />
+
+A sustained vowel:
+
+<AppleMusicQuote region="us" songId="1560735480" quote={"Ooh"} />
+
+### Connected sounds and audible pauses
+
+Join connected non-word sounds with hyphens. Use a comma when an audible pause separates the sounds. A phrase can contain both connected sounds and separate utterances.
+
+These sounds flow together:
+
+<AppleMusicQuote region="us" songId="296016899" quote={"Oh-oh-oh"} />
+
+Elsewhere in the same song, a pause separates the first sound from the connected sounds that follow:
+
+<AppleMusicQuote region="us" songId="296016899" quote={"Oh, oh-oh-oh"} />
+
+An opening that mixes pauses and connected sounds:
+
+<AppleMusicQuote
+  region="us"
+  songId="576670459"
+  quote={`Oh, oh-oh-oh
+Oh-oh-oh, oh`}
+/>
+
+Keep the first sound as Oh: its vowel is brief, while the breathy ending lasts longer. Listen to the vowel rather than judging from the total length of the sound.
+
+### Ah and Ha
+
+Use Ha when the sound has an audible h at the beginning, and Ah when it begins with the vowel. Preserve the difference when the singer moves between them.
+
+<AppleMusicQuote
+  region="us"
+  songId="1434371887"
+  quote={`Oh, ha, ah, ha, ah
+Ha, ah`}
+/>
+
+### Woo and Whoo
+
+Both spellings can be appropriate. Choose according to the delivery. Whoo tends to suit a sharper, more energetic vocalization; do not select it solely because the sound lasts longer.
+
+<AppleMusicQuote
+  region="us"
+  songId="1698723221"
+  quote={"Woo, you comin' home with me?"}
+/>
+
+A sharper vocalization:
+
+<AppleMusicQuote region="us" songId="1440843077" quote={"Whoo!"} />
+
+The Woo above is held longer than this Whoo, so length alone does not decide the spelling.
+
+### Whoa and Woah
+
+Prefer Whoa, the conventional spelling. Woah is an acceptable variant, but use Whoa consistently when authoring lyrics.
+
+<AppleMusicQuote region="us" songId="1691699836" quote={"Whoa"} />
+
+### Avoid extra letters for duration
+
+Use the established spelling of the vocal sound. Do not add extra letters just to represent a held note, a long breath, or an emphatic delivery. The timing carries the duration.
+
+For a quoted vocalization, use:
+
+<CodeComparison
+  correct={'My brain goes, "ah"'}
+  incorrect={'My brain goes, "ahhhh"'}
+  source={{ region: "us", songId: "1694386828" }}
+/>
+
+### Leave out incidental sounds
+
+Do not transcribe every incidental breath or turn improvised scatting into a long string of invented syllables. Do not insert descriptions of instrumental sounds or sound effects.
+
+## Spoken passages
+
+Transcribe audible spoken passages and conversational interludes, including introductions, dialogue, and spoken responses. Keep the words as performed, even when they are not sung or rapped.
+
+When the main artist or a featured artist speaks, assign the passage to that performer's vocal part. When someone outside those artists speaks, assign the passage to the **Other** vocal part. Do not attribute another person's dialogue to the artist just because it appears in their track.
+
+Keep speaker labels, section headings, and editorial instructions outside the lyric text. See [Agents and voices](../../ttml/agents.mdx#spoken-passages) for speaker assignments in the file.
+
+## Clean and explicit lyrics
+
+Match the version of the recording. Transcribe uncensored words in full when they are audible. This includes profanity and slurs, including the N-word. Do not mask a word solely because it is offensive; censor it only when the audio censors it.
+
+When the word is audible and uncensored:
+
+<CodeComparison
+  correct={"'Cause you only listen to your fucking friends"}
+  incorrect={"'Cause you only listen to your ****ing friends"}
+  source={{ region: "us", songId: "1564531202" }}
+/>
+
+When the recording bleeps, mutes, or otherwise censors part or all of a word, replace the whole word with asterisks rather than leaving part of it visible:
+
+<CodeComparison
+  correct={"Fuckin' with you feel like jail, ****"}
+  incorrect={"Fuckin' with you feel like jail, b****"}
+  source={{ region: "us", songId: "1574004703" }}
+/>
+
+That line censors one word and keeps the other, because only one is censored in the audio.
+
+If the singer performs a replacement word in a clean version, transcribe that word. Do not restore words from the explicit version or add censorship that is absent from the recording.

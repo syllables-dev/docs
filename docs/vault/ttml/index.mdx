@@ -1,0 +1,95 @@
+---
+title: Understanding TTML
+description: How a lyrics file represents text, lines, and song sections
+---
+
+TTML stands for Timed Text Markup Language. It is an XML format that combines text with structure and timing. A lyrics player uses that information to display lines, highlight words, and distinguish vocal parts.
+
+This guide explains Apple's lyrics profile of TTML and the conventions used by Syllables. Use the [lyrics guidelines](../lyrics-guidelines/index.mdx) to prepare the words and line breaks, then represent them in the file.
+
+## Read a lyrics document
+
+A TTML document has one root element, a head for metadata, and a body for the lyrics. This example contains a verse with two timed lines:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<tt xmlns="http://www.w3.org/ns/ttml"
+    xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
+    xmlns:itunes="http://itunes.apple.com/lyric-ttml-extensions"
+    xml:lang="en">
+  <head>
+    <metadata>
+      <ttm:title>Example song</ttm:title>
+    </metadata>
+  </head>
+  <body dur="00:20.000">
+    <div begin="00:00.000" end="00:20.000" itunes:song-part="Verse">
+      <p begin="00:10.000" end="00:12.000">I left my coat</p>
+      <p begin="00:12.000" end="00:15.000">By the open door</p>
+    </div>
+  </body>
+</tt>
+```
+
+The first line starts at ten seconds and ends at twelve seconds. The next line starts at twelve seconds and ends at fifteen seconds.
+
+## Understand the elements
+
+| Element | Purpose |
+| --- | --- |
+| `<tt>` | Contains the document and declares its namespaces and language |
+| `<head>` | Holds metadata rather than displayed lyric lines |
+| `<metadata>` | Contains information such as the title and performer definitions |
+| `<body>` | Contains the song's lyrics |
+| `<div>` | Groups lines into a paragraph or song section |
+| `<p>` | Represents one main lyric line |
+| `<span>` | Groups text within a line, including timed words, syllables, or backing vocals |
+
+Elements can contain other elements. A section contains lines, and a line can contain several timed spans. Keep those relationships intact when editing the file.
+
+Attributes describe an element. Timing attributes give its start and end; a role attribute identifies the function of a vocal part. The tags and attributes are not sung text.
+
+## Use explicit lyric lines
+
+Use a separate `<p>` element for each main lyric line. Use `<div>` elements to group related lines. Apple requires separate paragraph elements rather than `<br>` elements for lyric line breaks.
+
+```xml
+<div>
+  <p>I left my coat</p>
+  <p>By the open door</p>
+</div>
+```
+
+Indenting XML or putting a tag on a new source-code line does not create a displayed lyric line. The element structure determines the lyric lines.
+
+## Preserve text and spaces
+
+Spaces between words are part of the text. Keep them between word spans, but do not insert spaces between spans that form a single word. See [Word and syllable timing](./timing.mdx#word-and-syllable-timing).
+
+Escape characters that have a special meaning in XML. For example, an ampersand in the lyric must be encoded as an entity:
+
+```xml
+<p>You &amp; me</p>
+```
+
+The player displays:
+
+```text
+You & me
+```
+
+## Understand namespaces and profiles
+
+Namespaces identify the vocabulary used by elements and attributes. The root document above declares the base TTML namespace, the metadata namespace with the `ttm` prefix, and Apple's public lyrics extension namespace with the `itunes` prefix.
+
+Use the attributes defined by the profile you are authoring. Apple's public delivery profile names a section with `itunes:song-part`. Files returned by Apple Music can use an internal namespace and different attribute names, such as `itunes:songPart`. Do not mix those spellings or namespaces in a delivery file.
+
+## Continue reading
+
+- [Timing](./timing.mdx): How line, word, and syllable timestamps work.
+- [Agents and voices](./agents.mdx): Performer types, reserved IDs, spoken passages, and left/right alignment.
+- [Background vocals](./background-vocals.mdx): How to attach an independently timed backing subline to a lead line.
+
+## Reference
+
+[Apple Video and Audio Asset Guide: TTML File Format](https://help.apple.com/itc/videoaudioassetguide/#/itc0f14fecdd) defines Apple's delivery profile, examples, and timing requirements. The [static version](https://help.apple.com/itc/videoaudioassetguide/en.lproj/static.html#itcd7579a252) provides the same structural reference without the help viewer.
