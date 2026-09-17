@@ -1,0 +1,7 @@
+{
+  "title": "Vault",
+  "description": "Lyrics guidelines and contribution workflow",
+  "icon": "Library",
+  "root": true,
+  "pages": ["index", "lyrics-guidelines", "contributing"]
+}
