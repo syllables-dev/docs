@@ -1,0 +1,8 @@
+{
+  "title": "Syllables",
+  "description": "文档首页",
+  "pagesIndex": "index",
+  "icon": "House",
+  "root": true,
+  "pages": ["index"]
+}

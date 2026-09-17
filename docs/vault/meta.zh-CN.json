@@ -1,0 +1,8 @@
+{
+  "title": "资料库",
+  "description": "歌词规范与贡献流程",
+  "pagesIndex": "index",
+  "icon": "Vault",
+  "root": true,
+  "pages": ["index", "lyrics-guidelines", "contributing"]
+}

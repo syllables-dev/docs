@@ -1,0 +1,8 @@
+{
+  "title": "软件包",
+  "description": "用于解析和渲染歌词的库",
+  "pagesIndex": "index",
+  "icon": "Package",
+  "root": true,
+  "pages": ["index", "parse", "lyrics", "components"]
+}

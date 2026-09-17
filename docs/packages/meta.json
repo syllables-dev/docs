@@ -1,6 +1,7 @@
 {
   "title": "Packages",
   "description": "Libraries for parsing and rendering lyrics",
+  "pagesIndex": "index",
   "icon": "Package",
   "root": true,
   "pages": ["index", "parse", "lyrics", "components"]
