@@ -2,7 +2,7 @@
   "title": "Syllables",
   "description": "Documentation home",
   "pagesIndex": "index",
-  "icon": "House",
+  "icon": "logo",
   "root": true,
   "pages": ["index"]
 }
