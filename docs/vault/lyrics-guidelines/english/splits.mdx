@@ -5,7 +5,7 @@ description: Where to break lines, and when a word needs syllable timing
 
 Splitting happens at two levels, and they answer different questions. This page covers line splits first, then syllable splits.
 
-A line sync only needs a start and an end for each line. A word sync needs a start and an end for every word, and sometimes for parts of a word. That extra detail is the reason syllable splits exist, and it is also the limit on them. A split that carries no timing information is noise.
+A line sync only needs a start and an end for each line. A word sync needs a start and an end for every word, and sometimes for parts of a word. That extra detail is the reason syllable splits exist, and it is also the limit on them. Split a word where you hear it break, and only when there is something to hear.
 
 ## Line splits
 
@@ -53,7 +53,7 @@ A possessive can end a line the same way when the performance holds it there:
 Valentine`}
 />
 
-That break looks wrong on the page and is right in the recording. `my` is held for 1.683 seconds, and `Valentine` arrives 0.4 seconds later as its own sung phrase.
+That break looks wrong on the page and is right in the recording. `my` is held at the end of the phrase, and `Valentine` arrives after a pause as its own sung phrase.
 
 Keep the continuation on its own line when that reflects the performance. Capitalize its first word, even though the sentence began earlier.
 
@@ -130,69 +130,100 @@ Most words need no syllable split. One word, one timed interval, is the normal c
 
 Split a word only when the split tells the player something a single interval cannot:
 
-- A silence or breath falls inside the word.
-- The syllables land on separate notes, so they should highlight one after the other.
-- The performance stresses one syllable apart from the rest.
+- A gap or breath falls inside the word, so the highlight would otherwise run through a silence.
+- The performance leans hard on one syllable and the others pass quickly.
+- The word is really two words joined together, like `teatime` or `heartbreak`.
 - The word is spelled out, chanted, or repeated as a vocalization.
 
-If none of these apply, leave the word whole. A held note is not a reason on its own. Here a word is sustained for well over a second and still needs only one interval, because nothing happens inside it:
+If none of these apply, leave the word whole. A held note is not a reason on its own, and neither is a syllable landing on a new note. Here a word is drawn right out and still needs only one interval, because nothing happens inside it:
 
-```text
-Baby,   157.041 -> 158.738   (1.697s)
-```
+<SyllableChips
+  source={{ region: "us", songId: "1476731889" }}
+  ttml={`<p begin="2:37.041" end="2:42.971" itunes:key="L46" ttm:agent="v1"><span begin="2:37.041" end="2:38.738">Baby,</span> <span begin="2:38.738" end="2:39.202">when</span> <span begin="2:39.202" end="2:39.653">you</span> <span begin="2:39.653" end="2:40.071">left,</span> <span begin="2:40.071" end="2:40.487">I</span> <span begin="2:40.487" end="2:40.938">lost</span> <span begin="2:40.938" end="2:41.338">a</span> <span begin="2:41.338" end="2:41.770">part</span> <span begin="2:41.770" end="2:42.189">of</span> <span begin="2:42.189" end="2:42.971">me</span></p>`}
+/>
 
-The same line keeps `when`, `you`, `left`, `lost`, `part` and `me` whole too. Length alone never forces a split.
+`Baby,` is drawn out far longer than anything around it and still takes one interval, because the singer never breaks it. Every other word in the line is whole as well.
 
-### Split where the sound actually breaks
+### Split where the sound breaks
 
 When a split is warranted, put the boundary where the next syllable begins in the recording.
 
 The clearest case is an audible gap. The singer holds the first syllable, stops, and returns for the rest of the word:
 
-```text
-re     13.803 -> 14.327
-peat   15.508 -> 15.905
-```
+<SyllableChips
+  source={{ region: "us", songId: "1537477069" }}
+  ttml={`<p begin="11.711" end="16.879" itunes:key="L2" ttm:agent="v1"><span begin="11.711" end="12.191">I'm</span> <span begin="12.191" end="12.739">just</span> <span begin="12.739" end="13.317">hoping</span> <span begin="13.317" end="13.589">I</span> <span begin="13.589" end="13.803">don't</span> <span begin="13.803" end="14.327">re</span><span begin="15.508" end="15.905">peat</span> <span begin="15.905" end="16.879">history</span></p>`}
+/>
 
-Over a second of silence sits between `re` and `peat`. Without the split, the word would highlight straight through a pause that the listener plainly hears. The surrounding words in that same line, `hoping` and `history`, stay whole.
+The singer drops out entirely between `re` and `peat`. Without the split, the word would highlight straight through a silence the listener plainly hears. The surrounding words in that same line, `hoping` and `history`, stay whole.
 
-A shorter gap works the same way:
+The other everyday case is a word that is really two words joined together. `teatime` is `tea` plus `time`, and the singer treats it that way:
 
-```text
-tea    49.697 -> 50.158
-time,  50.887 -> 51.508
-```
+<SyllableChips
+  source={{ region: "us", songId: "1650841515" }}
+  ttml={`<p begin="49.386" end="54.252" itunes:key="L12" ttm:agent="v1"><span begin="49.386" end="49.697">At</span> <span begin="49.697" end="50.158">tea</span><span begin="50.887" end="51.508">time,</span> <span begin="52.078" end="53.102">everybody</span> <span begin="53.102" end="54.252">agrees</span></p>`}
+/>
 
-In the following line of that song, `everybody` runs 1.024 seconds with no internal break and takes one interval.
+The split falls where the two words meet, and the singer leaves a clear break there. `everybody` in the same line is longer still, but it is one word sung straight through, so it takes one interval.
 
 ### Follow ordinary syllable boundaries
 
-Divide the word the way the language divides it. A consonant that starts the next syllable belongs to that syllable, not to the one before it.
+Split the word the way you hear it. Say it aloud and the break is usually obvious; where it is not, two rules settle it.
+
+A single consonant between vowels starts the next syllable, so it goes with the vowel that follows it.
 
 <CodeComparison
   correctLabel="Prefer"
   incorrectLabel="Avoid"
   correct={`ha | lo
-fall | ing
-lit | tle
-shal | low`}
+re | peat
+to | mor | row`}
   incorrect={`hal | o
-fa | lling
-li | ttle
-sha | llow`}
+rep | eat
+tom | or | row`}
 />
 
-Existing files are not a reliable guide here. Published word syncs contain boundaries such as `hal|o`, `fa|lling` and `co|llec|ting`, where the split was placed at the moment the note changed rather than at the syllable break. The timing is right and the division is wrong. Keep the timing and move the boundary.
+A doubled consonant is split down the middle, one letter to each side.
 
-The boundary is a timing boundary, so it affects only when each part highlights. It does not change the spelling, insert a space or a hyphen, or start a new lyric line. The displayed word is unchanged:
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`fal | ling
+lit | tle
+shal | low
+col | lec | ting`}
+  incorrect={`fa | lling
+li | ttle
+sha | llow
+co | llec | ting`}
+/>
 
-```text
-Beautiful
-```
+A common mistake is to break at the note change instead, which lands the `l` on the wrong side:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:07.961" end="1:10.810" itunes:key="L15" ttm:agent="v1"><span begin="1:07.961" end="1:08.345">Baby,</span> <span begin="1:08.345" end="1:08.545">I</span> <span begin="1:08.545" end="1:08.678">can</span> <span begin="1:08.678" end="1:09.046">see</span> <span begin="1:09.046" end="1:09.228">your</span> <span begin="1:09.228" end="1:09.601">ha</span><span begin="1:09.601" end="1:10.810">lo</span></p>`}
+  incorrect={`<p begin="1:07.961" end="1:10.810" itunes:key="L15" ttm:agent="v1"><span begin="1:07.961" end="1:08.345">Baby,</span> <span begin="1:08.345" end="1:08.545">I</span> <span begin="1:08.545" end="1:08.678">can</span> <span begin="1:08.678" end="1:09.046">see</span> <span begin="1:09.046" end="1:09.228">your</span> <span begin="1:09.228" end="1:09.601">hal</span><span begin="1:09.601" end="1:10.810">o</span></p>`}
+  source={{ region: "us", songId: "296016893" }}
+/>
+
+The split itself belongs there, since the word is clearly sung in two parts. Only the letters move.
+
+Moving the boundary does not change the spelling, insert a space or a hyphen, or start a new lyric line. An editor shows each timed part as its own chip, and the parts of one word stay joined:
+
+<SyllableChips
+  source={{ region: "us", songId: "1740212434" }}
+  ttml={`<p begin="21.541" end="23.597" itunes:key="L6" ttm:agent="v1"><span begin="21.541" end="21.790">Switch</span> <span begin="21.790" end="21.924">it</span> <span begin="21.924" end="22.178">up</span> <span begin="22.178" end="22.429">like</span> <span begin="22.429" end="22.744">Nin</span><span begin="22.744" end="22.984">ten</span><span begin="22.984" end="23.597">do</span></p>`}
+/>
+
+`Nin`, `ten` and `do` carry separate timings while remaining one word. Every other chip is a whole word, and the lyric still reads `Nintendo`.
+
+These two rules describe where a boundary goes, not whether the word needs one. In practice it is easier to split every word into its syllables, sync the whole line against the recording, and then merge back the words whose parts carry no separate timing. Working in that order means the syllable boundaries are already correct wherever a split survives, and [A split must earn its place](#a-split-must-earn-its-place) decides the rest.
 
 ### Use the sung pronunciation
 
-Count the syllables the singer performs, not the ones the dictionary lists. Words are compressed and stretched in performance, and the timing follows what was sung.
+Count the syllables the singer performs, not the ones the dictionary lists. Words get compressed and stretched in performance, and what you hear wins.
 
 A syllable carried across several notes is still one syllable. Do not add letters or invent a syllable for each note.
 
@@ -200,17 +231,17 @@ Keep contractions as single written words. An apostrophe is not a syllable bound
 
 ### Repeated vocalizations
 
-A repeated sound is written as a repetition and timed as one, because each repeat is a separate attack:
+A repeated sound is written as a repetition and split the same way, because each repeat is sung separately:
 
-```text
-oh-oh-oh
-na-na-na
-```
+<SyllableChips
+  source={{ region: "us", songId: "1587414059" }}
+  ttml={`<p begin="2:27.337" end="2:29.094" itunes:key="L32" ttm:agent="v1"><span begin="2:27.337" end="2:28.038">Oh-</span><span begin="2:28.038" end="2:28.588">oh-</span><span begin="2:28.588" end="2:29.094">oh</span></p>`}
+/>
 
 Each repeat takes its own interval. These are splits between written parts of the lyric, not divisions inside a single word. See [Non-word vocals](./text.mdx#non-word-vocals) for how to write them.
 
 ### Check the whole song
 
-Time the same word the same way when it is performed the same way, and let it differ when the performance differs. A hook sung identically in three choruses should split identically in all three. A final chorus that stretches a word further may need a split the earlier ones did not.
+Split the same word the same way when it is sung the same way, and let it differ when the delivery differs. A hook sung identically in three choruses should split identically in all three. A final chorus that breaks a word apart may need a split the earlier ones did not.
 
 For encoding lines, words, and syllables in a file, see [Timing in TTML](../../ttml/timing.mdx).
