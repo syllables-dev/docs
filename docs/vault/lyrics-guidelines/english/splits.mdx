@@ -1,17 +1,23 @@
 ---
 title: Line and syllable splits
-description: Where to break lines and syllables in English
+description: Where to break lines, and when a word needs syllable timing
 ---
 
-Break lyrics into phrases that listeners can follow as they hear them. Use line breaks for vocal phrases and blank lines for larger sections of the song.
+Splitting happens at two levels, and they answer different questions. This page covers line splits first, then syllable splits.
 
-## Follow the vocal phrase
+A line sync only needs a start and an end for each line. A word sync needs a start and an end for every word, and sometimes for parts of a word. That extra detail is the reason syllable splits exist, and it is also the limit on them. A split that carries no timing information is noise.
+
+## Line splits
+
+Line splits decide what the reader sees as one phrase. They apply to every lyric, whether if it carries beat-by-beat / word timing or not.
+
+### Follow the vocal phrase
 
 Start a new line when a melodic or rhythmic phrase ends, a distinct response begins, or the delivery moves into a new thought. Listen to the words in context rather than splitting the text at every breath.
 
 A lyric line can contain a complete sentence, part of a sentence, or a single word. Do not add words to turn a fragment into a sentence, or join clearly separate sung phrases just to complete the grammar.
 
-## Keep connected words together
+### Keep connected words together
 
 When the performance allows more than one reasonable break, choose the one that keeps a grammatical phrase together. Avoid separating an article from its noun, an adjective from the word it describes, or the words in a person's name without a musical reason.
 
@@ -20,10 +26,11 @@ When either break fits the delivery:
 <CodeComparison
   correctLabel="Prefer"
   incorrectLabel="Avoid"
-  correct={`I left my coat
-By the open door`}
-  incorrect={`I left my coat by the
-Open door`}
+  correct={`Bittersweet memories
+That is all I'm taking with me`}
+  incorrect={`Bittersweet memories that
+Is all I'm taking with me`}
+  source={{ region: "us", songId: "388151901" }}
 />
 
 Musical phrasing can justify a break within a grammatical phrase. Do not automatically move a word to the next line just because it is an article or preposition.
@@ -37,9 +44,20 @@ Here the final words form their own sung phrase:
 The way`}
 />
 
+A possessive can end a line the same way when the performance holds it there:
+
+<AppleMusicQuote
+  region="us"
+  songId="1440659919"
+  quote={`I'll be your best friend and you'll be my
+Valentine`}
+/>
+
+That break looks wrong on the page and is right in the recording. `my` is held for 1.683 seconds, and `Valentine` arrives 0.4 seconds later as its own sung phrase.
+
 Keep the continuation on its own line when that reflects the performance. Capitalize its first word, even though the sentence began earlier.
 
-## Questions across lines
+### Questions across lines
 
 Read the entire question before placing its question mark. Put the mark at the end of the question, not at the end of every line it occupies.
 
@@ -55,7 +73,7 @@ The second line continues the same question. It needs a capital letter, but the 
 
 Apply the same principle to quotations: keep them open until the quoted passage ends. See [Quotation marks](./text.mdx#quotation-marks).
 
-## Keep line lengths natural
+### Keep line lengths natural
 
 Use the length of the sung phrase to guide the line. Do not force every line to have the same number of words or characters.
 
@@ -66,29 +84,35 @@ Use the length of the sung phrase to guide the line. Do not force every line to 
 
 Compare repeated passages. Keep their line breaks consistent when the words and delivery are the same, and preserve changes in phrasing when the performance changes.
 
-## Separate sections with a blank line
+### Separate sections with a blank line
 
 Use one blank line between verses, choruses, bridges, and other distinct sections. A change in tempo or a clear shift from singing to rapping can also mark a section boundary.
 
 Within a section, place each lyric line directly below the previous one.
 
 <CodeComparison
-  correct={`I left my coat
-By the open door
-I heard your footsteps
-Coming down the hall
+  correct={`But we are two worlds apart
+Can't reach to your heart
+When you say
+That I want it that way
 
-Stay with me Until the morning`}   incorrect={`I left my coat
+Tell me why
+Ain't nothin' but a heartache`}
+  incorrect={`But we are two worlds apart
 
-By the open door
+Can't reach to your heart
 
-I heard your footsteps
+When you say
 
-Coming down the hall`} />
+That I want it that way
+Tell me why
+Ain't nothin' but a heartache`}
+  source={{ region: "us", songId: "283567164" }}
+/>
 
-Do not put a blank line after every sentence, breath, or change of singer. Do not force every section into four lines. Keep unsung section labels outside the lyric text.
+The blank line falls where the verse ends and the chorus begins, not between the lines inside either one. Do not put a blank line after every sentence, breath, or change of singer. Do not force every section into four lines. Keep unsung section labels outside the lyric text.
 
-## Separate vocal parts
+### Separate vocal parts
 
 Identify the lead and backing phrases before deciding their line breaks. A backing phrase can overlap the lead or continue after it; it does not have to complete the lead singer's sentence.
 
@@ -96,24 +120,97 @@ For line-synced lyrics, place a short backing phrase in parentheses after the as
 
 A handoff to another singer may start a new line without starting a new section. Use a section break only when the musical passage also changes.
 
-## Word and syllable splits
+## Syllable splits
 
-Keep written words intact when adding timing. A boundary between timed syllables does not create a space, a hyphen, or a new lyric line.
+Syllable splits only apply to word-synced lyrics. They divide a word into separately timed parts so the player can follow it while it is being sung.
 
-For a word sung with three syllables, the timing boundaries can be represented as follows. The vertical bars show boundaries only; they are not part of the lyric.
+### A split must earn its place
+
+Most words need no syllable split. One word, one timed interval, is the normal case, and a word sync made only of whole words is a finished word sync.
+
+Split a word only when the split tells the player something a single interval cannot:
+
+- A silence or breath falls inside the word.
+- The syllables land on separate notes, so they should highlight one after the other.
+- The performance stresses one syllable apart from the rest.
+- The word is spelled out, chanted, or repeated as a vocalization.
+
+If none of these apply, leave the word whole. A held note is not a reason on its own. Here a word is sustained for well over a second and still needs only one interval, because nothing happens inside it:
 
 ```text
-Beau | ti | ful
+Baby,   157.041 -> 158.738   (1.697s)
 ```
 
-The displayed word remains:
+The same line keeps `when`, `you`, `left`, `lost`, `part` and `me` whole too. Length alone never forces a split.
+
+### Split where the sound actually breaks
+
+When a split is warranted, put the boundary where the next syllable begins in the recording.
+
+The clearest case is an audible gap. The singer holds the first syllable, stops, and returns for the rest of the word:
+
+```text
+re     13.803 -> 14.327
+peat   15.508 -> 15.905
+```
+
+Over a second of silence sits between `re` and `peat`. Without the split, the word would highlight straight through a pause that the listener plainly hears. The surrounding words in that same line, `hoping` and `history`, stay whole.
+
+A shorter gap works the same way:
+
+```text
+tea    49.697 -> 50.158
+time,  50.887 -> 51.508
+```
+
+In the following line of that song, `everybody` runs 1.024 seconds with no internal break and takes one interval.
+
+### Follow ordinary syllable boundaries
+
+Divide the word the way the language divides it. A consonant that starts the next syllable belongs to that syllable, not to the one before it.
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`ha | lo
+fall | ing
+lit | tle
+shal | low`}
+  incorrect={`hal | o
+fa | lling
+li | ttle
+sha | llow`}
+/>
+
+Existing files are not a reliable guide here. Published word syncs contain boundaries such as `hal|o`, `fa|lling` and `co|llec|ting`, where the split was placed at the moment the note changed rather than at the syllable break. The timing is right and the division is wrong. Keep the timing and move the boundary.
+
+The boundary is a timing boundary, so it affects only when each part highlights. It does not change the spelling, insert a space or a hyphen, or start a new lyric line. The displayed word is unchanged:
 
 ```text
 Beautiful
 ```
 
-Use the pronunciation in the recording. Some words can be compressed or stretched into different numbers of sung syllables. A syllable held over several notes is still one syllable; do not add letters or invent extra syllables for each note.
+### Use the sung pronunciation
 
-Keep contractions as single written words. An apostrophe is not a space and does not automatically mark a syllable boundary. For words spelled out in the performance, time the spoken letter names while preserving the hyphens between letters and the spaces between words.
+Count the syllables the singer performs, not the ones the dictionary lists. Words are compressed and stretched in performance, and the timing follows what was sung.
+
+A syllable carried across several notes is still one syllable. Do not add letters or invent a syllable for each note.
+
+Keep contractions as single written words. An apostrophe is not a syllable boundary. When the performance spells a word out, time the letter names and keep the hyphens between letters and the spaces between words.
+
+### Repeated vocalizations
+
+A repeated sound is written as a repetition and timed as one, because each repeat is a separate attack:
+
+```text
+oh-oh-oh
+na-na-na
+```
+
+Each repeat takes its own interval. These are splits between written parts of the lyric, not divisions inside a single word. See [Non-word vocals](./text.mdx#non-word-vocals) for how to write them.
+
+### Check the whole song
+
+Time the same word the same way when it is performed the same way, and let it differ when the performance differs. A hook sung identically in three choruses should split identically in all three. A final chorus that stretches a word further may need a split the earlier ones did not.
 
 For encoding lines, words, and syllables in a file, see [Timing in TTML](../../ttml/timing.mdx).
