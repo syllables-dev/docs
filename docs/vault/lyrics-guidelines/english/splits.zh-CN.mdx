@@ -1,0 +1,247 @@
+---
+title: 断行与音节切分
+description: 歌词在何处换行，以及何时需要细分到音节时间轴
+---
+
+切分分为两个层面，行切分与音节切分。
+
+逐行同步只需标出每行的起止时间。逐词同步则要标出每个词的起止时间，有时还要细化到词内的各个部分。音节切分正是为了容纳这层细节而存在的，但也仅止于此：只有在确实能听出停顿或重音断开时，才对单词做音节切分。
+
+## 断行
+
+断行决定了读者眼中怎样的一句话构成一个整句。无论歌词是逐字逐词同步还是仅逐行同步，都适用这套规则。
+
+### 依演唱乐句断行
+
+当旋律或节奏上的乐句告一段落、出现明确的和声应答，或者唱法进入下一层意思时，开启新的一行。以整句在语境中的听感为准，不要每换一口气就断一行。
+
+一行歌词可以是一个完整的句子、半句话，甚至只有一个词。不要为了凑成完整句子而硬加字，也不要仅仅为了语法完整就把听起来明显分开的两个乐句并作一行。
+
+### 保持语法结构完整
+
+如果演唱处理允许有多种合理的断句位置，优先选择能保持语法短语完整的那一种。除非有明确的音乐理由，否则不要把冠词与它修饰的名词拆开、不要把形容词与修饰的名词拆开，也不要把人名中的各个词拆到两行。
+
+当两种断行都契合演唱时：
+
+<CodeComparison
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`Bittersweet memories
+That is all I'm taking with me`}
+  incorrect={`Bittersweet memories that
+Is all I'm taking with me`}
+  source={{ region: "us", songId: "388151901" }}
+/>
+
+乐句本身的编排也可以是在短语内部断开的正当理由。不要仅仅因为某个词是冠词或介词，就机械地把它挪到下一行。
+
+下面这句里，收尾的词构成了独立成段的演唱乐句：
+
+<AppleMusicQuote
+  region="us"
+  songId="388151901"
+  quote={`I'll think of you every step of
+The way`}
+/>
+
+演唱在这里停顿拖长时，所有格代词同样可以作为行尾：
+
+<AppleMusicQuote
+  region="us"
+  songId="1440659919"
+  quote={`I'll be your best friend and you'll be my
+Valentine`}
+/>
+
+这样的断行在书面上看起来别扭，但跟录音是完全一致的。`my` 在乐句末尾拖长，而 `Valentine` 停顿之后才唱出来，是独立的演唱乐句。
+
+为了还原演唱的停顿而把后半截放到下一行时，即使这一句从上一行就开始了，新行首字母依然要大写。
+
+### 跨行的疑问句
+
+通读整个问句后再决定问号落在哪里。问号加在全句结束的地方，不要每行末尾都加一个。
+
+<CodeComparison
+  correct={`Do you ever feel like a plastic bag
+Drifting through the wind, wanting to start again?`}
+  incorrect={`Do you ever feel like a plastic bag?
+Drifting through the wind, wanting to start again?`}
+  source={{ region: "us", songId: "716192625" }}
+/>
+
+第二行是同一个问句的延续。它的首字母需要大写，但第一行末尾既不需要问号，也不需要逗号。
+
+引用引语时也是同样的原则：在引文完全结束之前保持开放，参见[引号](./text.mdx#引号)。
+
+### 保持自然的行长
+
+以演唱乐句的长短作为断行的依据。不要强求每行字数或字符数一致。
+
+- 记忆点短句（Hook）或和声应答若是作为独立乐句演唱的，就单独成短行。
+- 较长的段落，在明确的音乐节奏节点或语法边界处切断。
+- 不要为了塞进行宽而把一个词硬拆在两行。
+- 不要仅仅为了迎合编辑器或手机屏幕的宽度而手动换行。文本的自动折行交给播放器或界面渲染处理即可。
+
+对照同一首歌里重复出现的段落。歌词用词和唱法相同时，保持断行一致；演唱的处理方式有变动时，如实保留乐句的变化。
+
+### 段落之间空一行
+
+主歌（Verse）、副歌（Chorus）、过渡段（Bridge）以及其他明确区分的段落之间空一行。节奏速度变换，或者从演唱明确切换为说唱，也可以视作段落分界。
+
+同一段落内部，各行歌词紧随上一行排布，中间不留空行。
+
+<CodeComparison
+  correct={`But we are two worlds apart
+Can't reach to your heart
+When you say
+That I want it that way
+
+Tell me why
+Ain't nothin' but a heartache`}
+  incorrect={`But we are two worlds apart
+
+Can't reach to your heart
+
+When you say
+
+That I want it that way
+Tell me why
+Ain't nothin' but a heartache`}
+  source={{ region: "us", songId: "283567164" }}
+/>
+
+空行留在主歌结束、副歌开始的地方，而不是段落内部的每行之间。不要每唱完一句、每换一口气或每换一位演唱者就空一行。不要把每个段落都硬套成四行。不属于演唱内容的段落标签不要写进歌词正文。
+
+### 分离不同声部
+
+在决定断行之前，先分清主唱与伴唱乐句。伴唱乐句可以与主唱重叠，也可以接在主唱之后继续，不需要非得去凑齐主唱那一句的语法。
+
+在逐行同步的歌词中，把简短的伴唱乐句用括号附在对应的主唱行末尾。在逐词同步的歌词中，把它单列为独立的子行，并保留其独立的逐词时间轴。格式示例参见[和声](./text.mdx#和声)。
+
+换由另一位歌手演唱时，可以直接开启新的一行，而不必划分新段落。只有当音乐段落本身也发生切换时，才加空行分段。
+
+## 音节切分
+
+音节切分只适用于逐词同步的歌词。它把一个单词拆成多个独立计时的片段，以便播放器在演唱过程中逐步高亮跟随。
+
+### 切分必须有充分依据
+
+大部分单词根本不需要音节切分。一个单词对应一个时间区间，本就是最常见的情况；完全由整词构成的逐词歌词本身就是成品的逐词歌词。
+
+只有当单个时间区间无法准确反映演唱细节时，才对单词做切分：
+
+- 单词内部有明显的停顿或换气，如果不切分，高亮就会穿过一段无声的空白。
+- 演唱时刻意重读某一个音节，其余音节一掠而过。
+- 单词本身是由两个词拼合而成的复合词，比如 `teatime` 或 `heartbreak`。
+- 单词是按字母逐个拼读、打着节拍喊出，或者作为语气拟声反复唱出。
+
+如果都不符合上述情况，单词就完整保留。单纯拖长音不能作为切分的理由，音节落在新音高上也不能单独作为理由。像下面这个词，虽然被拖得很长，但内部连贯无停顿，依然只用一个时间区间：
+
+<SyllableChips
+  source={{ region: "us", songId: "1476731889" }}
+  ttml={`<p begin="2:37.041" end="2:42.971" itunes:key="L46" ttm:agent="v1"><span begin="2:37.041" end="2:38.738">Baby,</span> <span begin="2:38.738" end="2:39.202">when</span> <span begin="2:39.202" end="2:39.653">you</span> <span begin="2:39.653" end="2:40.071">left,</span> <span begin="2:40.071" end="2:40.487">I</span> <span begin="2:40.487" end="2:40.938">lost</span> <span begin="2:40.938" end="2:41.338">a</span> <span begin="2:41.338" end="2:41.770">part</span> <span begin="2:41.770" end="2:42.189">of</span> <span begin="2:42.189" end="2:42.971">me</span></p>`}
+/>
+
+`Baby,` 拖得比周围所有词都要长，但它仍只占一个时间区间，因为演唱者在中途并未断开。该行中的其他词也同样保持整词形态。
+
+### 在发音断开处切分
+
+如果确实需要切分，把分界点落在录音中下一个音节开始的地方。
+
+最明显的情况是听得出来的停顿。歌手唱完第一个音节后停顿、吸气，再接上词的其余部分：
+
+<SyllableChips
+  source={{ region: "us", songId: "1537477069" }}
+  ttml={`<p begin="11.711" end="16.879" itunes:key="L2" ttm:agent="v1"><span begin="11.711" end="12.191">I'm</span> <span begin="12.191" end="12.739">just</span> <span begin="12.739" end="13.317">hoping</span> <span begin="13.317" end="13.589">I</span> <span begin="13.589" end="13.803">don't</span> <span begin="13.803" end="14.327">re</span><span begin="15.508" end="15.905">peat</span> <span begin="15.905" end="16.879">history</span></p>`}
+/>
+
+在 `re` 和 `peat` 之间，演唱的声音完全停了。如果不拆开，高亮就会直接划过这段听众能清楚听到的静音。同一行前后的 `hoping` 和 `history` 则保持整词不拆。
+
+另一种常见情况是复合词。`teatime` 本就是 `tea` 和 `time` 拼成的，歌手在演唱时也是区别对待的：
+
+<SyllableChips
+  source={{ region: "us", songId: "1650841515" }}
+  ttml={`<p begin="49.386" end="54.252" itunes:key="L12" ttm:agent="v1"><span begin="49.386" end="49.697">At</span> <span begin="49.697" end="50.158">tea</span><span begin="50.887" end="51.508">time,</span> <span begin="52.078" end="53.102">everybody</span> <span begin="53.102" end="54.252">agrees</span></p>`}
+/>
+
+切分点落在两个词接合的位置，歌手在这里也留有清晰的停顿。同行的 `everybody` 甚至更长，但因为是一口气连着唱完的，所以只占一个时间区间。
+
+### 遵循常规音节分界
+
+按听到的发音来切分单词。读出声来通常就能明确界线；如果不确定，有两条常规规则可以作为参考：
+
+元音之间的单个辅音划归后一个音节，跟随其后的元音。
+
+<CodeComparison
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`ha | lo
+re | peat
+to | mor | row`}
+  incorrect={`hal | o
+rep | eat
+tom | or | row`}
+/>
+
+双写辅音从正中间拆开，左右各分一个字母。
+
+<CodeComparison
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`fal | ling
+lit | tle
+shal | low
+col | lec | ting`}
+  incorrect={`fa | lling
+li | ttle
+sha | llow
+co | llec | ting`}
+/>
+
+常见的错误是按音高变化的位置切分，结果把 `l` 错划给了前一个音节：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:07.961" end="1:10.810" itunes:key="L15" ttm:agent="v1"><span begin="1:07.961" end="1:08.345">Baby,</span> <span begin="1:08.345" end="1:08.545">I</span> <span begin="1:08.545" end="1:08.678">can</span> <span begin="1:08.678" end="1:09.046">see</span> <span begin="1:09.046" end="1:09.228">your</span> <span begin="1:09.228" end="1:09.601">ha</span><span begin="1:09.601" end="1:10.810">lo</span></p>`}
+  incorrect={`<p begin="1:07.961" end="1:10.810" itunes:key="L15" ttm:agent="v1"><span begin="1:07.961" end="1:08.345">Baby,</span> <span begin="1:08.345" end="1:08.545">I</span> <span begin="1:08.545" end="1:08.678">can</span> <span begin="1:08.678" end="1:09.046">see</span> <span begin="1:09.046" end="1:09.228">your</span> <span begin="1:09.228" end="1:09.601">hal</span><span begin="1:09.601" end="1:10.810">o</span></p>`}
+  source={{ region: "us", songId: "296016893" }}
+/>
+
+这个词本身唱成了两段，切分本身是必要的，错的只是字母的归属。
+
+调整音节分界并不会改变拼写，不需要额外插入空格或连字符，更不要另起一行。编辑器中每个计时片段都会显示为独立的 Chip，而同一个词内的片段仍然拼合在一起：
+
+<SyllableChips
+  source={{ region: "us", songId: "1740212434" }}
+  ttml={`<p begin="21.541" end="23.597" itunes:key="L6" ttm:agent="v1"><span begin="21.541" end="21.790">Switch</span> <span begin="21.790" end="21.924">it</span> <span begin="21.924" end="22.178">up</span> <span begin="22.178" end="22.429">like</span> <span begin="22.429" end="22.744">Nin</span><span begin="22.744" end="22.984">ten</span><span begin="22.984" end="23.597">do</span></p>`}
+/>
+
+`Nin`、`ten` 和 `do` 各自拥有独立的时间轴，但它们依然是一个完整的词。其余的 Chip 都是整词，歌词读起来依然是 `Nintendo`。
+
+这两条规则解决的是边界切在哪里，而不是单词该不该拆。在实际制作中，先将整行的词全部拆分成音节、对准录音调好时间轴，再把不需要独立计时的音节合并回整词，操作起来往往更快。按照这个顺序，保留下来的切分其边界已经自然准确，剩下的只需对照[切分必须有充分依据](#切分必须有充分依据)来决定留与不留。
+
+### 以演唱发音为准
+
+以歌手实际唱出的音节数为准，而不是词典收录的音节数。实际演唱中经常会出现吞音缩读或拖音延展，一切以听感为准。
+
+一个音节跨越多个音高依然是一个音节。不要为了对齐每个音符就额外增加字母或生造音节。
+
+缩写词在拼写上保持为一个单词。撇号不是音节的分界点。当演唱中把一个词按字母逐个念出时，为每个字母名称单独打时间轴，字母之间保留连字符，单词之间保留空格。
+
+### 重复的人声语气词
+
+重复出现的声音写作重复的形式，并且同样按次切分，因为每一次重复都是独立唱出来的：
+
+<SyllableChips
+  source={{ region: "us", songId: "1587414059" }}
+  ttml={`<p begin="2:27.337" end="2:29.094" itunes:key="L32" ttm:agent="v1"><span begin="2:27.337" end="2:28.038">Oh-</span><span begin="2:28.038" end="2:28.588">oh-</span><span begin="2:28.588" end="2:29.094">oh</span></p>`}
+/>
+
+每一次重复都占用一个独立的时间区间。这属于文本书写片段之间的切分，而不是单个单词内部的划分。具体写法参见[没有词义的人声](./text.mdx#没有词义的人声)。
+
+### 通篇通听检查
+
+同一个词如果在不同地方的唱法完全一致，就保持相同的切分方式；如果唱法有差异，切分也随之变动。在三次副歌中演唱得毫无二致的记忆点短句，三次的切分应该完全相同；而到了最后的尾段副歌，如果歌手把词拆开唱了，可能就需要前面副歌不需要的切分。
+
+关于在文件中如何编码行、词与音节，参见 [TTML 中的时间轴](../../ttml/timing.mdx)。
