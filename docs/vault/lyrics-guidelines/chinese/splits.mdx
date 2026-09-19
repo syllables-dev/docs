@@ -1,6 +1,255 @@
 ---
 title: Line and syllable splits
-description: Where to break lines and syllables in Chinese
+description: Where to break a line, where to put a space inside one, and how to time characters
 ---
 
-TODO
+This page covers three decisions: where a line ends, where a space falls inside a line, and which characters may share a timed interval.
+
+A line sync only needs a start and an end for each line. A word sync needs a start and an end for every timed unit inside it. In Chinese that unit is the character, because one character is one syllable, and a character is never divided further.
+
+## Line splits
+
+Line splits decide what the reader sees as one phrase. They apply to every lyric, whether or not it is word-synced.
+
+### Follow the vocal phrase
+
+Start a new line when a melodic or rhythmic phrase ends, a distinct response begins, or the delivery moves into a new thought. Listen to the characters in context rather than splitting the text wherever a clause ends on paper.
+
+A lyric line can contain a complete sentence, part of a sentence, or a single character. Do not add characters to complete a sentence, and do not join two clearly separate sung phrases to make the grammar read better.
+
+A pause inside a phrase is not a line break. The singer rests after `哼着` before naming the song, but the verb and its object are one sung thought and belong on one line, divided by a space:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:12.789" end="1:18.766" itunes:key="L5" ttm:agent="v1">哼着 那首過氣芭樂情歌</p>`}
+  incorrect={`<p begin="1:12.789" end="1:14.226" itunes:key="L5" ttm:agent="v1">哼着</p><p begin="1:14.583" end="1:18.766" itunes:key="L6" ttm:agent="v1">那首過氣芭樂情歌</p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+The chorus opens with the same fault. `該如何` is a question opening, not a phrase, and on its own it leaves the reader holding an unfinished thought:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:26.233" end="1:31.087" itunes:key="L8" ttm:agent="v1">該如何 掙脫逃逸這引力</p>`}
+  incorrect={`<p begin="1:26.233" end="1:27.590" itunes:key="L8" ttm:agent="v1">該如何</p><p begin="1:27.607" end="1:31.087" itunes:key="L9" ttm:agent="v1">掙脫逃逸這引力</p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+A short line that cannot stand as a phrase on its own is usually a sign that the break belongs inside the line. Reach for a new line when the thought changes, not whenever the singer takes a breath.
+
+### Keep connected characters together
+
+When the performance allows more than one reasonable break, choose the one that keeps a word or a fixed expression whole. Avoid splitting a two-character word across two lines, or separating a measure word from its noun, without a musical reason.
+
+This applies to a space inside a line as much as to a line break. When either position fits the delivery:
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={"我的訊息被隔離 一場雨淹沒聲音無人接聽"}
+  incorrect={"我的訊息被隔離一場 雨淹沒聲音無人接聽"}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+The second version strands `一場` at the end of a phrase, away from the `雨` it counts.
+
+Musical phrasing can override this. A line may end on a particle or a preposition when that is where the sung phrase ends.
+
+### Keep line lengths natural
+
+Chinese lyric lines are short. Ten characters is typical, and a line much past fifteen usually contains a phrase boundary that belongs to a space or a line break.
+
+- Keep a short hook or response short when it is performed as a separate phrase.
+- Split a long passage at a clear musical boundary.
+- Do not pad a line so that it matches the length of the line above it.
+- Do not insert line breaks solely to match the width of an editor or phone screen. Automatic text wrapping belongs to the display.
+
+Compare repeated passages. Keep their line breaks consistent when the words and delivery are the same, and preserve changes in phrasing when the performance changes.
+
+### Separate sections with a blank line
+
+Use one blank line between verses, choruses, bridges, and other distinct sections. Within a section, place each lyric line directly below the previous one.
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`哼着 那首過氣芭樂情歌
+就任回憶輾轉反側
+
+該如何 掙脫逃逸這引力`}
+  incorrect={`哼着 那首過氣芭樂情歌
+就任回憶輾轉反側
+該如何 掙脫逃逸這引力`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+Do not put a blank line after every sentence or every change of singer. Keep unsung section labels outside the lyric text.
+
+### Separate vocal parts
+
+Identify the lead and backing phrases before deciding their line breaks. A backing phrase can overlap the lead or continue after it; it does not have to complete the lead singer's sentence.
+
+For line-synced lyrics, place a short backing phrase in parentheses after the associated lead line. For word-synced lyrics, put it on its own subline. See [Background vocals](./text.mdx#background-vocals).
+
+<SyllableChips
+  source={{ region: "tw", songId: "1576303097" }}
+  ttml={`<p begin="2:11.074" end="2:15.072" itunes:key="L53984">君常違兮 國隳蕪 (烏有兮 歸處)</p><p begin="2:15.082" end="2:18.564" itunes:key="L53985">蓄讎怨增欷 (零落兮 困洿瀆)</p>`}
+/>
+
+The backing phrase answers the lead rather than completing it, and it keeps its own internal spacing.
+
+## The space inside a line
+
+A space inside a Chinese lyric line marks a boundary between two sung phrases that belong to the same line. It does the work a comma does in English prose, and it is the only mark Chinese lyrics use for it. About half of all lines contain one.
+
+Aim for two phrases in a line, divided by one space. A line holding a single phrase is common and correct. Three or more phrases is allowed, but it usually means a line break was missed.
+
+Use a space where the singer breathes, rests, or plainly starts a new phrase, and the break is not large enough to justify a new line.
+
+<SyllableChips
+  source={{ region: "tw", songId: "183919743" }}
+  ttml={`<p begin="1:06.138" end="1:11.949" itunes:key="L5" ttm:agent="v1">最美的願望 一定最瘋狂</p>`}
+/>
+
+The singer stops after `願望` and starts again at `一定`, so the space goes there. No other boundary in the line gets one.
+
+A space does not require a silence. It can also mark a phrase boundary the singer moves straight through, and the spacing then tells the reader where the phrases divide.
+
+<SyllableChips
+  source={{ region: "hk", songId: "539838976" }}
+  ttml={`<p begin="19.239" end="25.720" itunes:key="L1" ttm:agent="v1">今天我 寒夜裡看雪飄過</p>`}
+/>
+
+Do not put a space at every grammatical junction. A line with a space between each two-character word is harder to read than one with none, and it tells the reader nothing about the performance.
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={"過去多少 快樂記憶"}
+  incorrect={"過去 多少 快樂 記憶"}
+  source={{ region: "hk", songId: "892682436" }}
+/>
+
+For the mechanics of writing the space, see [Spacing](./text.mdx#spacing).
+
+## Syllable splits
+
+Syllable splits only apply to word-synced lyrics.
+
+### One character, one interval
+
+A Chinese character is a single syllable, and there is no smaller unit to divide. Never split a character into parts, and never let two characters share one interval.
+
+That removes most of what syllable splitting means in an alphabetic language. There are no boundary rules to apply, no consonant to place on one side or the other, and no word that needs breaking apart. Most lines need nothing beyond one interval per character, and a line built that way is a finished word sync.
+
+<SyllableChips
+  source={{ region: "tw", songId: "820292356" }}
+  ttml={`<p begin="33.253" end="39.467" itunes:key="L1" ttm:agent="v1"><span begin="33.253" end="33.593">我</span><span begin="33.593" end="34.045">曾</span><span begin="34.045" end="34.413">懷</span><span begin="34.413" end="34.673">疑</span><span begin="34.673" end="35.533">我</span> <span begin="36.873" end="37.313">走</span><span begin="37.313" end="37.720">在</span><span begin="37.720" end="38.111">沙</span><span begin="38.111" end="38.446">漠</span><span begin="38.446" end="39.467">中</span></p>`}
+/>
+
+A long note is not a reason to divide a character. A held character stays whole, because the syllable never stops and restarts, so there is nothing inside it to mark.
+
+<SyllableChips
+  source={{ region: "tw", songId: "1462002779" }}
+  ttml={`<p begin="3:31.704" end="3:42.938" itunes:key="L32" ttm:agent="v1"><span begin="3:31.704" end="3:32.441">張</span><span begin="3:32.441" end="3:35.186">開</span><span begin="3:35.186" end="3:36.668">翅</span><span begin="3:36.668" end="3:37.339">膀</span><span begin="3:37.598" end="3:37.903">飛</span><span begin="3:37.903" end="3:42.938">翔</span></p>`}
+/>
+
+### Do not group characters
+
+Two characters sharing an interval means the highlight runs through a syllable boundary the listener hears, and no delivery makes that correct.
+
+Apple Music groups characters anyway. Here `飄下記` is one group and `一字` is another, while every character between them stands on its own:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:49.384" end="1:55.203" itunes:key="L14" ttm:agent="v1"><span begin="1:49.384" end="1:49.868">飄</span><span begin="1:49.868" end="1:50.351">下</span><span begin="1:50.351" end="1:50.835">記</span><span begin="1:50.835" end="1:51.332">憶</span><span begin="1:51.332" end="1:51.735">不</span><span begin="1:51.735" end="1:52.025">斷</span><span begin="1:52.025" end="1:52.409">累</span><span begin="1:52.409" end="1:52.704">積</span><span begin="1:52.862" end="1:53.108">成</span><span begin="1:53.108" end="1:53.570">一</span><span begin="1:53.570" end="1:54.032">字</span><span begin="1:54.032" end="1:54.691">一</span><span begin="1:54.691" end="1:55.203">句</span></p>`}
+  incorrect={`<p begin="1:49.384" end="1:55.203" itunes:key="L14" ttm:agent="v1"><span begin="1:49.384" end="1:50.835">飄下記</span><span begin="1:50.835" end="1:51.332">憶</span><span begin="1:51.332" end="1:51.735">不</span><span begin="1:51.735" end="1:52.025">斷</span><span begin="1:52.025" end="1:52.409">累</span><span begin="1:52.409" end="1:52.704">積</span><span begin="1:52.862" end="1:53.108">成</span><span begin="1:53.108" end="1:54.032">一字</span><span begin="1:54.032" end="1:54.691">一</span><span begin="1:54.691" end="1:55.203">句</span></p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+Split both groups, one interval per character, and leave the rest of the line alone. A group only hides a boundary, and it saves nothing worth having.
+
+### A word is not one unit
+
+A Chinese word of two or more characters is not a timing unit. Split it like any other run of characters whenever both characters have their own onset, and that is the normal case.
+
+The same word can turn up grouped in one place and split in another within a single line:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="3:20.552" end="3:38.200" itunes:key="L38" ttm:agent="v1"><span begin="3:20.552" end="3:20.963">快</span><span begin="3:20.963" end="3:21.374">樂</span><span begin="3:21.374" end="3:21.790">妳</span><span begin="3:21.790" end="3:22.416">快</span><span begin="3:22.416" end="3:24.537">樂</span> <span begin="3:24.743" end="3:25.135">憂</span><span begin="3:25.135" end="3:25.528">愁</span><span begin="3:25.528" end="3:25.939">妳</span><span begin="3:25.939" end="3:26.395">憂</span><span begin="3:26.505" end="3:38.200">愁</span></p>`}
+  incorrect={`<p begin="3:20.552" end="3:38.200" itunes:key="L38" ttm:agent="v1"><span begin="3:20.552" end="3:21.374">快樂</span><span begin="3:21.374" end="3:21.790">妳</span><span begin="3:21.790" end="3:22.416">快</span><span begin="3:22.416" end="3:24.537">樂</span> <span begin="3:24.743" end="3:25.528">憂愁</span><span begin="3:25.528" end="3:25.939">妳</span><span begin="3:25.939" end="3:26.395">憂</span><span begin="3:26.505" end="3:38.200">愁</span></p>`}
+  source={{ region: "tw", songId: "1461438376" }}
+/>
+
+The Avoid side groups the first `快樂` and then splits the second, three characters later. Both copies of `快樂` and both of `憂愁` take two intervals.
+
+### Repeated characters
+
+Give each repeat its own interval. A repeated character is sung again, not held, so grouping the repeats hides the rhythm that makes them a repetition.
+
+<SyllableChips
+  source={{ region: "tw", songId: "541857036" }}
+  ttml={`<p begin="38.537" end="43.204" itunes:key="L6" ttm:agent="v1"><span begin="38.537" end="39.134">天</span><span begin="39.134" end="39.783">黑</span><span begin="39.783" end="40.909">黑</span> <span begin="41.521" end="42.171">黑</span><span begin="42.171" end="43.204">黑</span></p>`}
+/>
+
+The same applies to a repeated vocalization, where the silence between repeats is part of the effect:
+
+<SyllableChips
+  source={{ region: "tw", songId: "1676735991" }}
+  ttml={`<p begin="1:11.439" end="1:15.708" itunes:key="L12" ttm:agent="v1"><span begin="1:11.439" end="1:11.827">哈</span><span begin="1:12.126" end="1:12.561">哈</span><span begin="1:13.055" end="1:15.708">哈</span></p>`}
+/>
+
+Collapsing a run of repeats into one group is the most common grouping mistake. Each `匆` is struck separately in the recording, so each one needs its own interval:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:17.147" end="1:20.934" itunes:key="L11" ttm:agent="v1"><span begin="1:17.147" end="1:17.561">時</span><span begin="1:17.561" end="1:17.975">光</span><span begin="1:17.975" end="1:18.180">匆</span><span begin="1:18.180" end="1:18.385">匆</span><span begin="1:18.385" end="1:18.589">匆</span><span begin="1:18.589" end="1:18.794">匆</span><span begin="1:18.794" end="1:19.162">流</span><span begin="1:19.162" end="1:19.530">走</span> <span begin="1:19.530" end="1:19.736">也</span><span begin="1:19.736" end="1:19.943">也</span><span begin="1:19.943" end="1:20.150">也</span><span begin="1:20.150" end="1:20.356">不</span><span begin="1:20.356" end="1:20.645">回</span><span begin="1:20.645" end="1:20.934">頭</span></p>`}
+  incorrect={`<p begin="1:17.147" end="1:20.934" itunes:key="L11" ttm:agent="v1"><span begin="1:17.147" end="1:17.975">時光</span><span begin="1:17.975" end="1:18.794">匆匆匆匆</span><span begin="1:18.794" end="1:19.530">流走</span> <span begin="1:19.530" end="1:20.356">也也也不</span><span begin="1:20.356" end="1:20.934">回頭</span></p>`}
+  source={{ region: "tw", songId: "657693184" }}
+/>
+
+The grouping on the Avoid side also swallows `不` into the run of `也`, which is a different word entirely.
+
+For how to write the repeats themselves, see [Repeated characters](./text.mdx#repeated-characters).
+
+### Latin words follow English rules
+
+A Latin word inside a Chinese line is still a Latin word. Split it by the [English syllable rules](../english/splits.mdx#syllable-splits) and follow that page for every decision inside the run. It is the one place in a Chinese lyric where a single written word is divided into parts.
+
+The characters around it follow the Chinese rule as usual, one interval each:
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="1:13.821" end="1:19.061" itunes:key="L10" ttm:agent="v1"><span begin="1:13.821" end="1:14.039">無</span><span begin="1:14.039" end="1:14.258">法</span><span begin="1:14.258" end="1:14.476">不</span><span begin="1:14.476" end="1:14.804">愛</span><span begin="1:14.804" end="1:15.131">你</span> <span begin="1:15.131" end="1:16.066">Ba</span><span begin="1:16.066" end="1:16.330">by</span> <span begin="1:17.171" end="1:17.435">說</span><span begin="1:17.435" end="1:17.699">你</span><span begin="1:17.699" end="1:17.963">也</span><span begin="1:17.963" end="1:18.227">愛</span><span begin="1:18.227" end="1:19.061">我</span></p>`}
+  incorrect={`<p begin="1:13.821" end="1:19.061" itunes:key="L10" ttm:agent="v1"><span begin="1:13.821" end="1:14.476">無法不</span><span begin="1:14.476" end="1:15.131">愛你</span> <span begin="1:15.131" end="1:16.066">Ba</span><span begin="1:16.066" end="1:16.330">by</span> <span begin="1:17.171" end="1:18.227">說你也愛</span><span begin="1:18.227" end="1:19.061">我</span></p>`}
+  source={{ region: "tw", songId: "1416149931" }}
+/>
+
+`Ba` and `by` are identical on both sides. Only the Chinese characters change, because the two scripts are split by different rules in the same line.
+
+The spaces around a Latin run are [script spacing](./text.mdx#latin-script-inside-a-chinese-line), not phrase boundaries. Do not read them as places the singer breathed, and do not add or remove one to signal a split.
+
+### Check the whole song
+
+Split the same line the same way when it is sung the same way, and let it differ when the delivery differs. A chorus that repeats unchanged carries identical groupings each time.
+
+<SyllableChips
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`<p begin="25.258" end="31.928" itunes:key="L3" ttm:agent="v1"><span begin="25.258" end="26.175">後</span><span begin="26.175" end="27.224">來</span> <span begin="27.344" end="27.756">終</span><span begin="27.756" end="28.122">於</span><span begin="28.122" end="28.561">在</span><span begin="28.561" end="29.002">眼</span><span begin="29.002" end="29.307">淚</span><span begin="29.307" end="30.474">中</span><span begin="30.474" end="30.889">明</span><span begin="30.889" end="31.928">白</span></p>`}
+  incorrect={`<p begin="2:46.356" end="2:52.882" itunes:key="L27" ttm:agent="v1"><span begin="2:46.356" end="2:47.132">後</span><span begin="2:47.132" end="2:48.117">來</span> <span begin="2:48.285" end="2:49.157">終於</span><span begin="2:49.157" end="2:49.522">在</span><span begin="2:49.522" end="2:50.268">眼淚</span><span begin="2:50.268" end="2:51.503">中</span><span begin="2:51.504" end="2:51.873">明</span><span begin="2:51.873" end="2:52.882">白</span></p>`}
+  source={{ region: "tw", songId: "162143617" }}
+/>
+
+Those are the same line in two different choruses, sung the same way. The Avoid side groups `終於` and `眼淚`, and both characters in each pair have their own onset, so that is the version to correct.
+
+Work through the song once the whole lyric is split, and compare every repeated line against the first time it appears.
+
+For encoding lines, characters, and timings in a file, see [Timing in TTML](../../ttml/timing.mdx).
