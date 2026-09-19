@@ -335,7 +335,13 @@ Who will dance on the floor in the round?"`}
 
 单词之间使用单个空格。逗号、问号或感叹号后面紧跟其他单词时，其后须留一个空格。这些标点符号前面不要留空格，括号和引号的内侧也不加空格。
 
-<CodeComparison correct="Stay, baby (Stay)" incorrect="Stay ,baby ( Stay )" />
+<CodeComparison
+  correct={"It's me, hi (Hi)"}
+  incorrect={"It's me ,hi ( Hi )"}
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  source={{ region: "us", songId: "1650841515" }}
+/>
 
 数量词以英文单词形式拼写更易读时，拼写为单词。年份、时间点以及名称本身包含的数字，沿用通行的阿拉伯数字写法。同一数字在全曲中重复出现时，前后写法保持一致。
 
