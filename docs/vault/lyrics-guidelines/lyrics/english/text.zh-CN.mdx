@@ -1,0 +1,370 @@
+---
+title: 文本
+description: 拼写、变音符号、缩写、大小写、重复词，以及哼唱与语气词等无词义人声
+---
+
+按演唱实际内容转写歌词。本页讲用词本身，行内如何加空格与标点，参见[空格](./spacing.zh-CN.mdx)与[标点](./punctuation.zh-CN.mdx)。
+
+## 语法与拼写
+
+歌手有意使用的俚语、残句、省略成分和非标准语法都要保留。不要补上省略的动词，不要消除双重否定；某种说法不合常规，也不是把它改写成规范书面语的理由。
+
+下面这句保留原有说法：
+
+<AppleMusicQuote
+  region="us"
+  songId="1752214923"
+  quote={"That's that me espresso"}
+/>
+
+修正非演唱本意的拼写错误。遇到同音异义词时，根据上下文确定正确写法。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"You're only happy when your sorry head is filled with dope"}
+  incorrect={"Your only happy when you're sorry head is filled with dope"}
+  source={{ region: "us", songId: "1440827631" }}
+/>
+
+听不清某个词时，多听几遍录音，并参考歌手或发行方提供的官方歌词。换个词句子更通顺，这不是改动原词的理由。
+
+## 其他语种与变音符号
+
+保留专有名词与单词中固有的变音符号或重音记号。穿插其他语种的段落保持原文，并遵循该语言自身的书写规则。
+
+## 缩写与撇号
+
+### 缩写形式
+
+歌里唱的是缩写就保留缩写。省略字母的位置用撇号标出，撇号要紧贴单词，中间不留空格。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"I know it'll kill me when it's over"}
+  incorrect={"I know itll kill me when it 's over"}
+  source={{ region: "us", songId: "1170698158" }}
+/>
+
+### 省略写法
+
+省略写法沿用通行的约定形式。开头有字母省略时，行首保留的第一个字母也要大写。
+
+```text
+'Cause
+'Bout
+'Em
+Lovin'
+```
+
+下面这行中的 `'Cause` 保留了开头的撇号，作为行首词依然大写：
+
+<AppleMusicQuote
+  region="us"
+  songId="1031416179"
+  quote={"'Cause you know, I just wanna see you smile"}
+/>
+
+省略词尾字母时，撇号加在末尾：
+
+<AppleMusicQuote
+  region="us"
+  songId="1031416179"
+  quote={"Now don't you worry, it won't be long, darlin'"}
+/>
+
+词只唱出一部分时也按同样规则处理，不限于通行的缩写。唱出多少就写多少，省略的开头用撇号代替。别处唱过完整的词，或者别的声部唱了完整的词，都不是把它补全的理由。
+
+<AppleMusicQuote
+  region="us"
+  songId="1523763061"
+  quote={`I make it known I fuck with you, not undercover
+('Cover)`}
+/>
+
+<AppleMusicQuote
+  region="us"
+  songId="1734167854"
+  quote={`A breakthrough that can bring us anywhere
+('Nywhere)`}
+/>
+
+完整单词只唱了一遍，和声只跟唱了末尾的几个音节，因此写作 `'Cover`，而不是 `Undercover`。
+
+### 不带撇号的写法
+
+有些口语形式本身就不带撇号。不要因为一个词偏口语就擅自添加撇号，也不要将其展开替换为其他唱法。
+
+```text
+Gonna
+Wanna
+Gotta
+Tryna
+```
+
+下面两处都按实际唱法书写，不加撇号：
+
+<AppleMusicQuote
+  region="us"
+  songId="1170698158"
+  quote={"I don't wanna think about it, I just wanna love you now, oh yeah"}
+/>
+
+### 什么时候该加撇号
+
+注意区分普通复数与所有格。撇号用于表示所属关系（谁的），而非单纯表示复数（不止一个）。普通复数不加撇号。
+
+**单纯复数，不加撇号**
+
+<AppleMusicQuote
+  region="us"
+  songId="91989806"
+  quote={"The lights are on, but there's no one home"}
+/>
+
+**表示所属，要加撇号**
+
+<AppleMusicQuote
+  region="us"
+  songId="1657869393"
+  quote={"You was at the farmers' market with your perfect peach"}
+/>
+
+`farmers'` 指的是「农户们的」市集，词本身已经是复数，撇号就跟在 `s` 后面。这句里的 `You was` 不合语法，但歌就是这么唱的，照写。
+
+### 撇号样式
+
+全曲统一使用同一种撇号。不要混用直撇号与弯撇号，也不要用反引号代替。
+
+## 大小写
+
+每行歌词的首字母都要大写，承接上一行句意的跨行歌词也不例外。行内其余部分按常规大小写处理。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={`We don't talk anymore
+Like we used to do`}
+  incorrect={`We don't talk anymore
+like we used to do`}
+  source={{ region: "us", songId: "1031416185" }}
+/>
+
+第二行虽然无法独立成句，但首字母照样大写。
+
+以下内容要大写：
+
+- 第一人称代词（I 及缩写形式）。
+- 人名、品牌名和地名等专有名词。
+- 首字母缩略词。
+- 神明的称谓，以及指代神明的代词。
+- 宗教典籍的名称和特定宗教节日。
+
+保留专有名词固有的官方大小写。不要将每个单词的首字母都大写，也不要用全大写表示唱得大声。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct="I got a California king"
+  incorrect={`I Got A California King
+I GOT A CALIFORNIA KING`}
+  source={{ region: "us", songId: "1698723208" }}
+/>
+
+不要把歌曲标题的全小写或全大写艺术样式照搬到歌词正文中。歌词中引用歌曲标题时，按标题本身的规范写法处理大小写。
+
+指代普通人时不要套用神明专用的大写形式。
+
+## 重复的歌词
+
+重复出现的单词和整行歌词均须完整写出。不要用「重复」等说明文字代替副歌，也不要想当然地认为后续副歌的词句完全相同。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={`Please, please, please (Please)
+Please, please, please (Please)
+Please, please, please (Please, please)`}
+  incorrect="Please, please, please (Repeat x3)"
+  source={{ region: "us", songId: "1750307080" }}
+/>
+
+上面三行的伴唱和声各不相同，写成重复说明就会遗漏最后一行。
+
+短语中完整单词的重复用逗号隔开，属于同一个词内部的片段重复则用连字符连接。下面这行两种情况兼具，先是完整单词的重复，接着是词首片段的重复：
+
+<AppleMusicQuote
+  region="us"
+  songId="529843559"
+  quote={"Tonight we're going hard, hard, h-h-h-hard"}
+/>
+
+## 和声
+
+### 逐行同步的歌词
+
+仅在逐行同步歌词中，把简短的伴唱和声用括号附在对应主唱行的末尾，这也符合 [Apple Music for Artists 规范](https://artists.apple.com/support/1111-lyrics-guidelines)。括号内首字母大写，属于和声的标点也放在括号里面。
+
+<AppleMusicQuote
+  region="us"
+  songId="1440843077"
+  quote={"Won't you come and put it down on me? (Down on me)"}
+/>
+
+### 逐词同步的歌词
+
+把伴唱和声单列在对应主唱行下方的独立子行中。伴唱的文字与时间轴均与主唱各自独立，即便两者在演唱上有重叠也互不干扰。切勿将伴唱用括号合并进主唱行。
+
+同样是这一段，第二行作为伴唱行。它的第一个词在主唱行最后一个词尚未唱完时便已切入，两条时间轴相互独立：
+
+<AppleMusicQuote
+  region="us"
+  songId="1440843077"
+  quote={`Won't you come and put it down on me?
+(Down on me)`}
+/>
+
+伴唱行在文件中的结构和时间轴，参见 [TTML 中的和声](../../../ttml/background-vocals.mdx)。
+
+无论哪种同步方式，主唱自己即兴插入的语气词或短句（Ad-lib）都留在主唱文本里。不要因为它短就当作伴唱和声。
+
+伴唱和声是有人真的唱了一遍。延迟尾音、混响余韵、切碎的人声铺底，都是后期在重复主唱，没有第二个声部，也就不单列子行。参见[略去无关的声响](#略去无关的声响)。
+
+## 没有词义的人声
+
+哼唱、语气词这类没有词义的声音，只要清晰可辨，且构成了旋律、记忆点（Hook）或有意义的应答，就要转写。具体怎么拼，取决于元音音色、起音收音方式以及演唱力度。
+
+一切以实际听感为准，而非单纯看持续时长。时间轴区间长短并不决定单词如何拼写：短元音后面可以跟很长的气声尾音，一段延绵的人声里也可能包含好几种不同的音。
+
+### Oh 与 Ooh
+
+元音本身拖长时用 Ooh。元音短促的用 Oh，后面的气声拖得再久也依然写作 Oh。不要仅因时间区间长就改用 Ooh。
+
+单独出现的一声：
+
+<AppleMusicQuote region="us" songId="1657869393" quote={"Oh"} />
+
+拖长的元音：
+
+<AppleMusicQuote region="us" songId="1560735480" quote={"Ooh"} />
+
+### 连着唱还是断开唱
+
+连贯唱出的几声用连字符接起来。中间能听出明显停顿的，用逗号隔开。同一个短语里可以既有连贯的，也有断开的。
+
+下面几个音是连贯唱出的：
+
+<AppleMusicQuote region="us" songId="296016899" quote={"Oh-oh-oh"} />
+
+同一首歌的另一处，第一声和后面连贯的几声之间有停顿：
+
+<AppleMusicQuote region="us" songId="296016899" quote={"Oh, oh-oh-oh"} />
+
+开头这两行则是停顿和连贯的音交替出现：
+
+<AppleMusicQuote
+  region="us"
+  songId="576670459"
+  quote={`Oh, oh-oh-oh
+Oh-oh-oh, oh`}
+/>
+
+第一声依然写作 Oh：其元音本身短促，拖长的是后面的气声尾音。拼写取决于元音音色，而非声音的总时长。
+
+### Ah 与 Ha
+
+起音能听出清晰 h 音的用 Ha，直接从元音起音的用 Ah。歌手在两者之间交替时，这一细微差异应如实体现。
+
+<AppleMusicQuote
+  region="us"
+  songId="1434371887"
+  quote={`Oh, ha, ah, ha, ah
+Ha, ah`}
+/>
+
+### Woo 与 Whoo
+
+两种拼法均可接受，按具体唱法选用：Whoo 更适合干脆、有爆发力的一声，但持续时间长短不能单独作为选用它的依据。
+
+<AppleMusicQuote
+  region="us"
+  songId="1698723221"
+  quote={"Woo, you comin' home with me?"}
+/>
+
+更干脆的一声：
+
+<AppleMusicQuote region="us" songId="1440843077" quote={"Whoo!"} />
+
+前一个例子的 Woo 实际上比这里的 Whoo 持续得更久，可见单凭长短决定不了拼写。
+
+### Whoa 与 Woah
+
+优先使用公认的标准写法 Whoa。Woah 虽可接受，但为了保持歌词风格的一致性，统一使用 Whoa。
+
+<AppleMusicQuote region="us" songId="1691699836" quote={"Whoa"} />
+
+### 不要靠加字母表示时长
+
+语气词与拟声人声使用标准通行写法即可。不要为了表现长音、拖长气声或强烈的语气而随意堆叠重复字母（如 ahhhh），时长由时间轴来体现。
+
+引用单个语气词时这样写：
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={'My brain goes, "ah"'}
+  incorrect={'My brain goes, "ahhhh"'}
+  source={{ region: "us", songId: "1694386828" }}
+/>
+
+### 略去无关的声响
+
+不必把每一次换气都转写出来，也不要把即兴的拟声唱法写成一长串自造音节。乐器声、环境音效或背景杂音切勿用文字描述混入歌词正文中。
+
+人声经过制作处理、只剩音色不剩词义的，一律不转写。切碎、倒放、变调、滤波之后当成器乐铺底的人声，没有唱出任何可写的词；延迟和混响的尾音也只是同一句还在响，不是新的一句。要记录的是歌手唱了什么，不是后期对这段人声做了什么。
+
+判断依据是听感，不是制作手法。处理过的人声只要还能听清词，照样写进正文；单独录制的重复声部属于[和声](#和声)，不算音效。唱断的词也是演唱的一部分，按[连字符与中断](./punctuation.zh-CN.mdx#连字符与中断)的写法保留。
+
+## 念白
+
+能听清的念白、开场白和对话都应如实转写，不限于演唱或说唱内容。
+
+<AppleMusicQuote
+  region="us"
+  songId="1894533119"
+  quote={"Tell every look, tell every right from the—"}
+/>
+
+主唱或客串参演的艺人念白时，把这段划归该艺人的声部。如果说话者并非参与艺人，则统一划归 **Other** 声部。不能仅凭歌曲署名，把其他人的念白归入该艺人的声部。
+
+说话人标签、段落标题和制作说明都不要写进歌词正文。文件中声部的具体分配，参见[演唱者与声部](../../../ttml/agents.mdx#spoken-passages)。
+
+## 完整版与洁版
+
+以音频实际发行的录音版本为准。清晰可辨且未经处理的单词一律如实完整写出，脏话和冒犯性词语也一样，包括 N 开头的词。词语有冒犯性并不意味着需要遮蔽。只有录音作了遮蔽处理，歌词才相应遮蔽。
+
+词能听清且未经处理时：
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"'Cause you only listen to your fucking friends"}
+  incorrect={"'Cause you only listen to your ****ing friends"}
+  source={{ region: "us", songId: "1564531202" }}
+/>
+
+录音对某个词做了消音、静音或其他处理时，整个词都用星号代替，不要留下一部分字母：
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"Fuckin' with you feel like jail, ****"}
+  incorrect={"Fuckin' with you feel like jail, b****"}
+  source={{ region: "us", songId: "1574004703" }}
+/>
+
+这一行里一个词被遮蔽、另一个词照写，因为音频中只处理了其中一个。
+
+如果歌手在洁版里唱了替换词，就照着替换词如实写。不要把完整版的词还原回去，也不要自行加上录音里没有的遮蔽。

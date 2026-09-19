@@ -1,11 +1,4 @@
 {
   "title": "歌词规范",
-  "pages": [
-    "english",
-    "chinese",
-    "japanese",
-    "korean",
-    "other-languages",
-    "multilingual"
-  ]
+  "pages": ["lyrics", "translation", "romanization"]
 }

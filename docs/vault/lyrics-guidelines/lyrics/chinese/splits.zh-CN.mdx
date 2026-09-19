@@ -1,0 +1,221 @@
+---
+title: 断行与音节切分
+description: 歌词在何处换行，以及为什么汉字既不能拆分也不能合并计时
+---
+
+本页说明何时换行，以及汉字如何逐字切分。行内乐句之间的空格留法，参见[空格](./spacing.zh-CN.mdx)。
+
+逐行同步只需标出每行的起止时间。逐词同步则需标出内部每个计时单元的起止时间。中文歌词以单个汉字为计时单位。一个汉字就是一个音节，不再细分。
+
+## 换行时机
+
+断行决定哪些内容显示在同一行。无论是否制作逐词同步歌词，都适用这些规则。
+
+### 依演唱乐句断行
+
+当旋律或节奏上的乐句告一段落、开始一段独立的应答，或演唱转入新的意思时，另起一行。以整句在语境中的听感为准，不要看到纸面上分句结束就机械断行。
+
+一行歌词可以是一个完整的句子、半句话，甚至只有一个字。不要为了凑成完整句子而硬加字，也不要仅仅为了语法完整就把听起来明显分开的两个乐句并作一行。
+
+乐句内部的短暂停顿不等于换行。歌手唱完 `哼着` 后稍作停顿才唱出歌名，但动词与宾语属于同一个演唱意群，应当留在同一行，中间用空格隔开：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:12.789" end="1:18.766" itunes:key="L5" ttm:agent="v1">哼着 那首過氣芭樂情歌</p>`}
+  incorrect={`<p begin="1:12.789" end="1:14.226" itunes:key="L5" ttm:agent="v1">哼着</p><p begin="1:14.583" end="1:18.766" itunes:key="L6" ttm:agent="v1">那首過氣芭樂情歌</p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+副歌开头也容易出现同样的切分失误。`該如何` 只是问句的开头，算不上完整的乐句，单放一行会让读者读到半截落空：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:26.233" end="1:31.087" itunes:key="L8" ttm:agent="v1">該如何 掙脫逃逸這引力</p>`}
+  incorrect={`<p begin="1:26.233" end="1:27.590" itunes:key="L8" ttm:agent="v1">該如何</p><p begin="1:27.607" end="1:31.087" itunes:key="L9" ttm:agent="v1">掙脫逃逸這引力</p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+短小且无法独立成意群的一行，往往提示此处应该留在行内以空格分隔。在意思发生转换时另起新行，而不是歌手每换一口气就断一行。
+
+### 保持语法结构完整
+
+如果演唱处理允许多种合理的断句位置，优先选择能保持词语或固定短语完整的那一种。除非有明确的音乐理由，否则避免把双字词拆到两行，或者把量词与它修饰的名词拆开。
+
+这一原则既适用于行末换行，也同样适用于行内留空格。当两种位置都符合唱法时：
+
+<CodeComparison
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={"我的訊息被隔離 一場雨淹沒聲音無人接聽"}
+  incorrect={"我的訊息被隔離一場 雨淹沒聲音無人接聽"}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+后一种写法把 `一場` 孤立在乐句末尾，脱离了它所修饰的 `雨`。
+
+音乐本身的乐句可以打破这一规则。如果演唱乐句确实在虚词或介词处收尾，行末也可以落在此类字上。
+
+### 保持自然的行长
+
+中文歌词行普遍偏短。十个字左右最为典型；一行如果明显超过十五个字，通常意味着里面藏有本该用空格分隔或另起新行的乐句分界。
+
+- 短小的副歌记忆点（Hook）或应答如果作为独立乐句演唱，就保持短行。
+- 长段落选在清晰的音乐分界处断行。
+- 不要为了让各行看起来整齐对齐而强行补字。
+- 不要单纯为了迁就编辑器或手机屏幕宽度而插入换行。自动折行由播放器处理。
+
+对比全曲中重复出现的段落。词句与唱法一致时断行保持相同；演唱处理有变化时，如实体现乐句的差异。
+
+### 段落之间空一行
+
+主歌（Verse）、副歌（Chorus）、过渡段（Bridge）以及其他明确区分的段落之间空一行。同一段落内逐行排列，中间不留空行。
+
+<CodeComparison
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`哼着 那首過氣芭樂情歌
+就任回憶輾轉反側
+
+該如何 掙脫逃逸這引力`}
+  incorrect={`哼着 那首過氣芭樂情歌
+就任回憶輾轉反側
+該如何 掙脫逃逸這引力`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+不要每唱完一句或每换一位演唱者就加空行。不属于演唱内容的段落标签不要写入歌词正文。
+
+### 分离不同声部
+
+在决定断行之前，先分清主唱与伴唱乐句。伴唱乐句可以与主唱重叠，也可以接在主唱之后继续，不必接续主唱的句子。
+
+在逐行同步歌词中，把简短的伴唱乐句用括号附在对应的主唱行末尾。在逐词同步歌词中，把它单列为独立的子行。参见[伴唱与和声](./text.zh-CN.mdx#伴唱与和声)。
+
+<SyllableChips
+  source={{ region: "tw", songId: "1576303097" }}
+  ttml={`<p begin="2:11.074" end="2:15.072" itunes:key="L53984">君常違兮 國隳蕪 (烏有兮 歸處)</p><p begin="2:15.082" end="2:18.564" itunes:key="L53985">蓄讎怨增欷 (零落兮 困洿瀆)</p>`}
+/>
+
+伴唱乐句呼应主唱，不是主唱句子的延续，行内空格也应独立保留。
+
+## 音节切分
+
+音节切分仅适用于逐词同步歌词。
+
+### 一字一时段
+
+一个汉字就是一个音节，不存在更小的划分单位。汉字绝不拆分为多段，也绝不允许两个字共享同一个时间区间。
+
+中文不需要套用拼音文字的音节切分规则，无需判断辅音归属，也不用在字内寻找切分点。大多数歌词行按「一字一时段」处理即可。
+
+<SyllableChips
+  source={{ region: "tw", songId: "820292356" }}
+  ttml={`<p begin="33.253" end="39.467" itunes:key="L1" ttm:agent="v1"><span begin="33.253" end="33.593">我</span><span begin="33.593" end="34.045">曾</span><span begin="34.045" end="34.413">懷</span><span begin="34.413" end="34.673">疑</span><span begin="34.673" end="35.533">我</span> <span begin="36.873" end="37.313">走</span><span begin="37.313" end="37.720">在</span><span begin="37.720" end="38.111">沙</span><span begin="38.111" end="38.446">漠</span><span begin="38.446" end="39.467">中</span></p>`}
+/>
+
+拖长音不是拆分汉字的理由。拖长的字同样保持整体，因为音节并未中断重起，内部没有需要标记的分界点。
+
+<SyllableChips
+  source={{ region: "tw", songId: "1462002779" }}
+  ttml={`<p begin="3:31.704" end="3:42.938" itunes:key="L32" ttm:agent="v1"><span begin="3:31.704" end="3:32.441">張</span><span begin="3:32.441" end="3:35.186">開</span><span begin="3:35.186" end="3:36.668">翅</span><span begin="3:36.668" end="3:37.339">膀</span><span begin="3:37.598" end="3:37.903">飛</span><span begin="3:37.903" end="3:42.938">翔</span></p>`}
+/>
+
+### 严禁合并汉字计时
+
+两个汉字共享一个时间区间，意味着播放高亮会径直扫过听众耳中清晰可辨的音节边界，任何演唱处理都不能作为这种做法的依据。
+
+Apple Music 经常出现多字合并计时的现象。下面的示例中 `飄下記` 被并为一组，`一字` 被并为另一组，而中间的字却又是单字独立计时：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:49.384" end="1:55.203" itunes:key="L14" ttm:agent="v1"><span begin="1:49.384" end="1:49.868">飄</span><span begin="1:49.868" end="1:50.351">下</span><span begin="1:50.351" end="1:50.835">記</span><span begin="1:50.835" end="1:51.332">憶</span><span begin="1:51.332" end="1:51.735">不</span><span begin="1:51.735" end="1:52.025">斷</span><span begin="1:52.025" end="1:52.409">累</span><span begin="1:52.409" end="1:52.704">積</span><span begin="1:52.862" end="1:53.108">成</span><span begin="1:53.108" end="1:53.570">一</span><span begin="1:53.570" end="1:54.032">字</span><span begin="1:54.032" end="1:54.691">一</span><span begin="1:54.691" end="1:55.203">句</span></p>`}
+  incorrect={`<p begin="1:49.384" end="1:55.203" itunes:key="L14" ttm:agent="v1"><span begin="1:49.384" end="1:50.835">飄下記</span><span begin="1:50.835" end="1:51.332">憶</span><span begin="1:51.332" end="1:51.735">不</span><span begin="1:51.735" end="1:52.025">斷</span><span begin="1:52.025" end="1:52.409">累</span><span begin="1:52.409" end="1:52.704">積</span><span begin="1:52.862" end="1:53.108">成</span><span begin="1:53.108" end="1:54.032">一字</span><span begin="1:54.032" end="1:54.691">一</span><span begin="1:54.691" end="1:55.203">句</span></p>`}
+  source={{ region: "tw", songId: "1866517055" }}
+/>
+
+将这两组全部拆开，每个汉字各分配一个独立时段，行内其余部分保持原样。合并会掩盖原本清晰的音节边界。
+
+### 词不是计时单元
+
+由两个或多个字组成的中文词语不是时间轴上的最小单元。只要每个字都有独立的起音，就必须像普通文字序列一样逐字拆分，这也是常规的演唱情况。
+
+同一个词在单行内甚至可能出现一处合并、一处拆分的矛盾情况：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="3:20.552" end="3:38.200" itunes:key="L38" ttm:agent="v1"><span begin="3:20.552" end="3:20.963">快</span><span begin="3:20.963" end="3:21.374">樂</span><span begin="3:21.374" end="3:21.790">妳</span><span begin="3:21.790" end="3:22.416">快</span><span begin="3:22.416" end="3:24.537">樂</span> <span begin="3:24.743" end="3:25.135">憂</span><span begin="3:25.135" end="3:25.528">愁</span><span begin="3:25.528" end="3:25.939">妳</span><span begin="3:25.939" end="3:26.395">憂</span><span begin="3:26.505" end="3:38.200">愁</span></p>`}
+  incorrect={`<p begin="3:20.552" end="3:38.200" itunes:key="L38" ttm:agent="v1"><span begin="3:20.552" end="3:21.374">快樂</span><span begin="3:21.374" end="3:21.790">妳</span><span begin="3:21.790" end="3:22.416">快</span><span begin="3:22.416" end="3:24.537">樂</span> <span begin="3:24.743" end="3:25.528">憂愁</span><span begin="3:25.528" end="3:25.939">妳</span><span begin="3:25.939" end="3:26.395">憂</span><span begin="3:26.505" end="3:38.200">愁</span></p>`}
+  source={{ region: "tw", songId: "1461438376" }}
+/>
+
+避免示例中把前一个 `快樂` 合并，三个字后出现的第二个 `快樂` 却又拆成了两个字。两处 `快樂` 与两处 `憂愁` 均应各占两个时段。
+
+### 重复字的处理
+
+唱出的每一次重复都拥有独立的时段。重复字是重新唱出来的，并非拖长音，合并计时会抹平构成重复的节奏起伏。
+
+<SyllableChips
+  source={{ region: "tw", songId: "541857036" }}
+  ttml={`<p begin="38.537" end="43.204" itunes:key="L6" ttm:agent="v1"><span begin="38.537" end="39.134">天</span><span begin="39.134" end="39.783">黑</span><span begin="39.783" end="40.909">黑</span> <span begin="41.521" end="42.171">黑</span><span begin="42.171" end="43.204">黑</span></p>`}
+/>
+
+重复出现的语气助词同样如此，各次重复之间的无声停顿正是节奏效果的一部分：
+
+<SyllableChips
+  source={{ region: "tw", songId: "1676735991" }}
+  ttml={`<p begin="1:11.439" end="1:15.708" itunes:key="L12" ttm:agent="v1"><span begin="1:11.439" end="1:11.827">哈</span><span begin="1:12.126" end="1:12.561">哈</span><span begin="1:13.055" end="1:15.708">哈</span></p>`}
+/>
+
+将一连串重复字合并为一个时段是最常见的错误。录音中每个 `匆` 都是单独发声的，每一个都需要独立的时段：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:17.147" end="1:20.934" itunes:key="L11" ttm:agent="v1"><span begin="1:17.147" end="1:17.561">時</span><span begin="1:17.561" end="1:17.975">光</span><span begin="1:17.975" end="1:18.180">匆</span><span begin="1:18.180" end="1:18.385">匆</span><span begin="1:18.385" end="1:18.589">匆</span><span begin="1:18.589" end="1:18.794">匆</span><span begin="1:18.794" end="1:19.162">流</span><span begin="1:19.162" end="1:19.530">走</span> <span begin="1:19.530" end="1:19.736">也</span><span begin="1:19.736" end="1:19.943">也</span><span begin="1:19.943" end="1:20.150">也</span><span begin="1:20.150" end="1:20.356">不</span><span begin="1:20.356" end="1:20.645">回</span><span begin="1:20.645" end="1:20.934">頭</span></p>`}
+  incorrect={`<p begin="1:17.147" end="1:20.934" itunes:key="L11" ttm:agent="v1"><span begin="1:17.147" end="1:17.975">時光</span><span begin="1:17.975" end="1:18.794">匆匆匆匆</span><span begin="1:18.794" end="1:19.530">流走</span> <span begin="1:19.530" end="1:20.356">也也也不</span><span begin="1:20.356" end="1:20.934">回頭</span></p>`}
+  source={{ region: "tw", songId: "657693184" }}
+/>
+
+错误示例还把 `不` 与前面的 `也` 合在同一时段，但 `不` 是另一个词，应单独计时。
+
+关于重复字在书面上的写法，参见[完整写出重复字](./text.zh-CN.mdx#完整写出重复字)。
+
+### 西文单词遵循英文规则
+
+中文歌词中的西文单词按[英文音节切分规则](../english/splits.zh-CN.mdx#音节切分)处理。这是中文歌词中唯一会出现单个书写单词被切分成多段的地方。
+
+周围的汉字照常遵循中文规则，一字一时段：
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="1:13.821" end="1:19.061" itunes:key="L10" ttm:agent="v1"><span begin="1:13.821" end="1:14.039">無</span><span begin="1:14.039" end="1:14.258">法</span><span begin="1:14.258" end="1:14.476">不</span><span begin="1:14.476" end="1:14.804">愛</span><span begin="1:14.804" end="1:15.131">你</span> <span begin="1:15.131" end="1:16.066">Ba</span><span begin="1:16.066" end="1:16.330">by</span> <span begin="1:17.171" end="1:17.435">說</span><span begin="1:17.435" end="1:17.699">你</span><span begin="1:17.699" end="1:17.963">也</span><span begin="1:17.963" end="1:18.227">愛</span><span begin="1:18.227" end="1:19.061">我</span></p>`}
+  incorrect={`<p begin="1:13.821" end="1:19.061" itunes:key="L10" ttm:agent="v1"><span begin="1:13.821" end="1:14.476">無法不</span><span begin="1:14.476" end="1:15.131">愛你</span> <span begin="1:15.131" end="1:16.066">Ba</span><span begin="1:16.066" end="1:16.330">by</span> <span begin="1:17.171" end="1:18.227">說你也愛</span><span begin="1:18.227" end="1:19.061">我</span></p>`}
+  source={{ region: "tw", songId: "1416149931" }}
+/>
+
+两边的 `Ba` 和 `by` 完全一致。改变的只有汉字部分，因为同一行内的两种文字适用不同的切分规则。
+
+西文片段两侧的空格属于[混排排版空格](./spacing.zh-CN.mdx#中文行内混排西文字符)，并非乐句停顿。不要将它们当作歌手换气的地方，也不要为了表示切分而增减空格。
+
+### 通听全曲并检查
+
+同一行如果在不同地方唱法完全一致，就保持相同的切分方式；唱法有差异时，切分也随之变动。反复出现且唱法完全相同的副歌，每次的切分应当完全一致。
+
+<SyllableChips
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="25.258" end="31.928" itunes:key="L3" ttm:agent="v1"><span begin="25.258" end="26.175">後</span><span begin="26.175" end="27.224">來</span> <span begin="27.344" end="27.756">終</span><span begin="27.756" end="28.122">於</span><span begin="28.122" end="28.561">在</span><span begin="28.561" end="29.002">眼</span><span begin="29.002" end="29.307">淚</span><span begin="29.307" end="30.474">中</span><span begin="30.474" end="30.889">明</span><span begin="30.889" end="31.928">白</span></p>`}
+  incorrect={`<p begin="2:46.356" end="2:52.882" itunes:key="L27" ttm:agent="v1"><span begin="2:46.356" end="2:47.132">後</span><span begin="2:47.132" end="2:48.117">來</span> <span begin="2:48.285" end="2:49.157">終於</span><span begin="2:49.157" end="2:49.522">在</span><span begin="2:49.522" end="2:50.268">眼淚</span><span begin="2:50.268" end="2:51.503">中</span><span begin="2:51.504" end="2:51.873">明</span><span begin="2:51.873" end="2:52.882">白</span></p>`}
+  source={{ region: "tw", songId: "162143617" }}
+/>
+
+这两行来自不同遍副歌中的同一句，且演唱方式完全相同。避免示例中把 `終於` 与 `眼淚` 合并了计时，而两组词中的每个字都有独立的起音，因此是应当修正的错误版本。
+
+全曲所有切分完成后通篇检查一遍，将每一处重复出现的行与它首次出现时的切分做逐一对比。
+
+关于在文件中编码行、字与时间戳的具体规范，参见 [TTML 中的时间轴](../../../ttml/timing.mdx)。
