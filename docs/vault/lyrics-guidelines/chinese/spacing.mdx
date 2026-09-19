@@ -1,0 +1,136 @@
+---
+title: Spacing
+description: Where the space between sung phrases goes, look-alike space characters, spacing around Latin text, and numbers
+---
+
+A single space separates two sung phrases inside a line. It does the work a comma does in English prose, and it is the only mark Chinese lyrics use for it. About half of all lines contain one.
+
+A space appears for one other reason: to mark the boundary between Chinese characters and a run of Latin text. The two uses look identical and mean different things, so this page covers both.
+
+## Where the space goes
+
+Aim for two phrases in a line, divided by one space. A line holding a single phrase is common and correct. Three or more phrases is allowed, but it usually means a line break was missed.
+
+Use a space where the singer breathes, rests, or plainly starts a new phrase, and the break is not large enough to justify a new line. For when the break is large enough, see [Line splits](./splits.mdx#line-splits).
+
+<SyllableChips
+  source={{ region: "tw", songId: "183919743" }}
+  ttml={`<p begin="1:06.138" end="1:11.949" itunes:key="L5" ttm:agent="v1">最美的願望 一定最瘋狂</p>`}
+/>
+
+The singer stops after `願望` and starts again at `一定`, so the space goes there. No other boundary in the line gets one.
+
+A space does not require a silence. It can also mark a phrase boundary the singer moves straight through, and the spacing then tells the reader where the phrases divide.
+
+<SyllableChips
+  source={{ region: "hk", songId: "539838976" }}
+  ttml={`<p begin="19.239" end="25.720" itunes:key="L1" ttm:agent="v1">今天我 寒夜裡看雪飄過</p>`}
+/>
+
+Do not put a space at every grammatical junction. A line with a space between each two-character word is harder to read than one with none, and it tells the reader nothing about the performance.
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={"過去多少 快樂記憶"}
+  incorrect={"過去 多少 快樂 記憶"}
+  source={{ region: "hk", songId: "892682436" }}
+/>
+
+Keep a word or a fixed expression whole when either position fits the delivery. See [Keep connected characters together](./splits.mdx#keep-connected-characters-together).
+
+## How to write the space
+
+- Use one space, never two.
+- Do not start or end a line with a space.
+- Do not space out characters that belong to one continuous phrase.
+
+<CodeComparison
+  correct={"最美的願望 一定最瘋狂"}
+  incorrect={`最美的願望  一定最瘋狂
+最 美 的 願 望 一定最瘋狂`}
+  source={{ region: "tw", songId: "183919743" }}
+/>
+
+### Use a plain space, not a look-alike
+
+A non-breaking space (U+00A0) and an ideographic space (U+3000) look like a space and are not one. A zero-width space (U+200B) is invisible in every editor and still ends up in the file. All three survive a copy and paste out of a word processor or a lyric website.
+
+```text
+U+0020 correct
+U+00A0 no-break space
+U+3000 ideographic space
+U+200B zero-width space
+```
+
+Check for them before delivery. A line that looks right and sorts, searches, or splits wrongly usually contains one. Characters have the same problem, covered in [Check for look-alike characters](./text.mdx#check-for-look-alike-characters).
+
+## Latin script inside a Chinese line
+
+Put a space on both sides of every run of Latin text, and capitalize its first word. This applies wherever the scripts meet, including a single borrowed word in the middle of a Chinese clause.
+
+Chinese needs no space between words, so a Latin run pressed against the characters has no boundary at all and is hard to pick out at lyric sizes. The space supplies the boundary the script does not.
+
+<AppleMusicQuote
+  region="tw"
+  songId="165274582"
+  quote={"當初的那個少年 Whoa, whoa"}
+/>
+
+<CodeComparison
+  correct={"想 Follow 每則 IG 不錯過你的蹤跡"}
+  incorrect={"想follow每則IG 不錯過你的蹤跡"}
+  source={{ region: "tw", songId: "1486136137" }}
+/>
+
+<CodeComparison
+  correct={"緊緊相依的心如何 Say goodbye"}
+  incorrect={"緊緊相依的心如何say goodbye"}
+  source={{ region: "tw", songId: "218877967" }}
+/>
+
+Apple Music writes both of those without the spaces, which is why they appear here as the version to correct rather than the version to copy.
+
+Drop the space only where the run already sits at the start or the end of the line. A run that begins a line takes no space before it, and a run that ends one takes none after it.
+
+Capitalize the first word of each run and leave the rest to English rules. `Say goodbye` capitalizes only `Say`, an acronym such as `IG` keeps its own form, and a proper noun keeps its own capitalization wherever it falls. Apply English rules to any punctuation inside the run, and see the [English punctuation rules](../english/punctuation.mdx) for the details.
+
+A space between the scripts is not a phrase boundary. A line can carry both, and the spaces around a Latin run do not tell the reader that the singer breathed there.
+
+## Numbers
+
+Write numbers the way the lyric writes them. Chinese numerals and digits are both correct, and the choice usually follows whether the number is read as a word or as a string of figures.
+
+Chinese numerals for an ordinary quantity:
+
+<AppleMusicQuote
+  region="tw"
+  songId="163296591"
+  quote={"二十四小時沒有分開過"}
+/>
+
+Digits where the lyric treats the number as a figure:
+
+<AppleMusicQuote
+  region="hk"
+  songId="201526846"
+  quote={"明明刨正23 為何彈出41"}
+/>
+
+<AppleMusicQuote
+  region="hk"
+  songId="1571428113"
+  quote={"同我跳8拍 不如大膽數到9"}
+/>
+
+Digits do not take the spaces that [Latin text](#latin-script-inside-a-chinese-line) does. Write them tight against the characters around them, and keep the treatment consistent for repeated references to the same number.
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={"同我跳8拍 不如大膽數到9"}
+  incorrect={"同我跳 8 拍 不如大膽數到 9"}
+  source={{ region: "hk", songId: "1571428113" }}
+/>
+
+A digit is legible against a Chinese character in a way a lowercase Latin word is not, so it needs no boundary. A number written out in Latin letters, such as `One` or `Twenty-four`, is a Latin run and takes the spaces.

@@ -1,4 +1,4 @@
 {
   "title": "English",
-  "pages": ["text", "splits", "translation"]
+  "pages": ["text", "spacing", "punctuation", "splits", "translation"]
 }

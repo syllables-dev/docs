@@ -1,0 +1,55 @@
+---
+title: 空格
+description: 单词与标点周围的空格、形似的空白字符，以及数字的写法
+---
+
+本页只讲空格本身。用词参见[文本](./text.zh-CN.mdx)，标点符号参见[标点](./punctuation.zh-CN.mdx)。
+
+## 单词与标点
+
+单词之间使用单个空格。逗号、问号或感叹号后面紧跟其他单词时，其后须留一个空格。这些标点符号前面不要留空格，括号和引号的内侧也不加空格。
+
+<CodeComparison
+  correct={"It's me, hi (Hi)"}
+  incorrect={"It's me ,hi ( Hi )"}
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  source={{ region: "us", songId: "1650841515" }}
+/>
+
+### 用普通空格，不要用形似的空白字符
+
+不间断空格（U+00A0）和全角空格（U+3000）看上去像空格，实际上不是。零宽空格（U+200B）在任何编辑器里都看不见，却照样会留在文件中。从文字处理软件或歌词网站复制粘贴时，这三种都会被一并带进来。
+
+```text
+U+0020 correct
+U+00A0 no-break space
+U+3000 ideographic space
+U+200B zero-width space
+```
+
+交付前逐一排查。一行看着没问题，排序、搜索或切分却出错，往往就是里面混了这种字符。
+
+## 数字
+
+数量词以英文单词形式拼写更易读时，拼写为单词。年份、时间点以及名称本身包含的数字，沿用通行的阿拉伯数字写法。同一数字在全曲中重复出现时，前后写法保持一致。
+
+**数量写成单词**
+
+<AppleMusicQuote
+  region="us"
+  songId="1491987858"
+  quote={"Nineteen, but you act twenty-five now"}
+/>
+
+**年份**
+
+<AppleMusicQuote
+  region="us"
+  songId="1621817894"
+  quote={"Keeping dreams alive, 1999, heroes"}
+/>
+
+**时刻**
+
+<AppleMusicQuote region="us" songId="1381582728" quote={"Maybe it's 6:45"} />

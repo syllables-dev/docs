@@ -1,9 +1,9 @@
 ---
-title: 文本、空格与标点
-description: 英文歌词的拼写、大小写与标点，一切以实际唱出的内容为准
+title: 文本
+description: 拼写、变音符号、缩写、大小写、重复词，以及哼唱与语气词等无词义人声
 ---
 
-按实际演唱内容转写歌词。使用规范拼写、大小写与标点是为了让语义更清晰易读，而不是改变原词的含义与唱法。
+按演唱实际内容转写歌词。本页讲用词本身，行内如何加空格与标点，参见[空格](./spacing.zh-CN.mdx)与[标点](./punctuation.zh-CN.mdx)。
 
 ## 语法与拼写
 
@@ -20,12 +20,18 @@ description: 英文歌词的拼写、大小写与标点，一切以实际唱出�
 修正非演唱本意的拼写错误。遇到同音异义词时，结合上下文句意确定正确的写法。
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={"You're only happy when your sorry head is filled with dope"}
   incorrect={"Your only happy when you're sorry head is filled with dope"}
   source={{ region: "us", songId: "1440827631" }}
 />
 
 听不清某个词时，多听几遍录音，并参考歌手或发行方提供的官方歌词。换个词句子更通顺，这不是改动原词的理由。
+
+## 其他语种与变音符号
+
+保留专有名词与单词中固有的变音符号或重音记号。穿插其他语种的段落保持原文，并遵循该语言自身的书写规则。
 
 ## 缩写与撇号
 
@@ -34,6 +40,8 @@ description: 英文歌词的拼写、大小写与标点，一切以实际唱出�
 歌里唱的是缩写就保留缩写。省略字母的位置用撇号标出，撇号要紧贴单词，中间不留空格。
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={"I know it'll kill me when it's over"}
   incorrect={"I know itll kill me when it 's over"}
   source={{ region: "us", songId: "1170698158" }}
@@ -134,6 +142,8 @@ Tryna
 每行歌词的首字母都要大写，承接上一行句意的跨行歌词也不例外。行内其余部分按常规大小写处理。
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={`We don't talk anymore
 Like we used to do`}
   incorrect={`We don't talk anymore
@@ -154,6 +164,8 @@ like we used to do`}
 保留专有名词固有的官方大小写。不要将每个单词的首字母都大写，也不要用全大写表示唱得大声。
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct="I got a California king"
   incorrect={`I Got A California King
 I GOT A CALIFORNIA KING`}
@@ -164,214 +176,13 @@ I GOT A CALIFORNIA KING`}
 
 指代普通人时不要套用神明专用的大写形式。
 
-## 标点
-
-### 行尾
-
-歌词行末不加句号和逗号，整句唱完了也一样。问号、感叹号以及句末的闭引号，在语义需要时仍须保留。
-
-<CodeComparison
-  correct={`When you said you were passing through
-Was I even on your way?`}
-  incorrect={`When you said you were passing through,
-Was I even on your way.`}
-  source={{ region: "us", songId: "1564531202" }}
-/>
-
-专有名词或缩写本身自带的标点（如 Mr. 或 St.）应予保留，但行末不要再额外追加表示句末的句号。
-
-### 逗号
-
-行内使用逗号分隔并列成分、隔开称呼语或理顺从句结构。不要在每次换气或每个节奏重音处都加逗号。
-
-**称呼语**
-
-<AppleMusicQuote
-  region="us"
-  songId="1698723208"
-  quote={"So, baby, let's get freaky, get kinky"}
-/>
-
-**并列成分**
-
-<AppleMusicQuote
-  region="us"
-  songId="1440827631"
-  quote={"His pills, his hands, his jeans"}
-/>
-
-**前置状语**
-
-<AppleMusicQuote
-  region="us"
-  songId="1440620921"
-  quote={"When you come around, I get paralyzed"}
-/>
-
-不要因为演唱者在主谓语之间有所停顿，就强行在主语与谓语之间插入逗号。
-
-<CodeComparison
-  correct="The lights are on, but there's no one home"
-  incorrect="The lights, are on, but there's no one home"
-  source={{ region: "us", songId: "91989806" }}
-/>
-
-### 问号与感叹号
-
-问号加在疑问结束的地方。如果问句延续到下一行，就等到那一行再收尾。参见[跨行的疑问句](./splits.zh-CN.mdx#跨行的疑问句)。
-
-问号也可以出现在行中，后面紧跟下一层意思：
-
-<AppleMusicQuote
-  region="us"
-  songId="1752214923"
-  quote={"Is it that sweet? I guess so"}
-/>
-
-句中含有疑问词不等于它就是问句。作为陈述句一部分的间接疑问从句无需加问号。
-
-**直接疑问句**
-
-<AppleMusicQuote
-  region="us"
-  songId="1696819855"
-  quote={"What was I made for?"}
-/>
-
-**含间接疑问的陈述句**
-
-<AppleMusicQuote
-  region="us"
-  songId="1696819855"
-  quote={"What I was made for"}
-/>
-
-这两行在同一首歌中先后相邻，区别仅在语序。是否使用问号取决于语法结构，不能看见疑问词就加。
-
-感叹句使用感叹号。不要靠连串重复标点来表示音量或强调。
-
-### 引号
-
-歌词中引用说话内容时使用双引号。不要将整段歌词都套在引号里。
-
-<AppleMusicQuote
-  region="us"
-  songId="1468058171"
-  quote={"Said, \"I'm fine,\" but it wasn't true"}
-/>
-
-引语跨行时，引号一直保持开启，直到引用内容结束才收尾。如果疑问的是引语本身，问号放在后引号内侧。
-
-<AppleMusicQuote
-  region="us"
-  songId="269573364"
-  quote={`I said, "Don't mind, but what do you mean I am the one
-Who will dance on the floor in the round?"`}
-/>
-
-### 连字符与中断
-
-常规复合词、词首重复的发音片段，以及逐字母拼读的词，均使用连字符连接。单词内部的连字符两侧不加空格。
-
-**复合词**
-
-<AppleMusicQuote
-  region="us"
-  songId="1440862803"
-  quote={"Hope is a four-letter word"}
-/>
-
-**词首重复**
-
-<AppleMusicQuote region="us" songId="1440818663" quote={"We're c-coming out"} />
-
-**逐字母拼读**
-
-<AppleMusicQuote region="us" songId="1698723221" quote={"H-O-T T-O G-O"} />
-
-逐字母拼读的各个单词之间要保留空格。保留歌手实际唱出的字母，即使拼写不符合常规也原样记录。
-
-句子中断时用哪个符号，取决于断在哪里：断的是这个词，还是整句话。词只唱了一半不用破折号，整词唱完了句子才断也不用连字符。
-
-#### 连字符
-
-单词唱到一半戛然而止，在末尾加一个连字符。只写唱出来的部分，不要替歌手补全没唱完的字母。
-
-<AppleMusicQuote
-  region="us"
-  songId="1411629089"
-  quote={"Thunder, thunder, thun-"}
-/>
-
-歌手把词唱断又重起一遍时，连字符会紧挨着逗号。两个符号都要留：连字符属于没唱完的那个词，逗号隔开的是重起的部分。
-
-<AppleMusicQuote
-  region="us"
-  songId="1556175647"
-  quote={"I don't de-, I don't de-, I don't deserve you tonight"}
-/>
-
-主唱先唱了两次 `de-`，第三次才唱完整的 `deserve`，所以前两次各带一个连字符。
-
-#### 破折号
-
-整个词唱完了，断的是这句话，这时用破折号。歌曲淡出或者收尾处戛然而止，多是这种情况。
-
-<AppleMusicQuote region="us" songId="269573364" quote={"Billie Jean is—"} />
-
-<AppleMusicQuote
-  region="us"
-  songId="974485805"
-  quote={"I'm fallin', so I'm takin' my time on my—"}
-/>
-
-这两行结尾的词都是完整的，所以都不加连字符。
-
-#### 不加符号
-
-不要使用省略号表示换气、间奏或者句子跨行延续。单纯拖长音不需要额外添加字母或连字符。
-
-## 空格与数字
-
-单词之间使用单个空格。逗号、问号或感叹号后面紧跟其他单词时，其后须留一个空格。这些标点符号前面不要留空格，括号和引号的内侧也不加空格。
-
-<CodeComparison
-  correct={"It's me, hi (Hi)"}
-  incorrect={"It's me ,hi ( Hi )"}
-  correctLabel="推荐"
-  incorrectLabel="避免"
-  source={{ region: "us", songId: "1650841515" }}
-/>
-
-数量词以英文单词形式拼写更易读时，拼写为单词。年份、时间点以及名称本身包含的数字，沿用通行的阿拉伯数字写法。同一数字在全曲中重复出现时，前后写法保持一致。
-
-**数量写成单词**
-
-<AppleMusicQuote
-  region="us"
-  songId="1491987858"
-  quote={"Nineteen, but you act twenty-five now"}
-/>
-
-**年份**
-
-<AppleMusicQuote
-  region="us"
-  songId="1621817894"
-  quote={"Keeping dreams alive, 1999, heroes"}
-/>
-
-**时刻**
-
-<AppleMusicQuote region="us" songId="1381582728" quote={"Maybe it's 6:45"} />
-
-保留专有名词与单词中固有的变音符号或重音记号。穿插其他语种的段落保持原文，并遵循该语言自身的书写规则。
-
 ## 重复的歌词
 
 重复出现的单词和整行歌词均须完整写出。不要用「重复」等说明文字代替副歌，也不要想当然地认为后续副歌的词句完全相同。
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={`Please, please, please (Please)
 Please, please, please (Please)
 Please, please, please (Please, please)`}
@@ -501,6 +312,8 @@ Ha, ah`}
 引用单个语气词时这样写：
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={'My brain goes, "ah"'}
   incorrect={'My brain goes, "ahhhh"'}
   source={{ region: "us", songId: "1694386828" }}
@@ -512,7 +325,7 @@ Ha, ah`}
 
 人声经过制作处理、只剩音色不剩词义的，一律不转写。切碎、倒放、变调、滤波之后当成器乐铺底的人声，没有唱出任何可写的词；延迟和混响的尾音也只是同一句还在响，不是新的一句。要记录的是歌手唱了什么，不是后期对这段人声做了什么。
 
-判断依据是听感，不是制作手法。处理过的人声只要还能听清词，照样写进正文；单独录制的重复声部属于[和声](#和声)，不算音效。唱断的词也是演唱的一部分，按[连字符与中断](#连字符与中断)的写法保留。
+判断依据是听感，不是制作手法。处理过的人声只要还能听清词，照样写进正文；单独录制的重复声部属于[和声](#和声)，不算音效。唱断的词也是演唱的一部分，按[连字符与中断](./punctuation.zh-CN.mdx#连字符与中断)的写法保留。
 
 ## 念白
 
@@ -535,6 +348,8 @@ Ha, ah`}
 词能听清且未经处理时：
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={"'Cause you only listen to your fucking friends"}
   incorrect={"'Cause you only listen to your ****ing friends"}
   source={{ region: "us", songId: "1564531202" }}
@@ -543,6 +358,8 @@ Ha, ah`}
 录音对某个词做了消音、静音或其他处理时，整个词都用星号代替，不要留下一部分字母：
 
 <CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
   correct={"Fuckin' with you feel like jail, ****"}
   incorrect={"Fuckin' with you feel like jail, b****"}
   source={{ region: "us", songId: "1574004703" }}

@@ -1,0 +1,83 @@
+---
+title: Punctuation
+description: Why a Chinese lyric carries almost none, and the few marks that stay
+---
+
+A Chinese lyric line carries almost no punctuation. This page covers the few marks that stay; [Spacing](./spacing.mdx) covers the space that does the rest of the work.
+
+## Leave the marks out
+
+Do not end a line with `。`, and do not separate phrases inside a line with `，`, `、`, `；`, or `：`. The [space](./spacing.mdx) does that work.
+
+<CodeComparison
+  correct={`我曾懷疑我 走在沙漠中
+從不結果 無論種什麼夢`}
+  incorrect={`我曾懷疑我，走在沙漠中。
+從不結果，無論種什麼夢。`}
+  source={{ region: "tw", songId: "820292356" }}
+/>
+
+Three marks stay, because each carries meaning a space cannot: corner brackets around a quotation, parentheses around a backing phrase, and whatever punctuation belongs to an embedded Latin word.
+
+## Quotation brackets
+
+Use corner brackets `「」` for words quoted inside the lyric. Do not use straight or curly quotation marks, and do not wrap a whole line in brackets because it is sung by a character.
+
+<AppleMusicQuote
+  region="tw"
+  songId="1478107502"
+  quote={"我的重聽 以為你說「繼續」"}
+/>
+
+Keep a quotation open across line breaks until the quoted passage ends. Use `『』` only for a quotation nested inside another quotation.
+
+## Parentheses
+
+Use half-width parentheses `(` `)` for a backing phrase in a line-synced lyric, and keep them tight against the text inside. See [Background vocals](./text.mdx#background-vocals).
+
+## Marks that belong to Latin text
+
+Keep the apostrophes, commas, hyphens, and periods that belong to an embedded English phrase. They are part of the spelling of those words, not punctuation applied to the Chinese line. See [Latin script inside a Chinese line](./spacing.mdx#latin-script-inside-a-chinese-line) for the spaces around the run.
+
+<AppleMusicQuote
+  region="tw"
+  songId="905226305"
+  quote={"Ah, ooh-whoa (我懷念的)"}
+/>
+
+## Questions take no question mark
+
+A Chinese question is marked by a particle or by word order, so the mark adds nothing. Write the particle and stop.
+
+<CodeComparison
+  correct={"妳還在想著他嗎"}
+  incorrect={"妳還在想著他嗎？"}
+  source={{ region: "tw", songId: "160857031" }}
+/>
+
+<AppleMusicQuote
+  region="tw"
+  songId="1073025443"
+  quote={"走也罷 留也罷 錯了嗎"}
+/>
+
+The same applies to the other question particles, `呢` and `吧`, and to a question built from a question word such as `誰`, `甚麼`, or `點解`.
+
+<AppleMusicQuote
+  region="tw"
+  songId="1158763996"
+  quote={`然後呢
+我該心安或是 心痛呢`}
+/>
+
+A question can also be built by repeating a verb around `不`, with no particle and no question word at all. `是不是` is the pattern that makes this line a question, and it takes no mark either:
+
+<AppleMusicQuote
+  region="tw"
+  songId="165274273"
+  quote={"是不是我又做錯了什麼"}
+/>
+
+## Marks that add nothing
+
+Do not add an exclamation mark for a shouted line, and do not add an ellipsis for a held note or a fade. The recording carries both.

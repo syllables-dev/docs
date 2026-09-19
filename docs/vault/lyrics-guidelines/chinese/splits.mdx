@@ -1,9 +1,9 @@
 ---
 title: Line and syllable splits
-description: Where to break a line, where to put a space inside one, and how to time characters
+description: Where to break a line, and why a character is never split or grouped
 ---
 
-This page covers three decisions: where a line ends, where a space falls inside a line, and which characters may share a timed interval.
+This page covers two decisions: where a line ends, and which characters may share a timed interval. For the space that divides phrases inside a line, see [Spacing](./spacing.mdx).
 
 A line sync only needs a start and an end for each line. A word sync needs a start and an end for every timed unit inside it. In Chinese that unit is the character, because one character is one syllable, and a character is never divided further.
 
@@ -99,40 +99,6 @@ For line-synced lyrics, place a short backing phrase in parentheses after the as
 />
 
 The backing phrase answers the lead rather than completing it, and it keeps its own internal spacing.
-
-## The space inside a line
-
-A space inside a Chinese lyric line marks a boundary between two sung phrases that belong to the same line. It does the work a comma does in English prose, and it is the only mark Chinese lyrics use for it. About half of all lines contain one.
-
-Aim for two phrases in a line, divided by one space. A line holding a single phrase is common and correct. Three or more phrases is allowed, but it usually means a line break was missed.
-
-Use a space where the singer breathes, rests, or plainly starts a new phrase, and the break is not large enough to justify a new line.
-
-<SyllableChips
-  source={{ region: "tw", songId: "183919743" }}
-  ttml={`<p begin="1:06.138" end="1:11.949" itunes:key="L5" ttm:agent="v1">最美的願望 一定最瘋狂</p>`}
-/>
-
-The singer stops after `願望` and starts again at `一定`, so the space goes there. No other boundary in the line gets one.
-
-A space does not require a silence. It can also mark a phrase boundary the singer moves straight through, and the spacing then tells the reader where the phrases divide.
-
-<SyllableChips
-  source={{ region: "hk", songId: "539838976" }}
-  ttml={`<p begin="19.239" end="25.720" itunes:key="L1" ttm:agent="v1">今天我 寒夜裡看雪飄過</p>`}
-/>
-
-Do not put a space at every grammatical junction. A line with a space between each two-character word is harder to read than one with none, and it tells the reader nothing about the performance.
-
-<CodeComparison
-  correctLabel="Prefer"
-  incorrectLabel="Avoid"
-  correct={"過去多少 快樂記憶"}
-  incorrect={"過去 多少 快樂 記憶"}
-  source={{ region: "hk", songId: "892682436" }}
-/>
-
-For the mechanics of writing the space, see [Spacing](./text.mdx#spacing).
 
 ## Syllable splits
 
@@ -234,7 +200,7 @@ The characters around it follow the Chinese rule as usual, one interval each:
 
 `Ba` and `by` are identical on both sides. Only the Chinese characters change, because the two scripts are split by different rules in the same line.
 
-The spaces around a Latin run are [script spacing](./text.mdx#latin-script-inside-a-chinese-line), not phrase boundaries. Do not read them as places the singer breathed, and do not add or remove one to signal a split.
+The spaces around a Latin run are [script spacing](./spacing.mdx#latin-script-inside-a-chinese-line), not phrase boundaries. Do not read them as places the singer breathed, and do not add or remove one to signal a split.
 
 ### Check the whole song
 

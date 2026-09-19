@@ -1,0 +1,53 @@
+---
+title: Spacing
+description: Spaces between words and around punctuation, look-alike space characters, and how numbers are written
+---
+
+This page covers the spaces themselves. [Text](./text.mdx) covers the words and [Punctuation](./punctuation.mdx) covers the marks.
+
+## Words and punctuation
+
+Use one space between words. Put a space after a comma, question mark, or exclamation point when another word follows. Do not put a space before those marks or immediately inside parentheses and quotation marks.
+
+<CodeComparison
+  correct={"It's me, hi (Hi)"}
+  incorrect={"It's me ,hi ( Hi )"}
+  source={{ region: "us", songId: "1650841515" }}
+/>
+
+### Use a plain space, not a look-alike
+
+A non-breaking space (U+00A0) and an ideographic space (U+3000) look like a space and are not one. A zero-width space (U+200B) is invisible in every editor and still ends up in the file. All three survive a copy and paste out of a word processor or a lyric website.
+
+```text
+U+0020 correct
+U+00A0 no-break space
+U+3000 ideographic space
+U+200B zero-width space
+```
+
+Check for them before delivery. A line that looks right and sorts, searches, or splits wrongly usually contains one.
+
+## Numbers
+
+Write quantities in words when that makes the sung phrase clear. Use familiar numeric forms for years, clock times, and names that contain digits. Keep the treatment consistent for repeated references to the same number.
+
+**Quantities in words**
+
+<AppleMusicQuote
+  region="us"
+  songId="1491987858"
+  quote={"Nineteen, but you act twenty-five now"}
+/>
+
+**A year**
+
+<AppleMusicQuote
+  region="us"
+  songId="1621817894"
+  quote={"Keeping dreams alive, 1999, heroes"}
+/>
+
+**A clock time**
+
+<AppleMusicQuote region="us" songId="1381582728" quote={"Maybe it's 6:45"} />

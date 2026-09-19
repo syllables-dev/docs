@@ -1,0 +1,175 @@
+---
+title: 标点
+description: 行尾、逗号、问句、引语，以及唱断时该用哪种符号收尾
+---
+
+标点用来让意思更清楚，但不改变演唱本身。本页讲标点符号本身，符号周围的空格参见[空格](./spacing.zh-CN.mdx)。
+
+## 行尾
+
+歌词行末不加句号和逗号，整句唱完了也一样。问号、感叹号以及句末的闭引号，在语义需要时仍须保留。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={`When you said you were passing through
+Was I even on your way?`}
+  incorrect={`When you said you were passing through,
+Was I even on your way.`}
+  source={{ region: "us", songId: "1564531202" }}
+/>
+
+专有名词或缩写本身自带的标点（如 Mr. 或 St.）应予保留，但行末不要再额外追加表示句末的句号。
+
+## 逗号
+
+行内使用逗号分隔并列成分、隔开称呼语或理顺从句结构。不要在每次换气或每个节奏重音处都加逗号。
+
+**称呼语**
+
+<AppleMusicQuote
+  region="us"
+  songId="1698723208"
+  quote={"So, baby, let's get freaky, get kinky"}
+/>
+
+**并列成分**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440827631"
+  quote={"His pills, his hands, his jeans"}
+/>
+
+**前置状语**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440620921"
+  quote={"When you come around, I get paralyzed"}
+/>
+
+不要因为演唱者在主谓语之间有所停顿，就强行在主语与谓语之间插入逗号。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct="The lights are on, but there's no one home"
+  incorrect="The lights, are on, but there's no one home"
+  source={{ region: "us", songId: "91989806" }}
+/>
+
+## 问号与感叹号
+
+问号加在疑问结束的地方。如果问句延续到下一行，就等到那一行再收尾。参见[跨行的疑问句](./splits.zh-CN.mdx#跨行的疑问句)。
+
+问号也可以出现在行中，后面紧跟下一层意思：
+
+<AppleMusicQuote
+  region="us"
+  songId="1752214923"
+  quote={"Is it that sweet? I guess so"}
+/>
+
+句中含有疑问词不等于它就是问句。作为陈述句一部分的间接疑问从句无需加问号。
+
+**直接疑问句**
+
+<AppleMusicQuote
+  region="us"
+  songId="1696819855"
+  quote={"What was I made for?"}
+/>
+
+**含间接疑问的陈述句**
+
+<AppleMusicQuote
+  region="us"
+  songId="1696819855"
+  quote={"What I was made for"}
+/>
+
+这两行在同一首歌中先后相邻，区别仅在语序。是否使用问号取决于语法结构，不能看见疑问词就加。
+
+感叹句使用感叹号。不要靠连串重复标点来表示音量或强调。
+
+## 引号
+
+歌词中引用说话内容时使用双引号。不要将整段歌词都套在引号里。
+
+<AppleMusicQuote
+  region="us"
+  songId="1468058171"
+  quote={"Said, \"I'm fine,\" but it wasn't true"}
+/>
+
+引语跨行时，引号一直保持开启，直到引用内容结束才收尾。如果疑问的是引语本身，问号放在后引号内侧。
+
+<AppleMusicQuote
+  region="us"
+  songId="269573364"
+  quote={`I said, "Don't mind, but what do you mean I am the one
+Who will dance on the floor in the round?"`}
+/>
+
+## 连字符与中断
+
+常规复合词、词首重复的发音片段，以及逐字母拼读的词，均使用连字符连接。单词内部的连字符两侧不加空格。
+
+**复合词**
+
+<AppleMusicQuote
+  region="us"
+  songId="1440862803"
+  quote={"Hope is a four-letter word"}
+/>
+
+**词首重复**
+
+<AppleMusicQuote region="us" songId="1440818663" quote={"We're c-coming out"} />
+
+**逐字母拼读**
+
+<AppleMusicQuote region="us" songId="1698723221" quote={"H-O-T T-O G-O"} />
+
+逐字母拼读的各个单词之间要保留空格。保留歌手实际唱出的字母，即使拼写不符合常规也原样记录。
+
+句子中断时用哪个符号，取决于断在哪里：断的是这个词，还是整句话。词只唱了一半不用破折号，整词唱完了句子才断也不用连字符。
+
+### 连字符
+
+单词唱到一半戛然而止，在末尾加一个连字符。只写唱出来的部分，不要替歌手补全没唱完的字母。
+
+<AppleMusicQuote
+  region="us"
+  songId="1411629089"
+  quote={"Thunder, thunder, thun-"}
+/>
+
+歌手把词唱断又重起一遍时，连字符会紧挨着逗号。两个符号都要留：连字符属于没唱完的那个词，逗号隔开的是重起的部分。
+
+<AppleMusicQuote
+  region="us"
+  songId="1556175647"
+  quote={"I don't de-, I don't de-, I don't deserve you tonight"}
+/>
+
+主唱先唱了两次 `de-`，第三次才唱完整的 `deserve`，所以前两次各带一个连字符。
+
+### 破折号
+
+整个词唱完了，断的是这句话，这时用破折号。歌曲淡出或者收尾处戛然而止，多是这种情况。
+
+<AppleMusicQuote region="us" songId="269573364" quote={"Billie Jean is—"} />
+
+<AppleMusicQuote
+  region="us"
+  songId="974485805"
+  quote={"I'm fallin', so I'm takin' my time on my—"}
+/>
+
+这两行结尾的词都是完整的，所以都不加连字符。
+
+### 不加符号
+
+不要使用省略号表示换气、间奏或者句子跨行延续。单纯拖长音不需要额外添加字母或连字符。

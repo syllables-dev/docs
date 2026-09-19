@@ -1,9 +1,9 @@
 ---
-title: Text, spacing, and punctuation
-description: Characters, script, spacing, and the few punctuation marks a Chinese lyric uses
+title: Text
+description: Which characters to write, in which script, and which vocal content belongs in the lyric
 ---
 
-Transcribe the characters as performed. A Chinese lyric line carries almost no punctuation: a single space separates one sung phrase from the next, and the characters carry everything else.
+Transcribe the characters as performed. This page covers which characters go in the file; [Spacing](./spacing.mdx) and [Punctuation](./punctuation.mdx) cover how the line is marked up.
 
 This page applies to Mandarin and Cantonese alike. Where the two differ, the difference is in which characters the lyric uses, not in how the line is written.
 
@@ -97,171 +97,6 @@ That line uses `妳` for the woman being addressed and `他` for the man she is 
 
 Keep the choice consistent within a song unless the lyric deliberately switches.
 
-## Spacing
-
-A single space separates two sung phrases inside a line. It is the only separator a Chinese lyric line uses.
-
-- Use one space, never two.
-- Use a plain space, U+0020. See [Check for look-alikes](#check-for-look-alikes).
-- Do not start or end a line with a space.
-- Do not space out characters that belong to one continuous phrase.
-
-<CodeComparison
-  correct={"最美的願望 一定最瘋狂"}
-  incorrect={`最美的願望  一定最瘋狂
-最 美 的 願 望 一定最瘋狂`}
-  source={{ region: "tw", songId: "183919743" }}
-/>
-
-For where the space belongs and how many a line should hold, see [The space inside a line](./splits.mdx#the-space-inside-a-line).
-
-### Latin script inside a Chinese line
-
-Put a space on both sides of every run of Latin text, and capitalize its first word. This applies wherever the scripts meet, including a single borrowed word in the middle of a Chinese clause.
-
-Chinese needs no space between words, so a Latin run pressed against the characters has no boundary at all and is hard to pick out at lyric sizes. The space supplies the boundary the script does not.
-
-<AppleMusicQuote
-  region="tw"
-  songId="165274582"
-  quote={"當初的那個少年 Whoa, whoa"}
-/>
-
-<CodeComparison
-  correct={"想 Follow 每則 IG 不錯過你的蹤跡"}
-  incorrect={"想follow每則IG 不錯過你的蹤跡"}
-  source={{ region: "tw", songId: "1486136137" }}
-/>
-
-<CodeComparison
-  correct={"緊緊相依的心如何 Say goodbye"}
-  incorrect={"緊緊相依的心如何say goodbye"}
-  source={{ region: "tw", songId: "218877967" }}
-/>
-
-Apple Music writes both of those without the spaces, which is why they appear here as the version to correct rather than the version to copy.
-
-Drop the space only where the run already sits at the start or the end of the line. A run that begins a line takes no space before it, and a run that ends one takes none after it.
-
-Capitalize the first word of each run and leave the rest to English rules. `Say goodbye` capitalizes only `Say`, an acronym such as `IG` keeps its own form, and a proper noun keeps its own capitalization wherever it falls. Apply English rules to any punctuation inside the run, and see the [English guidelines](../english/text.mdx) for the details.
-
-A space between the scripts is not a phrase boundary. A line can carry both, and the spaces around a Latin run do not tell the reader that the singer breathed there.
-
-## Numbers
-
-Write numbers the way the lyric writes them. Chinese numerals and digits are both correct, and the choice usually follows whether the number is read as a word or as a string of figures.
-
-Chinese numerals for an ordinary quantity:
-
-<AppleMusicQuote
-  region="tw"
-  songId="163296591"
-  quote={"二十四小時沒有分開過"}
-/>
-
-Digits where the lyric treats the number as a figure:
-
-<AppleMusicQuote
-  region="hk"
-  songId="201526846"
-  quote={"明明刨正23 為何彈出41"}
-/>
-
-<AppleMusicQuote
-  region="hk"
-  songId="1571428113"
-  quote={"同我跳8拍 不如大膽數到9"}
-/>
-
-Digits do not take the spaces that [Latin text](#latin-script-inside-a-chinese-line) does. Write them tight against the characters around them, and keep the treatment consistent for repeated references to the same number.
-
-<CodeComparison
-  correctLabel="Prefer"
-  incorrectLabel="Avoid"
-  correct={"同我跳8拍 不如大膽數到9"}
-  incorrect={"同我跳 8 拍 不如大膽數到 9"}
-  source={{ region: "hk", songId: "1571428113" }}
-/>
-
-A digit is legible against a Chinese character in a way a lowercase Latin word is not, so it needs no boundary. A number written out in Latin letters, such as `One` or `Twenty-four`, is a Latin run and takes the spaces.
-
-## Punctuation
-
-Leave punctuation out. Do not end a line with `。`, and do not separate phrases inside a line with `，`, `、`, `；`, or `：`. The space does that work.
-
-<CodeComparison
-  correct={`我曾懷疑我 走在沙漠中
-從不結果 無論種什麼夢`}
-  incorrect={`我曾懷疑我，走在沙漠中。
-從不結果，無論種什麼夢。`}
-  source={{ region: "tw", songId: "820292356" }}
-/>
-
-Three marks stay, because each carries meaning a space cannot: corner brackets around a quotation, parentheses around a backing phrase, and whatever punctuation belongs to an embedded Latin word.
-
-### Quotation brackets
-
-Use corner brackets `「」` for words quoted inside the lyric. Do not use straight or curly quotation marks, and do not wrap a whole line in brackets because it is sung by a character.
-
-<AppleMusicQuote
-  region="tw"
-  songId="1478107502"
-  quote={"我的重聽 以為你說「繼續」"}
-/>
-
-Keep a quotation open across line breaks until the quoted passage ends. Use `『』` only for a quotation nested inside another quotation.
-
-### Parentheses
-
-Use half-width parentheses `(` `)` for a backing phrase in a line-synced lyric, and keep them tight against the text inside. See [Background vocals](#background-vocals).
-
-### Marks that belong to Latin text
-
-Keep the apostrophes, commas, hyphens, and periods that belong to an embedded English phrase. They are part of the spelling of those words, not punctuation applied to the Chinese line.
-
-<AppleMusicQuote
-  region="tw"
-  songId="905226305"
-  quote={"Ah, ooh-whoa (我懷念的)"}
-/>
-
-### Questions take no question mark
-
-A Chinese question is marked by a particle or by word order, so the mark adds nothing. Write the particle and stop.
-
-<CodeComparison
-  correct={"妳還在想著他嗎"}
-  incorrect={"妳還在想著他嗎？"}
-  source={{ region: "tw", songId: "160857031" }}
-/>
-
-<AppleMusicQuote
-  region="tw"
-  songId="1073025443"
-  quote={"走也罷 留也罷 錯了嗎"}
-/>
-
-The same applies to the other question particles, `呢` and `吧`, and to a question built from a question word such as `誰`, `甚麼`, or `點解`.
-
-<AppleMusicQuote
-  region="tw"
-  songId="1158763996"
-  quote={`然後呢
-我該心安或是 心痛呢`}
-/>
-
-A question can also be built by repeating a verb around `不`, with no particle and no question word at all. `是不是` is the pattern that makes this line a question, and it takes no mark either:
-
-<AppleMusicQuote
-  region="tw"
-  songId="165274273"
-  quote={"是不是我又做錯了什麼"}
-/>
-
-### Marks that add nothing
-
-Do not add an exclamation mark for a shouted line, and do not add an ellipsis for a held note or a fade. The recording carries both.
-
 ## Repeated characters
 
 Write every repeat in full. Do not collapse a repeated character into a count, and do not join repeats with a hyphen or an enumeration comma. Repetition of a whole character is written as repetition of the character.
@@ -340,11 +175,9 @@ Match the version of the recording. Transcribe uncensored words in full when the
 
 If the singer performs a replacement word in a clean version, transcribe that word. Do not restore words from the explicit version or add censorship that is absent from the recording.
 
-## Check for look-alikes
+## Check for look-alike characters
 
-Two kinds of invisible substitution survive a copy and paste out of a PDF, a word processor, or a lyric website. Both render correctly and both break search, sorting, romanization, and text-to-speech.
-
-Some characters have a visually identical twin elsewhere in Unicode, and Kangxi radicals are the common case. `⼼` (U+2F3C) and `心` (U+5FC3) render the same way in most fonts, but only the second is the character.
+Some characters have a visually identical twin elsewhere in Unicode, and Kangxi radicals are the common case. `⼼` (U+2F3C) and `心` (U+5FC3) render the same way in most fonts, but only the second is the character. The look-alike survives a copy and paste out of a PDF or an image caption, renders correctly, and breaks search, sorting, romanization, and text-to-speech.
 
 <CodeComparison
   correct={"我發覺心裡有條裂痕"}
@@ -354,13 +187,4 @@ Some characters have a visually identical twin elsewhere in Unicode, and Kangxi 
 
 Those two lines differ only in the third character.
 
-A look-alike space is the same problem in the separator. A non-breaking space (U+00A0) and an ideographic space (U+3000) look like a space and are not one, and a zero-width space (U+200B) is invisible in every editor.
-
-```text
-U+0020 correct
-U+00A0 no-break space
-U+3000 ideographic space
-U+200B zero-width space
-```
-
-Type Chinese text with a standard input method rather than copying glyphs out of an image caption, and check the file before delivery. A line that looks right and sorts, searches, or splits wrongly usually contains one of these.
+Type Chinese text with a standard input method rather than copying glyphs out of an image caption, and check the file before delivery. Spaces have the same problem, covered in [Use a plain space, not a look-alike](./spacing.mdx#use-a-plain-space-not-a-look-alike).

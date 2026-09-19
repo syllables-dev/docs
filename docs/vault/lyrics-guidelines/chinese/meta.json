@@ -1,4 +1,11 @@
 {
   "title": "Chinese",
-  "pages": ["text", "splits", "translation", "romanization"]
+  "pages": [
+    "text",
+    "spacing",
+    "punctuation",
+    "splits",
+    "translation",
+    "romanization"
+  ]
 }
