@@ -1,6 +1,65 @@
 ---
 title: Structure and syntax
-description: How a TTML document is laid out
+description: The shape of an Apple lyrics document.
 ---
 
-TODO
+The root `<tt>` contains a metadata head and a timed body. Body divisions group lyric paragraphs; spans subdivide their text.
+
+## Syntax
+
+```xml
+<tt>
+  <head><metadata>metadata</metadata></head>
+  <body dur="duration">
+    <div begin="start" end="end" itunes:songPart="part">
+      <p begin="start" end="end" itunes:key="key">content</p>
+    </div>
+  </body>
+</tt>
+```
+
+This is a schematic outline. A complete file declares the namespaces used by its elements and attributes.
+
+## Complete example
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<tt xmlns="http://www.w3.org/ns/ttml" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" xmlns:itunes="http://music.apple.com/lyric-ttml-internal" xml:lang="en" itunes:timing="Word">
+  <head>
+    <metadata>
+      <ttm:title>Example</ttm:title>
+      <ttm:agent xml:id="v1" type="person"><ttm:name>Example Singer</ttm:name></ttm:agent>
+    </metadata>
+  </head>
+  <body dur="20.000">
+    <div begin="12.000" end="13.300" itunes:songPart="Verse">
+      <p begin="12.000" end="13.300" itunes:key="L1" ttm:agent="v1"><span begin="12.000" end="12.400">Hel</span><span begin="12.400" end="12.700">lo</span> <span begin="12.700" end="13.300">world</span></p>
+    </div>
+  </body>
+</tt>
+```
+
+The file declares a singer, a verse, one line, and three timed units. The body duration is the song duration; it can extend beyond the final lyric.
+
+## Namespaces
+
+| Namespace | Purpose |
+| --- | --- |
+| `http://www.w3.org/ns/ttml` | Core elements such as `tt`, `body`, `div`, `p`, and `span` |
+| `http://www.w3.org/ns/ttml#metadata` | Metadata such as agents, names, titles, and vocal roles |
+| `http://music.apple.com/lyric-ttml-internal` | Apple's playback extensions |
+| `http://www.w3.org/XML/1998/namespace` | Built-in `xml:lang` and `xml:id` attributes |
+
+Apple metadata commonly declares its own default namespace on `<iTunesMetadata>`. Children such as `<translations>` and `<audio>` then belong to that namespace. Keep the conventional `ttm` and `itunes` prefixes for Apple compatibility; the Apple client looks up several attributes by their qualified names.
+
+## Line keys and XML IDs
+
+`xml:id` identifies an XML element. `itunes:key` identifies a lyric line for parallel tracks. They serve different purposes. A translation's `<text for="L1">` points to `itunes:key="L1"`, not to the line's position or its `xml:id`.
+
+Use distinct line keys and preserve them when reordering lyrics. Changing a key requires updating the corresponding translation and transliteration references.
+
+## Song sections
+
+`itunes:songPart` labels a `<div>`. The Apple client recognizes `Verse`, `Chorus`, `Pre-Chorus`, `Bridge`, `Intro`, `Outro`, `Refrain`, and `Instrumental`, ignoring case when mapping these values. Unknown values have no recognized section kind.
+
+A section label describes song structure. `Instrumental` does not itself instruct the player to show countdown dots; the Apple Music player derives those from timing gaps.

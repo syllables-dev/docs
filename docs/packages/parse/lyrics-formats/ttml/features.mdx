@@ -1,6 +1,65 @@
 ---
-title: Supported features and extensions
-description: What Parse supports, and the extensions it adds
+title: Attribute reference
+description: Apple lyrics elements and attributes.
 ---
 
-TODO
+This reference uses the internal playback vocabulary. See [structure](./structure.mdx) for namespace declarations and [Apple client behavior](./client-behavior.mdx) for defaults and error handling.
+
+## Document and sections
+
+| Element | Attribute | Meaning |
+| --- | --- | --- |
+| `tt` | `xml:lang` | Original lyric language |
+| `tt` | `itunes:timing` | Line or word synchronization; the Apple client otherwise falls back to untimed |
+| `tt` | `itunes:lyricGenId` | Opaque lyric generation ID |
+| `body` | `dur` | Song duration |
+| `div` | `itunes:songPart` | Section label such as `Verse` or `Chorus` |
+| `p` | `itunes:key` | Line key referenced by parallel tracks |
+
+## Timed text
+
+| Attribute | Meaning |
+| --- | --- |
+| `begin` | Absolute start time |
+| `end` | Absolute end time |
+| `xml:id` | XML element identifier |
+| `ttm:agent` | Vocal agent reference |
+| `ttm:role` | Vocal role; `x-bg` marks backing vocals |
+| `itunes:parenthesis="keep"` | Retain parentheses on the relevant text element |
+
+These fields occur on lyric sections, paragraphs, spans, or parallel text as applicable. They are not all meaningful on every XML element.
+
+## People and audio
+
+| Element | Attribute | Meaning |
+| --- | --- | --- |
+| `ttm:agent` | `xml:id` | Referenced vocalist ID |
+| `ttm:agent` | `type` | Agent category stored as a string |
+| `ttm:agent` | `itunes:artistId` | Apple artist ID |
+| `songwriter` | `artistId` | Apple songwriter artist ID, without a prefix |
+| `iTunesMetadata` | `leadingSilence` | Leading silence as a clock value |
+| `audio` | `lyricOffset` | Lyric-time adjustment as a clock value |
+| `audio` | `role` | Audio role; exact value `spatial` identifies spatial audio |
+
+Names are element text: `<ttm:name>` names an agent and `<songwriter>` names a songwriter.
+
+## Parallel tracks
+
+| Element | Attribute | Meaning |
+| --- | --- | --- |
+| `translation` | `xml:lang` | Translation language |
+| `translation` | `type` | `subtitle` or `replacement` |
+| `translation` | `automaticallyCreated` | Generated-text flag |
+| `transliteration` | `xml:lang` | Pronunciation language, script, and optional variant |
+| `transliteration` | `automaticallyCreated` | Generated-text flag |
+| `text` | `for` | Original line's `itunes:key` |
+
+Parallel `<text>` entries can also carry timed text structure. Their reference is `for`, not an `itunes:key` copied onto the parallel entry.
+
+## Fields that do not mean the same thing
+
+- `xml:id` is an XML identity; `itunes:key` links lyric lines to parallel text.
+- `ttm:agent` names a singer; `ttm:role="x-bg"` identifies a backing vocal.
+- `itunes:songPart="Instrumental"` labels a section; it does not encode the player's countdown animation.
+- `automaticallyCreated` describes supplied text; it does not ask the client to generate a translation.
+- `audio role="spatial"` identifies an audio role; `spatial="true"` is not supported.

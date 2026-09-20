@@ -1,6 +1,52 @@
 ---
-title: Timing representation
-description: How timings are expressed and resolved
+title: Timing
+description: Time values and synchronization modes.
 ---
 
-TODO
+Apple playback TTML uses absolute audio times for `begin` and `end`. A nested span's start is not relative to its parent paragraph.
+
+## Syntax
+
+```xml
+<p begin="start" end="end">content</p>
+```
+
+Time values use `[minutes:]seconds[.fraction]`, such as `12.400` or `1:12.400`. `end` is an absolute endpoint; `dur` expresses a duration.
+
+## Example
+
+```xml
+<p begin="1:12.000" end="1:13.300">Hello world</p>
+```
+
+This line starts at 72 seconds and ends at 73.3 seconds. Its duration is 1.3 seconds.
+
+## Line and word timing
+
+The root's `itunes:timing` selects the synchronization mode. `Line` uses paragraph timing. `Word` carries finer intervals on words or syllables. Apple's parser recognizes these values without regard to case.
+
+```xml
+<p begin="12.000" end="13.300"><span begin="12.000" end="12.700">Hello</span> <span begin="12.700" end="13.300">world</span></p>
+```
+
+Under word timing, the player can highlight `Hello` and `world` separately. Each can be subdivided further with nested or adjacent spans. Timing boundaries do not create spaces.
+
+Apple's parser treats missing or unrecognized `itunes:timing` as untimed. Parse instead requires a recognized declaration and uses `None` for its explicit static mode. `None` is not a separately recognized keyword in Apple's parser; it reaches that client's untimed fallback.
+
+## Duration, leading silence, and offsets
+
+`<body dur="3:20.000">` describes the song duration. `<iTunesMetadata leadingSilence="12.000">` records leading silence. `<audio lyricOffset="0.250"/>` carries a lyric-time adjustment. These all use clock values, not integer millisecond counts.
+
+Keep the stored timing distinct from playback adjustments. Parse applies its supported source offset when reading and exposes integer milliseconds in the document model. Adding it again would shift the lyrics twice.
+
+## Gaps and overlaps
+
+Explicit ends preserve silence between lines and allow overlapping vocals. A line need not end exactly when the next begins. Author intervals that describe the recording instead of stretching them to remove gaps.
+
+The Apple Music player creates instrumental-break UI for gaps strictly greater than seven seconds. This is client behavior, not a TTML validity rule or an attribute that authors need to add.
+
+## Clock compatibility
+
+Apple's parser reads the last clock component as seconds and the preceding component as integer minutes. It does not interpret an hours field: `01:02:03` becomes 123 seconds, not 3723. Fractional minutes are truncated. Use ordinary minute/second values rather than relying on these quirks.
+
+Parse validates time syntax more strictly and uses integer milliseconds. Apple's acceptance of malformed or negative values does not imply that Parse accepts them.
