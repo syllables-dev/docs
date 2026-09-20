@@ -1,0 +1,115 @@
+---
+title: 认识 TTML
+description: 歌词文件如何呈现文本、断行与歌曲分段
+---
+
+TTML 是 Timed Text Markup Language（定时文本标记语言）的缩写。它是一种将文本与结构和时间轴紧密结合的 XML 格式。歌词播放器利用这些信息排版歌词行、逐词高亮，并区分不同的演唱声部。
+
+本指南介绍使用 Apple Music TTML 播放格式在 Vault 中创建同步歌词所需的基础知识。完整的格式规范、属性说明与播放器行为参见 [TTML 参考手册](../../packages/parse/lyrics-formats/ttml/index.mdx)。
+
+## 从录音开始
+
+1. 参考[规范](../guidelines/index.mdx)整理歌词文本与断行。
+2. 将歌词行归入歌曲的各个段落，并标注段落类型。
+3. 对照录音为每一行标注起止时间戳。
+4. 制作逐词同步歌词时，为每个单词或音节添加时间戳。
+5. 分配演唱声部，必要时单列伴唱和声。
+6. 配合同一版本录音回放文件，仔细核对用词、停顿、换人演唱与逐词高亮。
+
+## 读懂歌词文档
+
+TTML 文档由一个根元素、存放元数据的 head，以及存放歌词正文的 body 组成。以下虚构示例展示了一个包含两行带时间戳歌词的主歌段落：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<tt xmlns="http://www.w3.org/ns/ttml"
+    xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
+    xmlns:itunes="http://music.apple.com/lyric-ttml-internal"
+    xml:lang="en" itunes:timing="Line">
+  <head>
+    <metadata>
+      <ttm:title>Example song</ttm:title>
+    </metadata>
+  </head>
+  <body dur="00:20.000">
+    <div begin="00:00.000" end="00:20.000" itunes:songPart="Verse">
+      <p begin="00:10.000" end="00:12.000">I left my coat</p>
+      <p begin="00:12.000" end="00:15.000">By the open door</p>
+    </div>
+  </body>
+</tt>
+```
+
+第一行起于 10 秒、止于 12 秒。第二行起于 12 秒、止于 15 秒。
+
+## 认识各元素
+
+| 元素 | 用途 |
+| --- | --- |
+| `<tt>` | 文档根元素，声明命名空间与语言 |
+| `<head>` | 存放元数据，不包含显示的歌词行 |
+| `<metadata>` | 包含标题、表演者声明等信息 |
+| `<body>` | 包含歌曲的歌词内容 |
+| `<div>` | 将歌词行分组为段落或歌曲分段 |
+| `<p>` | 代表一行主唱歌词 |
+| `<span>` | 行内的文本分组，包含带有时间戳的单词、音节或伴唱和声 |
+
+元素可以嵌套包含其他元素。一个分段包含多行歌词，一行歌词内部可以包含多个带有时间戳的 span。编辑文件时务必保持这种层级结构完整。
+
+属性用于描述元素。时间属性标明起止时刻，角色属性标明声部的具体职能。XML 标签与属性本身并不是演唱的歌词。
+
+## 使用明确的歌词行
+
+每一行主唱歌词均使用单独的 `<p>` 元素。使用 `<div>` 元素对相关歌词行分组。Apple 要求使用独立的段落元素表示歌词断行，不得使用 `<br>` 标签。
+
+```xml
+<div>
+  <p>I left my coat</p>
+  <p>By the open door</p>
+</div>
+```
+
+在 XML 中添加代码缩进或换行，并不会在播放器中产生换行效果。显示的歌词换行完全由元素层级结构决定。
+
+## 保留文本与空格
+
+单词之间的空格属于文本本身。每个空格都应包含在其前面的单词 span 内部，由多个 span 组成的同一个单词内部不得插入空格。参见[逐词与逐音节计时](./timing.mdx#逐词与逐音节计时)。
+
+在 XML 中具有特殊含义的字符必须转义。例如，歌词中的 `&` 符号必须写为实体字符：
+
+```xml
+<p>You &amp; me</p>
+```
+
+播放器中呈现为：
+
+```text
+You & me
+```
+
+## 学习后续步骤
+
+<Cards>
+  <Card
+    href="/zh-CN/vault/ttml/sections"
+    title="歌曲分段"
+    description="将歌词行归入主歌、副歌等歌曲各个段落。"
+  />
+  <Card
+    href="/zh-CN/vault/ttml/timing"
+    title="时间标注"
+    description="为歌词行、单词与音节添加时间戳。"
+  />
+  <Card
+    href="/zh-CN/vault/ttml/agents"
+    title="演唱者与声部"
+    description="指定演唱与念白人员，区分合唱与多声部。"
+  />
+  <Card
+    href="/zh-CN/vault/ttml/background-vocals"
+    title="和声"
+    description="为伴唱副线分配独立文本与时间轴。"
+  />
+</Cards>
+
+[Parse TTML 参考手册](../../packages/parse/lyrics-formats/ttml/index.mdx)涵盖本入门指南之外的详细内容，包括翻译、发音轨道、元数据与 Apple 客户端行为。其[结构规范页面](../../packages/parse/lyrics-formats/ttml/structure.mdx)解释了命名空间，以及 Apple 提交流程与播放格式的差异。
