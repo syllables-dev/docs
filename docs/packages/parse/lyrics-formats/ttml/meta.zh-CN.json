@@ -1,4 +1,15 @@
 {
   "title": "TTML",
-  "pages": ["structure", "timing", "features"]
+  "pages": [
+    "structure",
+    "timing",
+    "agents",
+    "background-vocals",
+    "translations",
+    "transliterations",
+    "metadata",
+    "text",
+    "features",
+    "client-behavior"
+  ]
 }

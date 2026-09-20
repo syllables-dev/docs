@@ -1,0 +1,54 @@
+---
+title: Text and whitespace
+description: Text boundaries inside timed elements.
+---
+
+XML markup divides the text, but does not automatically add spaces between its elements. The characters between tags remain part of the lyric content.
+
+## Syntax
+
+```xml
+<span begin="start" end="end">content</span> <span begin="start" end="end">content</span>
+```
+
+The literal space between these spans separates their displayed words. Removing it joins the content.
+
+## Example
+
+```xml
+<p begin="12.000" end="13.300"><span begin="12.000" end="12.400">Hel</span><span begin="12.400" end="12.700">lo</span> <span begin="12.700" end="13.300">world</span></p>
+```
+
+The first pair is adjacent and displays `Hello`. The following space produces `Hello world`. Do not insert a space after every closing span or trim every text node independently.
+
+## Nested spans
+
+A span can group other spans. Its ordered content can mix literal strings and timed children:
+
+```xml
+<span begin="12.000" end="12.700"><span begin="12.000" end="12.400">Hel</span><span begin="12.400" end="12.700">lo</span></span>
+```
+
+The outer span represents the complete word; the inner spans retain finer intervals. Flattening this to one string discards that hierarchy.
+
+## Formatting whitespace
+
+Keep paragraph content on one source line when reformatting XML. Newlines and indentation inside a lyric paragraph can become text. An XML formatter that preserves element order can still change the visible lyric or its character ranges.
+
+Apple's parser accumulates text without general whitespace collapsing. Its backing-vocal cleanup is a specific exception, described under [backing vocals](./background-vocals.mdx). It does not implement `xml:space` as a separate whitespace-policy switch.
+
+## Entities and CDATA
+
+Use XML escaping for reserved characters: `&amp;` for an ampersand and `&lt;` for a less-than sign. Numeric character references also represent text. Decoding happens before Apple assembles the lyric's text ranges.
+
+Use XML entity escaping instead of CDATA. The Apple client ignores CDATA content.
+
+## Unicode and character ranges
+
+Apple's parser does not normalize Unicode to NFC or NFD. Visually identical spellings can therefore have different character counts. Preserve the source representation when round-tripping timed text.
+
+Apple's text ranges use UTF-16 code units, not bytes, Unicode scalar counts, or grapheme counts. An emoji outside the Basic Multilingual Plane occupies two code units. A combining sequence can occupy several while displaying as one glyph. These ranges describe the text; they are not separate TTML timing attributes.
+
+## Direction
+
+The Apple Music player derives left-to-right or right-to-left layout from rendered text. It does not select direction solely from the document's `xml:lang`. A transliteration can therefore have a different direction from its original line.

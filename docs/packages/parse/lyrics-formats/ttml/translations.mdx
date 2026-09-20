@@ -1,0 +1,58 @@
+---
+title: Translations
+description: Alternate-language lyric tracks.
+---
+
+Translations live in the head's Apple metadata. Each track declares a language and contains `<text>` entries that reference original lyric lines.
+
+## Syntax
+
+```xml
+<translations>
+  <translation xml:lang="language" type="subtitle">
+    <text for="lineKey">translated content</text>
+  </translation>
+</translations>
+```
+
+The container belongs inside `<iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal">`. The `for` value matches an original paragraph's `itunes:key`.
+
+## Example
+
+Inside `<iTunesMetadata>`:
+
+```xml
+<translations>
+  <translation xml:lang="fr" type="subtitle" automaticallyCreated="false">
+    <text for="L1">Bonjour le monde</text>
+  </translation>
+</translations>
+```
+
+In the body:
+
+```xml
+<p begin="12.000" end="13.300" itunes:key="L1">Hello world</p>
+```
+
+The reference links these lines without relying on their array positions. Reordering the body does not change the association as long as the key remains stable.
+
+## Subtitle and replacement
+
+`type="subtitle"` provides text alongside the original. `type="replacement"` provides alternate text to use instead of it. These are presentation kinds, not different reference mechanisms.
+
+Chinese script alternatives can be carried as translation tracks, including `zh-Hant` and `zh-Hans`. Do not assume every translation changes the spoken language.
+
+## Language and generated text
+
+`xml:lang` identifies this track's language. Apple's parser reads language on the root and on translation/transliteration containers, not on each lyric paragraph or span. A missing track language causes the track to be dropped by that parser.
+
+`automaticallyCreated="true"` marks generated text. The value is case-sensitive: `True` is not treated as `true`. This flag describes the supplied track; it is not a request for the player to translate the lyrics.
+
+## Structured translated lines
+
+A `<text>` entry can retain timing, spans, agent assignments, and backing vocals. The Apple model represents parallel text as a full line, not just a string. Simple subtitle translations can use the plain-text form shown above; richer input should retain its structure when edited.
+
+## Duplicate keys and tracks
+
+The Apple client stores entries in a map keyed by `for`, so duplicate entries for one line can overwrite earlier ones. Its translation-language map also keeps the last track for a duplicate language. Use unique keys and one unambiguous track for each language rather than depending on overwrite order.

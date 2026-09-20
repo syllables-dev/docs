@@ -1,0 +1,42 @@
+---
+title: Backing vocals
+description: Parallel vocals within a lyric line.
+---
+
+Apple marks backing vocals with `ttm:role="x-bg"`. A containing span groups the backing text, and nested spans can time its syllables independently of the lead vocal.
+
+## Syntax
+
+```xml
+<p begin="start" end="end">primary content<span ttm:role="x-bg" begin="start" end="end">(backing content)</span></p>
+```
+
+## Example
+
+```xml
+<p begin="12.000" end="14.000" itunes:key="L1"><span begin="12.000" end="13.000">Hello</span><span ttm:role="x-bg" begin="12.500" end="14.000">(<span begin="12.500" end="14.000">Oh</span>)</span></p>
+```
+
+The primary word and backing vocal overlap. Their intervals remain independent even though they belong to one paragraph.
+
+## Parentheses
+
+Backing text commonly includes wrapping parentheses. In the Apple client, the backing-vocal path removes them from the displayed backing text unless `itunes:parenthesis="keep"` is set on the relevant text element.
+
+```xml
+<span ttm:role="x-bg" itunes:parenthesis="keep" begin="12.500" end="14.000">(Oh)</span>
+```
+
+The `keep` value is case-sensitive. Apple's stripping path trims trailing spaces and tabs before checking the closing parenthesis, but does not trim newlines in the same way. Avoid adding formatting whitespace inside lyric content.
+
+Parentheses alone are not the role declaration. A parenthesized phrase without `x-bg` can remain ordinary primary text.
+
+## One group per line
+
+Apple's parser retains the first backing-vocal group and discards additional groups on the same line. Group the backing syllables inside one `x-bg` span rather than adding several unrelated backing containers.
+
+Only `x-bg` receives this backing-vocal handling. Arbitrary values such as `x-translation` are not substitutes for Apple's parallel-track metadata.
+
+## Parallel tracks
+
+Translated and transliterated lines can also carry backing text. They still attach to the original lyric through its line key. Their backing timing does not have to be inferred from the original spelling or syllable count.

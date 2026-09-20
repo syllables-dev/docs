@@ -1,0 +1,109 @@
+---
+title: Agents and singers
+description: Vocalist identities and assignments.
+---
+
+An agent names a vocal participant. Declare agents in the metadata, then assign their IDs to sections, lines, or spans with `ttm:agent`.
+
+## Syntax
+
+```xml
+<ttm:agent xml:id="agentId" type="agentType"><ttm:name>name</ttm:name></ttm:agent>
+```
+
+Reference the declaration from a lyric element:
+
+```xml
+<p begin="start" end="end" ttm:agent="agentId">content</p>
+```
+
+## Example
+
+Inside `<metadata>`:
+
+```xml
+<ttm:agent xml:id="v1" type="person"><ttm:name>First Singer</ttm:name></ttm:agent>
+<ttm:agent xml:id="v2" type="person"><ttm:name>Second Singer</ttm:name></ttm:agent>
+```
+
+Inside a body division:
+
+```xml
+<p begin="12.000" end="13.300" ttm:agent="v1">Hello world</p>
+<p begin="14.000" end="15.300" ttm:agent="v2">Hello again</p>
+```
+
+These lines have different singers. The IDs are references, not timing or screen coordinates.
+
+## IDs and types
+
+Apple Music files commonly reserve `v1000` for a `group` and `v2000` for `other` voices. Individual performers usually use `v1`, `v2`, `v3`, and so on. Follow these conventions when creating a file:
+
+```xml
+<ttm:agent xml:id="v1" type="person"/>
+<ttm:agent xml:id="v2" type="person"/>
+<ttm:agent xml:id="v1000" type="group"/>
+<ttm:agent xml:id="v2000" type="other"/>
+```
+
+These numbers are naming conventions, not reserved XML identifiers. The declared `type` determines how the player handles the agent. Renaming a `person` to `v1000` does not turn it into a group.
+
+The parser retains the agent's `type` string and does not validate it. The Apple client acts on three exact values: `person`, `group`, and `other`. TTML also defines `character` and `organization`, and a differently spelled or capitalized value such as `Person` is a different string; the client treats all of those as unknown and falls back to the behavior in [Alignment](#alignment). Agent type and vocal role are separate: a person can sing backing vocals, and a group is not automatically a backing track.
+
+An agent can also have an `itunes:artistId`. This identifies an artist, not a line key. The corresponding songwriter attribute is spelled differently; see [metadata](./metadata.mdx).
+
+## Inheritance and overrides
+
+In the Apple client, a word without an explicit resolved agent falls back to its line, and a line falls back to its section. An unresolved reference is logged and can fall through that inheritance chain. It does not create a new agent or automatically choose the first declared singer.
+
+Declare every referenced agent and use explicit overrides when a span changes singer. The file describes vocal identity; the player decides how to display it.
+
+## Alignment
+
+Agent assignments let the player place different voices on opposite sides. In Apple's client, person-attributed lines switch sides when the singer changes; an ID does not have a permanent left or right position. These rules describe the [Apple client version covered by this reference](./index.mdx#compatibility).
+
+The side is decided from the agent's declared `type`, matched as an exact string. The ID itself is only compared against the previous line's ID to detect a change of singer, so `v1000` and `v2000` carry no side of their own.
+
+| Agent type | Side assignment |
+| --- | --- |
+| `person` | The first person starts on the normal side. Repeated lines by that person stay there; a change of person switches sides. |
+| `group` | Uses the normal side. |
+| `other` | Uses the opposite side. |
+| Missing or unknown type | Keeps the running side. |
+
+Group and other lines do not reset the person sequence. When the same person resumes after one of these lines, their side stays the same. Keep performer IDs stable throughout the song instead of changing them to force a particular layout.
+
+For left-to-right text, the normal side is left and the opposite side is right. For right-to-left text, those sides reverse. A player can also apply its own layout settings, including centered presentation, so these assignments do not guarantee a fixed screen position in every view.
+
+### Example sequence
+
+For left-to-right lyrics in a side-aligned view:
+
+| Line | Agent | Type | Side | Reason |
+| --- | --- | --- | --- | --- |
+| 1 | `v2000` | `other` | Right | Other voice |
+| 2 | `v2` | `person` | Left | First person |
+| 3 | `v2` | `person` | Left | Same person continues |
+| 4 | `v1000` | `group` | Left | Group voice |
+| 5 | `v1` | `person` | Right | Person changes |
+| 6 | `v2000` | `other` | Right | Other voice |
+| 7 | `v1` | `person` | Right | Same person resumes |
+| 8 | `v3` | `person` | Left | Person changes again |
+
+Here `v2` starts on the left because it performs first. With three or more people, the running side changes can put different singers on the same side at different points.
+
+### Scope of an assignment
+
+The side is a property of the line. A span that names a different agent inside a line marks who sings those words; it does not move part of the line to the other side or advance the running sequence. Change the side by starting a new line.
+
+### Vocalist classification
+
+The client also classifies the whole song from the distinct `type` strings among the declared agents: one distinct type reads as a single vocalist, two as a duet, and three or more as a group. It counts declarations rather than references, so an agent that is declared and never used still counts, and two `person` agents still amount to one distinct type. The classification feeds the client's choice between a centered layout and the per-line sides above, so it is not purely informational.
+
+Declare the agents the file actually uses and let the line assignments describe the performance.
+
+## Preserving agents during conversion
+
+Parse preserves declarations in `LyricsDocument.agents`, line assignments in `LyricsLine.agent`, and span assignments in `Syllable.agent`. Preserve imported IDs and resolve them against their declarations rather than inferring types from the numbers.
+
+Formats such as LYS store duet sides instead of full performer identities. After conversion to a side-only format, the original singers cannot be reconstructed from alignment alone.

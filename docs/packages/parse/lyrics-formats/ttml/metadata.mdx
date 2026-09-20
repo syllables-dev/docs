@@ -1,0 +1,60 @@
+---
+title: Metadata
+description: Song and audio information.
+---
+
+Apple playback files combine TTML metadata with an `<iTunesMetadata>` container for songwriters, audio properties, and parallel text.
+
+## Syntax
+
+```xml
+<head>
+  <metadata>
+    <ttm:title>title</ttm:title>
+    <iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="time">
+      <songwriters><songwriter artistId="artistId">name</songwriter></songwriters>
+      <audio role="role" lyricOffset="offset"/>
+    </iTunesMetadata>
+  </metadata>
+</head>
+```
+
+The root supplies the `ttm` namespace declaration. Translation and transliteration containers also belong inside `<iTunesMetadata>`.
+
+## Example
+
+```xml
+<head>
+  <metadata>
+    <ttm:title>Example</ttm:title>
+    <iTunesMetadata xmlns="http://music.apple.com/lyric-ttml-internal" leadingSilence="12.000">
+      <songwriters><songwriter>Example Writer</songwriter></songwriters>
+      <audio role="spatial" lyricOffset="0.250"/>
+    </iTunesMetadata>
+  </metadata>
+</head>
+```
+
+This records a title, one songwriter, 12 seconds of leading silence, a spatial audio role, and a 250-millisecond lyric offset. The offset uses seconds in clock notation; it is not the integer-millisecond syntax of an LRC offset tag.
+
+## Songwriters and artist IDs
+
+Each `<songwriter>` contains a name and can carry an unprefixed `artistId`. An agent's artist ID uses `itunes:artistId` instead. Apple's parser reads these exact different spellings.
+
+Songwriter metadata can feed the player's credits display. It is not sung text and does not need to be inserted as a lyric paragraph.
+
+## Audio role
+
+The Apple client recognizes spatial audio by comparing the audio element's `role` to the exact string `spatial`. The markup is `<audio role="spatial"/>`, not `<audio spatial="true"/>`. Other role strings are stored as strings without that spatial flag.
+
+## Leading silence and duration
+
+`leadingSilence` belongs to `<iTunesMetadata>`. `dur` belongs to `<body>`. They describe different values: silence before lyrics and the song's duration. Neither changes a span's absolute `begin` into a relative timestamp.
+
+## Generation ID
+
+`itunes:lyricGenId` on the root identifies a lyric generation. It is metadata associated with the lyric document, not a timestamp, song-part label, or reference to a translated line. Preserve it as an opaque value when retaining source metadata.
+
+## Language
+
+The root's `xml:lang` describes the original lyric language. Each translation and transliteration declares its own language. Per-word `xml:lang` does not create an independently localized word in Apple's lyrics model.

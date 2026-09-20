@@ -1,0 +1,61 @@
+---
+title: Apple client behavior
+description: How Apple Music reads and displays lyrics.
+---
+
+This page covers Apple's MediaServices parser and MusicApplication player in iOS build `24A5355q`. Behavior can vary between versions. The `@syllables-dev/parse` package has its own validation rules and may reject files that Apple Music accepts.
+
+## Parsing and validation
+
+Malformed XML causes parsing to fail. An incorrect root element, misplaced elements, missing duration, or unresolved agent references can produce warnings and leave the lyrics only partially parsed. Successful playback does not guarantee that a document is valid.
+
+Children of unknown elements are still parsed. CDATA content is ignored, so use ordinary text with XML entity escaping.
+
+| Condition | Behavior |
+| --- | --- |
+| Missing or unknown `itunes:timing` | Untimed mode |
+| Unknown `itunes:songPart` | No recognized section kind |
+| Unknown agent `type` | String retained |
+| Unresolved `ttm:agent` | Warning; no agent assigned directly, so inheritance can apply |
+| Missing `xml:lang` on a parallel track | Track dropped |
+| Parallel `<text>` missing `for` | Entry not inserted into the line map |
+| Additional backing groups in a line | First group retained, later groups discarded |
+| Empty lyric paragraph | Retained |
+
+## Case and namespaces
+
+Apple's element dispatch is case-insensitive, as are its timing, section-kind, and translation-kind comparisons. XML itself remains case-sensitive, including matching start and end tags. Use the conventional spellings when authoring.
+
+Attribute names, agent IDs, `x-bg`, `keep`, `true`, and `spatial` use exact comparisons. Namespace processing does not make all attribute prefixes interchangeable: the implementation looks up qualified keys such as `ttm:agent`.
+
+## Clock parsing
+
+Apple reads seconds as a floating-point value and minutes as an integer. Extra components before the last two are ignored. Malformed numeric input can become zero and negative values are not clamped by this parsing step. These are compatibility quirks, not useful authoring conventions.
+
+## Ordering
+
+Write lines and spans in playback order. The client initially preserves document order and can sort them by start time when it detects an ordering problem. Elements with an end time of zero are excluded from that check, so automatic sorting cannot reliably fix an out-of-order document.
+
+Line keys still link parallel text after sorting. Overlaps and zero-duration ranges are not generally repaired by this parser. Author valid intervals rather than expecting the client to correct them.
+
+## Text assembly
+
+Preserve spaces between spans. The player can include them in the preceding span as well as the full line, so removing them can change highlighting even if the displayed words remain the same.
+
+Backing-vocal cleanup trims trailing whitespace before stripping outer parentheses. A separate primary-text path removes the backing range, removes empty `()` pairs, and trims surrounding spaces and tabs. Neither path is a general Unicode normalization or newline-removal pass.
+
+## Translations and script selection
+
+Parallel entries are keyed by the original line's `itunes:key`. Duplicate keys can overwrite earlier entries. Translation languages also have a last-wins map; transliterations remain an ordered collection, including same-language alternatives.
+
+Chinese script selection matches the `zh-Hant` and `zh-Hans` prefixes. A region-tagged value such as `zh-Hant-TW` can match `zh-Hant`; this is distinct from exact dictionary lookup by a complete language string.
+
+The player chooses among supplied transliteration tracks using language and script preferences. Availability can also depend on server-provided feature settings. A locale alone does not determine whether pinyin or jyutping is selected.
+
+## What the player derives
+
+Instrumental-break rows come from gaps between lyric intervals. The gap must exceed seven seconds. A leading break starts at zero; an internal break starts 0.1 seconds after the previous line ends and finishes at the next line's start. A section labeled `Instrumental` is a separate mechanism.
+
+Songwriter metadata can become a credits row. Direction is derived from text layout, and pronunciation wrapping is adjusted against the original line. These are presentation decisions rather than extra lyric tags.
+
+The markup also does not contain a complete animation specification. Timing and language feed the renderer, but glow, lift, scrolling, and emphasis come from client behavior and settings. An arbitrary custom role is not an animation command.

@@ -1,0 +1,58 @@
+---
+title: Transliterations
+description: Pronunciation and alternate-script tracks.
+---
+
+Apple carries pronunciation text in `<transliteration>` tracks. These can represent romanization or readings in another script. They are separately timed lines, not inline ruby annotations attached to individual glyphs.
+
+## Syntax
+
+```xml
+<transliterations>
+  <transliteration xml:lang="language-script">
+    <text for="lineKey" begin="start" end="end"><span begin="start" end="end">pronunciation</span></text>
+  </transliteration>
+</transliterations>
+```
+
+Place this container inside Apple `<iTunesMetadata>`. `for` references the original paragraph's `itunes:key`.
+
+## Example
+
+Inside `<iTunesMetadata>`:
+
+```xml
+<transliterations>
+  <transliteration xml:lang="ja-Latn" automaticallyCreated="false">
+    <text for="L1" begin="12.000" end="13.000"><span begin="12.000" end="12.500">a</span><span begin="12.500" end="13.000">sa</span></text>
+  </transliteration>
+</transliterations>
+```
+
+In the body:
+
+```xml
+<p begin="12.000" end="13.000" itunes:key="L1"><span begin="12.000" end="12.500">あ</span><span begin="12.500" end="13.000">さ</span></p>
+```
+
+The original displays `あさ`; the parallel track displays `asa`. Their shared key links the lines, while the parallel spans carry their own text and intervals. A real track can have different text lengths or syllable boundaries from the original.
+
+## Language and script
+
+`xml:lang` identifies the supplied track. Script and variant subtags help distinguish alternatives such as Latin romanization and kana readings. Preserve the complete identifier rather than reducing every Japanese track to `ja` or every Chinese track to `zh`.
+
+Supply the pronunciation text in the document, including pinyin or jyutping. The player selects from the available tracks; a language identifier does not ask it to generate a reading.
+
+## Multiple alternatives
+
+A document can contain several transliteration tracks, including repeated languages. Apple's parser retains them as an ordered collection. The player selects one active transliteration rather than displaying every alternative at once.
+
+This differs from the translation-language map's last-wins behavior. An editor should retain track order and variants instead of flattening all transliterations into a single string per language.
+
+## Layout and timing
+
+The parallel line can have its own backing vocals and word timing. The Apple Music player compares its layout with the original and adjusts wrapping to keep corresponding text together. Direction mismatch and nonbreaking spaces can affect those adjustments.
+
+Match the original line's interval, then time the pronunciation's words or syllables within it. Different line start times can cause the Apple Music player to log a warning.
+
+Use a parallel transliteration track for furigana-style readings. The Apple lyrics player covered here does not support `<ruby>` or `<rt>` markup.

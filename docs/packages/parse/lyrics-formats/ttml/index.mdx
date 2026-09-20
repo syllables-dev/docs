@@ -1,6 +1,55 @@
 ---
 title: TTML
-description: The primary timed-text format
+description: Apple's XML-based lyrics format.
 ---
 
-TODO
+<Callout type="info" title="Apple Music TTML">
+
+This documentation covers Apple Music's TTML playback format and its `itunes:` namespace extensions. It does not cover general TTML 1 or TTML 2 usage. For those formats, refer to the W3C [TTML 1](https://www.w3.org/TR/ttml1/) and [TTML 2](https://www.w3.org/TR/ttml2/) specifications.
+
+The TTML codec in `@syllables-dev/parse` is designed specifically for Apple Music TTML. It does not support plain TTML documents without Apple's extensions.
+
+</Callout>
+
+TTML, or Timed Text Markup Language, describes text on a timeline using XML. Apple Music builds on it with vocal agents, song sections, backing vocals, translations, and transliterations.
+
+## Syntax
+
+```xml
+<p begin="start" end="end"><span begin="start" end="end">content</span></p>
+```
+
+A paragraph represents a lyric line. Spans divide it into words or syllables. This fragment belongs inside a complete document with namespace declarations, metadata, and a body.
+
+## Example
+
+```xml
+<p begin="12.000" end="13.300" itunes:key="L1"><span begin="12.000" end="12.400">Hel</span><span begin="12.400" end="12.700">lo</span> <span begin="12.700" end="13.300">world</span></p>
+```
+
+The line displays `Hello world`. Each span has its own absolute interval. The space between the second and third spans separates the two words; no space separates the first two syllables.
+
+## Delivery files and playback files
+
+Apple's public delivery guide and the TTML returned for playback use different extension vocabularies. Apple's [Video and Audio Asset Guide](https://help.apple.com/itc/videoaudioassetguide/en.lproj/static.html) documents delivery files with `http://itunes.apple.com/lyric-ttml-extensions` and `itunes:song-part`. Playback files use the internal namespace `http://music.apple.com/lyric-ttml-internal` and attributes such as `itunes:songPart` and `itunes:timing`.
+
+These pages describe the playback format and Apple client behavior. They are not a replacement for Apple's delivery requirements or the broader [W3C TTML specification](https://www.w3.org/TR/ttml2/).
+
+## Read the format
+
+- [Structure and syntax](./structure.mdx): a complete document, namespaces, line keys, and sections.
+- [Timing](./timing.mdx): timing modes, clock values, durations, and gaps.
+- [Agents and singers](./agents.mdx): vocalist declarations and inherited assignments.
+- [Backing vocals](./background-vocals.mdx): `x-bg`, nested spans, and parentheses.
+- [Translations](./translations.mdx): subtitle and replacement tracks linked to original lines.
+- [Transliterations](./transliterations.mdx): separately timed pronunciation text and language variants.
+- [Metadata](./metadata.mdx): songwriters, audio roles, offsets, and generation IDs.
+- [Text and whitespace](./text.mdx): spaces, nested content, XML entities, and Unicode.
+- [Attribute reference](./features.mdx): the fields used across the document.
+- [Apple client behavior](./client-behavior.mdx): parsing and playback details.
+
+## Compatibility
+
+Client-specific behavior on these pages applies to Apple's MediaServices parser and MusicApplication player in iOS build `24A5355q`. Other versions may handle these files differently. Use the syntax shown in the examples; a file that plays successfully can still contain invalid markup.
+
+Parse has its own validation and preservation rules. Its `ttml` codec targets this playback profile, not every TTML subtitle profile. See the [package API](../../api-reference.mdx) for those rules.
