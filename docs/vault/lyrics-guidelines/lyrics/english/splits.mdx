@@ -84,11 +84,13 @@ Use the length of the sung phrase to guide the line. Do not force every line to 
 
 Compare repeated passages. Keep their line breaks consistent when the words and delivery are the same, and preserve changes in phrasing when the performance changes.
 
-### Separate sections with a blank line
+### Separate the song's sections
 
-Use one blank line between verses, choruses, bridges, and other distinct sections. A change in tempo or a clear shift from singing to rapping can also mark a section boundary.
+Work out where one part of the song ends and the next begins. Verses, choruses, bridges, and other distinct parts are separate sections. A change in tempo or a clear shift from singing to rapping can also mark a section boundary.
 
-Within a section, place each lyric line directly below the previous one.
+A lyrics file has no blank lines. Each part becomes its own section, and the lines inside it follow one after another. See [Song sections](../../../ttml/sections.mdx) for the markup and the labels.
+
+The example marks the boundary with a gap:
 
 <CodeComparison
   correct={`But we are two worlds apart
@@ -110,7 +112,7 @@ Ain't nothin' but a heartache`}
   source={{ region: "us", songId: "283567164" }}
 />
 
-The blank line falls where the verse ends and the chorus begins, not between the lines inside either one. Do not put a blank line after every sentence, breath, or change of singer. Do not force every section into four lines. Keep unsung section labels outside the lyric text.
+The boundary falls where the verse ends and the chorus begins, not between the lines inside either one. Do not start a new section after every sentence, breath, or change of singer. Do not force every section into four lines. Keep unsung section labels outside the lyric text; the file records the name of a part as an attribute on its section.
 
 ### Separate vocal parts
 

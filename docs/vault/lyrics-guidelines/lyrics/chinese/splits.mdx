@@ -68,9 +68,13 @@ Chinese lyric lines are short. Ten characters is typical, and a line much past f
 
 Compare repeated passages. Keep their line breaks consistent when the words and delivery are the same, and preserve changes in phrasing when the performance changes.
 
-### Separate sections with a blank line
+### Separate the song's sections
 
-Use one blank line between verses, choruses, bridges, and other distinct sections. Within a section, place each lyric line directly below the previous one.
+Work out where one part of the song ends and the next begins. Verses, choruses, bridges, and other distinct parts are separate sections.
+
+A lyrics file has no blank lines. Each part becomes its own section, and the lines inside it follow one after another. See [Song sections](../../../ttml/sections.mdx) for the markup and the labels.
+
+The example marks the boundary with a gap:
 
 <CodeComparison
   correctLabel="Prefer"
@@ -85,7 +89,7 @@ Use one blank line between verses, choruses, bridges, and other distinct section
   source={{ region: "tw", songId: "1866517055" }}
 />
 
-Do not put a blank line after every sentence or every change of singer. Keep unsung section labels outside the lyric text.
+Do not start a new section after every sentence or every change of singer. Keep unsung section labels outside the lyric text; the file records the name of a part as an attribute on its section.
 
 ### Separate vocal parts
 
