@@ -4,5 +4,5 @@
   "pagesIndex": "index",
   "icon": "House",
   "root": true,
-  "pages": ["index"]
+  "pages": ["index", "about", "contributing", "community"]
 }
