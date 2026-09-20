@@ -1,0 +1,102 @@
+---
+title: Document types
+description: The shared lyrics schema, generated from Parse's TypeScript declarations.
+---
+
+Import these types from `@syllables-dev/parse`. The tables come directly from the installed package's `.d.ts` files during the documentation build.
+
+```ts
+import type { LyricsDocument, LyricsLine, Syllable } from "@syllables-dev/parse";
+```
+
+## LyricsDocument
+
+The document is plain JSON. All timestamps are absolute integer milliseconds, including syllable times; they are not relative to the containing line. A source offset is already applied by the reader and must not be added again.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsDocument" />
+
+## LyricsMeta
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsMeta" />
+
+## LyricsAgent
+
+Lines reference agents by ID. A format with `identity` support preserves opaque IDs and types; `alignment` support preserves duet-side attribution but may normalize those identities.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsAgent" />
+
+## LyricsLine
+
+`p` is the primary vocal track and `b` is the backing track. Each contains timed syllables. Translation and pronunciation tracks are keyed by BCP 47 language tags.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsLine" />
+
+## Syllable
+
+Text includes meaningful whitespace. Concatenate adjacent syllables with `join("")`, not `join(" ")`.
+
+When `content` is present, it stores the authoritative ordered mix of strings and nested syllables. `text` is the visible text derived from that structure. Editing only `text` does not replace the structured content.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="Syllable" />
+
+### SyllableContent
+
+`content` holds `SyllableContent[]`, and each item is either a `Syllable` or a `string`. A string is literal text at that position; a nested syllable carries its own timing and can nest further.
+
+## Translations
+
+### LyricsTranslation
+
+Translations normally carry text in `p` and optional backing text in `b`. Apple TTML can retain structured words and timing as well. When `pWords` or `bWords` exists, it is authoritative over the corresponding flattened string.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsTranslation" />
+
+### LyricsTranslationTrack
+
+Document-level metadata describes each language track's kind and generated-text flag.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsTranslationTrack" />
+
+## Pronunciations
+
+### LyricsPronunciation
+
+Pronunciation tracks carry timed syllables. Repeated tracks in the same language can retain separate variants and absent line positions.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsPronunciation" />
+
+### LyricsPronunciationTrack
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsPronunciationTrack" />
+
+### LyricsPronunciationReference
+
+Used by `apple.pronunciationOrder` to retain track order across languages and variants.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsPronunciationReference" />
+
+## Apple TTML fields
+
+These fields retain Apple TTML data outside the shared model. Other formats cannot generally represent this structure. Keep it when editing a document intended for TTML output.
+
+### AppleLyrics
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="AppleLyrics" />
+
+### LyricsAudio
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsAudio" />
+
+### LyricsElementAttributes
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsElementAttributes" />
+
+### LyricsBody
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsBody" />
+
+### LyricsSection
+
+Sections group line IDs in document order and can retain song-part labels and division timing.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="LyricsSection" />

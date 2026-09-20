@@ -1,6 +1,174 @@
 ---
 title: API reference
-description: Every export, option, and return type
+description: Public functions, conversion options, and format-specific imports.
 ---
 
-TODO
+Import the shared API from `@syllables-dev/parse`. The tables below are generated from the installed package's TypeScript declarations. All parsing and writing functions are synchronous.
+
+## Detect and read
+
+### detect
+
+Identifies the format from the text and returns a [`FormatId`](#format-specific-entry-points), or `null` for unrecognized input. It checks recognizable syntax; it does not fully parse or validate the file.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ detect: typeof detect }" name="detectReference" />
+
+### parse
+
+Detects the format and reads the text. Returns `{ doc, format }`. Throws `ParseError` when no format is recognized or the selected reader rejects the input.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ parse: typeof parse }" name="parseReference" />
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="ParseResult" />
+
+### read
+
+Uses the requested reader directly. Unlike `parse()`, it returns the `LyricsDocument` itself.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ read: typeof read }" name="readReference" />
+
+### ReadOptions
+
+Options are accepted by `parse()`, `read()`, and `convert()`. `expandRepeats` defaults to `false` and applies only to LRC input; setting it to `true` for another format throws.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="ReadOptions" />
+
+## Write and convert
+
+### write
+
+Serializes a document with the chosen writer. The document is not mutated. Unsupported features throw unless an available lossy projection is explicitly enabled.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ write: typeof write }" name="writeReference" />
+
+### convert
+
+Detects and reads the input, then writes the target format. To specify the input format explicitly, call `read()` followed by `write()` instead.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ convert: typeof convert }" name="convertReference" />
+
+### WriteOptions
+
+`lossy` defaults to `false`. Enabling it accepts the reductions reported by `losses()`. It does not bypass all writer checks or synthesize missing word timing.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="WriteOptions" />
+
+### ConvertOptions
+
+Combines read and write options for a single conversion.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="ConvertOptions" />
+
+## Inspect format support
+
+### losses
+
+Returns the features in this document that would lose fidelity in the target format. This is a document-specific report, not a complete preflight check: an empty array does not guarantee that `write()` will succeed.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ losses: typeof losses }" name="lossesReference" />
+
+The returned `ConversionLoss` values are:
+
+| Value | Reported when |
+| --- | --- |
+| `agents` | The document attributes lines to agents and the target cannot record that attribution. |
+| `backing` | The target cannot keep a separate backing track, so its words fold into the primary text. |
+| `metadata.album` | The target cannot store an album, or cannot store this value as written. |
+| `metadata.artist` | The target cannot store a primary artist, or cannot store this value as written. |
+| `metadata.songwriters` | The target cannot store songwriters, or cannot store this list as written. Tag-based formats keep one name. |
+| `metadata.title` | The target cannot store a title, or cannot store this value as written. |
+| `pronunciations` | The target cannot store pronunciation tracks, or cannot keep this document's track metadata. |
+| `translations` | The target cannot store translation tracks, or cannot keep this document's track metadata. |
+| `lineRange` | The target cannot store these line boundaries. LRC infers each end from the next line's start. |
+| `wordTiming` | The document is word-timed and the target writes line timing only. |
+
+A metadata value is reported as written when the format stores the field but cannot carry line breaks or surrounding whitespace.
+
+### capabilities
+
+Returns an independent snapshot of a writer's supported features. Mutating the returned object does not change the codec. These capabilities describe output: a reader can accept features its writer cannot preserve, such as enhanced LRC word timing.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/api.d.ts" type="{ capabilities: typeof capabilities }" name="capabilitiesReference" />
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="FormatCapabilities" />
+
+### TimingCapabilities
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="TimingCapabilities" />
+
+### MetadataCapabilities
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="MetadataCapabilities" />
+
+## Create and validate
+
+### createDocument
+
+Returns a new document with `version: 1`, `timing: "line"`, empty `agents` and `lines` arrays, and an empty `meta` object. Each call creates independent collections.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/document.d.ts" type="{ createDocument: typeof createDocument }" name="createDocumentReference" />
+
+### validate
+
+Reports timing findings in document and track order without changing the document. Static documents return an empty array. Line order is based on start times; overlapping lines are not automatically invalid.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/validate.d.ts" type="{ validate: typeof validate }" name="validateReference" />
+
+Each finding has a stable `code`, the affected line or syllable's `id`, and a human-readable `message`. Use `code` for application logic and localization.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/types.d.ts" name="Problem" />
+
+| Code | Message |
+| --- | --- |
+| `line-out-of-order` | line starts before the preceding line |
+| `line-invalid-time` | line times must be integer milliseconds |
+| `line-invalid-range` | line must end after it begins |
+| `syllable-out-of-order` | syllable starts before the preceding syllable |
+| `syllable-invalid-time` | syllable times must be integer milliseconds |
+| `syllable-invalid-range` | syllable ends before it begins |
+| `syllable-outside-line` | syllable extends outside its line |
+
+### ParseError
+
+`ParseError` extends `Error` and has the name `"ParseError"`. Import it from the package root and use `instanceof ParseError` to distinguish unreadable input from other failures. Writer failures and invalid options can throw ordinary errors; see [error handling](./usage.mdx#handle-invalid-input).
+
+## Format-specific entry points
+
+These public imports each export `read`, `write`, and a `capabilities` object:
+
+| Format ID | Import |
+| --- | --- |
+| `ttml` | `@syllables-dev/parse/ttml` |
+| `lrc` | `@syllables-dev/parse/lrc` |
+| `lyl` | `@syllables-dev/parse/lyl` |
+| `eslrc` | `@syllables-dev/parse/eslrc` |
+| `qrc` | `@syllables-dev/parse/qrc` |
+| `yrc` | `@syllables-dev/parse/yrc` |
+| `lys` | `@syllables-dev/parse/lys` |
+| `lqe` | `@syllables-dev/parse/lqe` |
+
+Their readers take `(text, options?)` and writers take `(doc, options?)`. There is no format argument to select the codec, and `capabilities` is an object rather than a function. Import shared types and `ParseError` from the root.
+
+```ts
+import { capabilities, read, write } from "@syllables-dev/parse/ttml";
+import type { LyricsDocument } from "@syllables-dev/parse";
+
+function rewrite(source: string): string {
+  const doc: LyricsDocument = read(source);
+  return write(doc);
+}
+
+console.log(capabilities.timing.word); // true
+```
+
+The LYS writer also exposes an optional third `format` argument used for format-specific diagnostics. Normal LYS exports should leave it unset.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/formats/lys/index.d.ts" type="{ write: typeof write }" name="lysWriteReference" />
+
+The LRC subpath additionally exports `writeAlignedRows(doc)`. It preserves empty translation rows for positional alignment with LYS lines, as used by LQE. Use ordinary `write()` for a standalone LRC file.
+
+<auto-type-table path="../../../../node_modules/@syllables-dev/parse/dist/formats/lrc.d.ts" type="{ writeAlignedRows: typeof writeAlignedRows }" name="writeAlignedRowsReference" />
+
+## Document schema
+
+All public schema types are exported from `@syllables-dev/parse`. See [document types](./document-types.mdx) for the generated fields of lines, syllables, metadata, translations, pronunciations, and Apple TTML data.
