@@ -1,0 +1,51 @@
+---
+title: 风格化大小写
+description: 整首歌统一写成小写或大写的风格，哪一种可以保留
+---
+
+有些歌手会把整首歌乃至整张专辑的歌词统一写成一种大小写，而不按常规规则处理。这样写不影响阅读的，保留；影响阅读的，改回常规大小写。
+
+本页讲的是贯穿整首歌的风格。行内的大小写规则参见[大小写](./text.zh-CN.mdx#大小写)。
+
+## 全曲小写可以保留
+
+整首歌都写成小写的，保留原样。小写字母有高有低，每个词的轮廓依然分明，读起来不费劲，句子的起止也有标点可依。
+
+<AppleMusicQuote
+  region="us"
+  songId="1725878242"
+  quote={`i didn't think you'd understand me
+how could you ever even try?`}
+/>
+
+这种风格对全曲每个字母都生效：行首单词写成小写，第一人称 i 也写成小写。
+
+范围更窄的大小写规则同样让位于它。像神明称谓这类本该大写的词，也跟着全曲一起写成小写：
+
+<AppleMusicQuote
+  region="us"
+  songId="1694386828"
+  quote={"but, god, when i look at you"}
+/>
+
+要么整首歌都这么写，要么一行都不这么写。常规大小写的歌里冒出一行小写，那是转写出错，照常规大写即可。
+
+## 全曲大写不要保留
+
+整首歌都写成大写的，不要照搬。全大写之后每个词的外形都是一个方块，读者认不出词形，只能一个字母一个字母往下拼。逐行同步的歌词要在它出现的那几秒内读完，全大写会拖慢这个过程。
+
+改用常规大小写书写。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={`Birds of a feather
+We should stick together, I know`}
+  incorrect={`BIRDS OF A FEATHER
+WE SHOULD STICK TOGETHER, I KNOW`}
+  source={{ region: "us", songId: "1739659142" }}
+/>
+
+每行首词、第一人称 I 和专有名词大写，其余一律小写。词本身自带的大写要留着，比如首字母缩略词，或者本来就全大写的专有名词。
+
+流媒体平台上这些版本的歌词就是全大写的。能在那里找到，不等于可以照抄。
