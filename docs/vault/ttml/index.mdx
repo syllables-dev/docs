@@ -5,25 +5,34 @@ description: How a lyrics file represents text, lines, and song sections
 
 TTML stands for Timed Text Markup Language. It is an XML format that combines text with structure and timing. A lyrics player uses that information to display lines, highlight words, and distinguish vocal parts.
 
-This guide explains Apple's lyrics profile of TTML and the conventions used by Syllables. Use the [lyrics guidelines](../lyrics-guidelines/index.mdx) to prepare the words and line breaks, then represent them in the file.
+This guide covers the basics needed to create synchronized lyrics for Vault using Apple Music's TTML playback format. For the complete format, attributes, and player behavior, see the [TTML reference](../../packages/parse/lyrics-formats/ttml/index.mdx).
+
+## Start with the recording
+
+1. Prepare the text and line breaks using the [lyrics guidelines](../lyrics-guidelines/index.mdx).
+2. Group the lines into the song's sections and label each one.
+3. Time each line against the recording, from the start of its vocals to their end.
+4. For word-synced lyrics, add timing to each word or syllable.
+5. Assign voices and separate backing parts where needed.
+6. Play the file with the same recording and check the words, pauses, singer changes, and highlights.
 
 ## Read a lyrics document
 
-A TTML document has one root element, a head for metadata, and a body for the lyrics. This example contains a verse with two timed lines:
+A TTML document has one root element, a head for metadata, and a body for the lyrics. This example uses invented text and contains a verse with two timed lines:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <tt xmlns="http://www.w3.org/ns/ttml"
     xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
-    xmlns:itunes="http://itunes.apple.com/lyric-ttml-extensions"
-    xml:lang="en">
+    xmlns:itunes="http://music.apple.com/lyric-ttml-internal"
+    xml:lang="en" itunes:timing="Line">
   <head>
     <metadata>
       <ttm:title>Example song</ttm:title>
     </metadata>
   </head>
   <body dur="00:20.000">
-    <div begin="00:00.000" end="00:20.000" itunes:song-part="Verse">
+    <div begin="00:00.000" end="00:20.000" itunes:songPart="Verse">
       <p begin="00:10.000" end="00:12.000">I left my coat</p>
       <p begin="00:12.000" end="00:15.000">By the open door</p>
     </div>
@@ -64,7 +73,7 @@ Indenting XML or putting a tag on a new source-code line does not create a displ
 
 ## Preserve text and spaces
 
-Spaces between words are part of the text. Keep them between word spans, but do not insert spaces between spans that form a single word. See [Word and syllable timing](./timing.mdx#word-and-syllable-timing).
+Spaces between words are part of the text. Keep each one inside the span that ends the word before it, and do not insert spaces between spans that form a single word. See [Word and syllable timing](./timing.mdx#word-and-syllable-timing).
 
 Escape characters that have a special meaning in XML. For example, an ampersand in the lyric must be encoded as an entity:
 
@@ -78,18 +87,29 @@ The player displays:
 You & me
 ```
 
-## Understand namespaces and profiles
+## Learn the next step
 
-Namespaces identify the vocabulary used by elements and attributes. The root document above declares the base TTML namespace, the metadata namespace with the `ttm` prefix, and Apple's public lyrics extension namespace with the `itunes` prefix.
+<Cards>
+  <Card
+    href="/vault/ttml/sections"
+    title="Song sections"
+    description="Group the lines into verses, choruses, and other parts of the song."
+  />
+  <Card
+    href="/vault/ttml/timing"
+    title="Timing"
+    description="Add timestamps to lines, words, and syllables."
+  />
+  <Card
+    href="/vault/ttml/agents"
+    title="Agents and voices"
+    description="Identify singers, shared parts, and spoken passages."
+  />
+  <Card
+    href="/vault/ttml/background-vocals"
+    title="Background vocals"
+    description="Give a backing part its own text and timing."
+  />
+</Cards>
 
-Use the attributes defined by the profile you are authoring. Apple's public delivery profile names a section with `itunes:song-part`. Files returned by Apple Music can use an internal namespace and different attribute names, such as `itunes:songPart`. Do not mix those spellings or namespaces in a delivery file.
-
-## Continue reading
-
-- [Timing](./timing.mdx): How line, word, and syllable timestamps work.
-- [Agents and voices](./agents.mdx): Performer types, reserved IDs, spoken passages, and left/right alignment.
-- [Background vocals](./background-vocals.mdx): How to attach an independently timed backing subline to a lead line.
-
-## Reference
-
-[Apple Video and Audio Asset Guide: TTML File Format](https://help.apple.com/itc/videoaudioassetguide/#/itc0f14fecdd) defines Apple's delivery profile, examples, and timing requirements. The [static version](https://help.apple.com/itc/videoaudioassetguide/en.lproj/static.html#itcd7579a252) provides the same structural reference without the help viewer.
+The [Parse TTML reference](../../packages/parse/lyrics-formats/ttml/index.mdx) covers the details beyond this introduction, including translations, pronunciation tracks, metadata, and Apple client behavior. Its [structure page](../../packages/parse/lyrics-formats/ttml/structure.mdx) explains namespaces and the differences between Apple's delivery and playback formats.

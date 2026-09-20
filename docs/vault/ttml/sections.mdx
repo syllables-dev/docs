@@ -1,0 +1,64 @@
+---
+title: Song sections
+description: Group lines into parts of the song and label what each part is
+---
+
+A section holds the lines of one part of the song, such as a verse or a chorus. Use a `<div>` for the grouping and `itunes:songPart` to name the part.
+
+## Group the lines
+
+Start a new `<div>` where the song moves to a different part. Keep each section's interval around the lines it contains. The text here is invented:
+
+```xml
+<body dur="00:20.000">
+  <div begin="00:00.000" end="00:08.000" itunes:songPart="Verse">
+    <p begin="00:01.000" end="00:04.000">I left my coat</p>
+    <p begin="00:04.000" end="00:08.000">By the open door</p>
+  </div>
+  <div begin="00:08.000" end="00:20.000" itunes:songPart="Chorus">
+    <p begin="00:08.000" end="00:14.000">And I never went back</p>
+    <p begin="00:14.000" end="00:20.000">I never went back</p>
+  </div>
+</body>
+```
+
+The grouping is the part the player reads for layout: it marks where one part ends and the next begins. The label describes what that part is.
+
+## Name the part
+
+The player recognizes eight values:
+
+| Value | Use it for |
+| --- | --- |
+| `Intro` | An opening part with vocals, before the first verse |
+| `Verse` | A narrative part whose words change each time it returns |
+| `Pre-Chorus` | The build between a verse and the chorus |
+| `Chorus` | The main repeated part |
+| `Refrain` | A repeated line or short passage that is not a full chorus |
+| `Bridge` | A contrasting part, usually heard once and late in the song |
+| `Outro` | The closing part |
+| `Instrumental` | A part with no lead vocal |
+
+The values are matched without regard to case, so `chorus` and `CHORUS` both read as a chorus. Write them as spelled above so the file stays consistent.
+
+Anything outside this list is not recognized. The lines still display, but nothing reads the section as a part of the song. Leave the attribute off a `<div>` rather than inventing a value for it.
+
+## Label the part the song actually has
+
+<Callout type="warn" title="Not every section is a verse">
+Some labels and distributors tag every section of a song as `Verse`, whatever the part really is. Nothing in the player complains, so the habit spreads, and the file ends up recording a structure the song does not have.
+</Callout>
+
+Choose the value that matches what is being performed. A chorus that returns three times is a chorus each time, and the build into it is a pre-chorus rather than part of the verse.
+
+If you cannot tell what a part is, leave `itunes:songPart` off that section. A missing label says nothing; a wrong one states something false about the song.
+
+Keep the grouping honest as well. Do not merge a verse and a chorus into one `<div>` to avoid choosing between labels, and do not split one part across several sections.
+
+## Instrumental parts
+
+`Instrumental` describes a part of the song with no lead vocal. It does not ask the player for the dots that count down between lines; Apple's player works those out from the gap between timed lines. Label the section to describe the recording, not to trigger a display.
+
+## Learn more
+
+[Structure and syntax in the TTML reference](../../packages/parse/lyrics-formats/ttml/structure.mdx#song-sections) covers how sections sit in the document and how the Apple client reads the label. Apple's public delivery guide spells the attribute `itunes:song-part`; the playback files this guide describes use `itunes:songPart`.

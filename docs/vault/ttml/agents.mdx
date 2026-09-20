@@ -1,124 +1,51 @@
 ---
 title: Agents and voices
-description: Identify performers, assign spoken passages, and determine lyric alignment
+description: Assign lyrics to the people performing them.
 ---
 
-An agent identifies who performs a vocal part. Declare the agents in the document's metadata, then reference them from the lyric lines or spans they perform. A voice can sing, rap, or speak without changing its identity.
+An agent identifies who sings or speaks a part. Declare each performer once in `<head><metadata>`, then use their ID on the lines they perform.
 
-Apple uses agent references to distinguish performers and display duet lyrics on opposite sides of the screen. The agent's type describes the performer; its ID connects the text to that declaration.
-
-## Declare the agents
-
-Declare each agent once inside the head's metadata. The `xml:id` must be unique within the document. Use that exact ID whenever you refer to the same agent.
+## Declare the voices
 
 ```xml
-<head>
-  <metadata>
-    <ttm:agent type="person" xml:id="v1"/>
-    <ttm:agent type="person" xml:id="v2"/>
-    <ttm:agent type="person" xml:id="v3"/>
-    <ttm:agent type="group" xml:id="v1000"/>
-    <ttm:agent type="other" xml:id="v2000"/>
-  </metadata>
-</head>
+<ttm:agent xml:id="v1" type="person"/>
+<ttm:agent xml:id="v2" type="person"/>
+<ttm:agent xml:id="v1000" type="group"/>
+<ttm:agent xml:id="v2000" type="other"/>
 ```
 
-These fragments use the `ttm` metadata namespace declared on the document root. See [Understanding TTML](./index.mdx#read-a-lyrics-document) for the surrounding document.
+Use `v1`, `v2`, and so on for individual performers, `v1000` for people performing together, and `v2000` for other voices, such as a speaker outside the main and featured artists. Keep the same ID whenever a performer returns. An artist who switches from singing to speaking still uses their existing agent.
 
-Use these reserved IDs when authoring Syllables lyrics:
+Declare only the voices the file uses. The player counts the declared types when it lays out the song, so an agent that no line references still affects the result.
 
-| Type | IDs | Use |
-| --- | --- | --- |
-| `person` | `v1`, `v2`, `v3`, and so on | Individual performers, including the main and featured artists |
-| `group` | `v1000` | Multiple vocalists performing a shared part |
-| `other` | `v2000` | Other voices, including spoken dialogue from someone outside the main and featured artists |
+These declarations belong inside the metadata in the [example document](./index.mdx#read-a-lyrics-document).
 
-Reserve `v1000` and `v2000` for their special types; do not assign them to individual singers. Keep person IDs stable throughout the song. An agent ID is not an Apple Music catalog artist ID, and its number does not determine its alignment.
-
-The types and references come from Apple's TTML profile. The reserved numbering above is the authoring convention used here. Imported files can use different IDs, so read the declared type rather than guessing it from the number.
-
-## Assign a line to its performer
-
-Use the `ttm:agent` attribute to refer to an agent declared in metadata:
+## Assign the lines
 
 ```xml
-<p begin="00:10.000" end="00:12.000" ttm:agent="v2">I'll wait for you</p>
-<p begin="00:12.000" end="00:14.000" ttm:agent="v1">I'm on my way</p>
-<p begin="00:14.000" end="00:16.000" ttm:agent="v1000">We're coming home</p>
+<p begin="10.000" end="12.000" ttm:agent="v1">Hello world</p>
+<p begin="12.000" end="14.000" ttm:agent="v2">Hello again</p>
+<p begin="14.000" end="16.000" ttm:agent="v1000">All together</p>
 ```
 
-Keep assigning the same person ID when that performer returns. Do not create a new person ID for every verse, line, or change from singing to speaking.
+The first two lines belong to different singers. The third is performed together. The text here is invented to demonstrate the markup.
 
-When different people perform spans within one line, put the agent references on those spans:
+## How voices affect alignment
 
-```xml
-<p begin="00:10.000" end="00:12.000">
-  <span begin="00:10.000" end="00:11.000" ttm:agent="v1">Stay</span>
-  <span begin="00:11.000" end="00:12.000" ttm:agent="v2">I'm here</span>
-</p>
-```
+In a left-to-right side-aligned view, the first person starts on the left and a change of person switches sides. Group parts use the left side; other voices use the right. The declared type controls this behavior, not the number in the ID. Right-to-left text reverses the sides, and the player's layout can override them.
 
-Apple's public delivery guidance calls for an agent assignment at only one level of a parent-child hierarchy. For a shared line like this, leave the parent unassigned and identify the voices on the spans.
+Alignment is derived, not designed. Tag each line with the performer who sings it and let the player work out the sides. Do not hand a duet part to `v2000`, and do not swap performer IDs, because it puts a line on the side you had in mind. That records the wrong singer, and the layout still changes with the player, the reading direction, and the rest of the song.
+
+See [Agents and singers](../../packages/parse/lyrics-formats/ttml/agents.mdx#alignment) for the full alignment rules, an example sequence, and assignments within a line.
 
 ## Spoken passages
 
-Include spoken and conversational passages in the transcript. Choose the agent by who is speaking:
+A spoken part is performed by someone, so it takes an agent like any other line. A performer who stops singing and starts speaking keeps the agent they already have. Use `v2000` only for a voice outside the main and featured artists, such as a narrator or an interviewer.
 
-- Use the artist's existing `person` agent when the main artist or a featured artist speaks.
-- Use `other` with ID `v2000` when the speaker is outside those artists, such as another person in a recorded conversation.
-- Use `group` with ID `v1000` for a part performed together by multiple vocalists. A solo spoken interlude is not a group part.
+The file records who speaks the words. It does not mark the delivery as speech, and no agent type means "spoken".
 
-A spoken introduction from another person can be assigned as follows:
+## Backing vocals
 
-```xml
-<p begin="00:01.000" end="00:03.000" ttm:agent="v2000">Is everybody ready?</p>
-```
+A singer or group can perform either lead or backing vocals. Keep the agent assignment and the vocal part separate: `type="group"` does not mark a backing part. Use [a backing span](./background-vocals.mdx) for that.
 
-The speaker assignment belongs in the metadata and attributes. Do not insert the speaker's name or an editorial description into the displayed words.
-
-## Determine left and right alignment
-
-Use the agent type and the order of person-attributed lines to determine alignment. These are the Apple-style display rules used by Syllables and the parser's duet-side conversion:
-
-1. Start the first encountered `person` voice on the left, whether its ID is `v1`, `v2`, `v3`, or another person ID.
-2. Keep subsequent lines by the same person on the current side.
-3. Switch sides when the person changes.
-4. Force `group` to the left.
-5. Force `other` to the right.
-6. Keep the current person and side when a group or other line intervenes. Those special lines do not establish or reset the person sequence.
-
-For example, a spoken introduction can appear before the first person's line:
-
-| Line | Agent | Type | Alignment | Reason |
-| --- | --- | --- | --- | --- |
-| 1 | `v2000` | `other` | Right | Other is always right |
-| 2 | `v2` | `person` | Left | First person to perform |
-| 3 | `v2` | `person` | Left | Same person continues |
-| 4 | `v1000` | `group` | Left | Group is always left |
-| 5 | `v1` | `person` | Right | Person changes from `v2` to `v1` |
-| 6 | `v2000` | `other` | Right | Other is always right |
-| 7 | `v1` | `person` | Right | Same person resumes after the other voice |
-| 8 | `v3` | `person` | Left | Person changes again |
-
-Do not hard-code `v1` as left or `v2` as right. With more than two people, duet-side alignment follows changes in the person sequence; it is not a permanent side assigned to each ID.
-
-## Keep agents separate from backing-vocal roles
-
-An agent answers **who performs the words**. A backing-vocal role identifies **which vocal part the words belong to**.
-
-The `x-bg` role marks a [backing subline](./background-vocals.mdx). It does not mean the agent is `other`, and a group part does not automatically become a backing subline. Keep performer identity and lead/backing structure separate.
-
-## Preserve identity when parsing
-
-[@syllables-dev/parse](../../packages/parse/index.mdx) preserves TTML agent declarations in `LyricsDocument.agents`, line references in `LyricsLine.agent`, and span-level references in `Syllable.agent`. Parent assignments can supply an inherited agent reference.
-
-- Preserve imported IDs and type values rather than renumbering them during a read.
-- Resolve references against the declared agents. An undeclared ID is not a new singer to invent.
-- Use the declared type when determining alignment, including for files with IDs outside the authoring convention above.
-- Preserve agent identity separately from the displayed side. Two different people can occupy the same side at different points.
-
-TTML preserves identity. Formats such as LYS and LQE preserve duet-side alignment and may replace the original IDs and types during conversion. Do not infer the original cast from a left/right-only conversion.
-
-## Reference
-
-[Apple Video and Audio Asset Guide: Lyrics Example Annotations](https://help.apple.com/itc/videoaudioassetguide/en.lproj/static.html#itc8c2e23e9a) defines agent declarations, performer types, names, and references. The public guide describes duet positioning; the reserved IDs and exact alignment rules above document the Syllables convention.
+A backing part can also name its own performer. Put `ttm:agent` on the backing span when someone other than the line's agent sings it.
