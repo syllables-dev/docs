@@ -1,0 +1,40 @@
+---
+title: YRC
+description: NetEase Cloud Music's word-synchronized lyrics format.
+---
+
+YRC is a word-timed lyrics format used by NetEase Cloud Music. Its line header resembles QRC, but word timing appears before the text.
+
+## Syntax
+
+```text
+[lineStart,lineDuration](start,duration,0)content(start,duration,0)content
+```
+
+All times are milliseconds. Each parenthesized triple applies to the content after it.
+
+## Example
+
+```text
+[12000,1300](12000,400,0)Hel(12400,300,0)lo (12700,600,0)world
+```
+
+`[12000,1300]` starts the line at 12000 milliseconds for a duration of 1300 milliseconds. Each `(start,duration,0)` triple introduces the following text unit. Starts are absolute milliseconds.
+
+The example displays `Hello world`: `Hel` lasts 400 milliseconds, `lo ` lasts 300, and `world` lasts 600. The third word field is conventionally `0`; it is not a singer ID or a line-relative timestamp. Parse's writer emits `0` there.
+
+## Credit rows
+
+YRC files can begin with JSON rows for credits and other display text:
+
+```json
+{"t":0,"c":[{"tx":"作词: "},{"tx":"Example Writer"}]}
+```
+
+`t` gives a display time and `c` contains text fragments. Each fragment's `tx` holds displayed text; provider data can also include links or artwork fields. These rows are separate from the timed lyric syntax.
+
+## Parse behavior
+
+Use `yrc` or `@syllables-dev/parse/yrc`. The reader recognizes supported songwriter credit text in the JSON preamble. It does not retain arbitrary provider JSON, artwork, or links.
+
+The writer requires word timing. This codec has no dedicated fields for separate backing vocals, agent identities, translations, or pronunciations.

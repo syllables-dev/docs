@@ -1,0 +1,62 @@
+---
+title: LRC
+description: A plain-text format for synchronized lyrics.
+---
+
+LRC is a plain-text lyrics format. Each lyric row begins with one or more timestamps, followed by the text to display.
+
+## Line timing
+
+```text
+[minutes:seconds.fraction]content
+```
+
+For example:
+
+```text
+[00:12.000]Hello world
+[00:15.500]Another line
+[00:18.000]
+```
+
+The first line starts at 12 seconds. The second starts at 15.5 seconds. The final empty row marks a boundary at 18 seconds without adding lyric text.
+
+The usual timestamp is `[minutes:seconds.fraction]`. Two fractional digits express hundredths of a second; three express milliseconds. LRC has no separate end attribute. A player commonly uses the next timestamp to end the current line, and an empty row can mark a pause.
+
+## Metadata
+
+```text
+[ti:Example]
+[ar:Example Artist]
+[al:Example Album]
+[au:Example Writer]
+[by:Example Editor]
+[offset:0]
+[00:12.000]Hello world
+```
+
+`ti`, `ar`, and `al` identify the title, artist, and album. `au` names the writer; `by` credits the lyrics editor. `offset` carries a global timing adjustment in milliseconds. Offset conventions and metadata support vary between players, so check an adjustment in the target application.
+
+## Repeated lines
+
+```text
+[timestamp][timestamp]content
+```
+
+For example:
+
+```text
+[00:12.000][00:42.000]Hello again
+```
+
+This single row represents the same text sung at two different times.
+
+## Enhanced LRC
+
+[ELRC](./elrc.mdx), or Enhanced LRC, adds angle-bracket word timestamps. See its own page for the syntax and examples.
+
+## Parse behavior
+
+Use `lrc` for ordinary and enhanced LRC. `expandRepeats: true` expands repeated leading timestamps; the default reads only the first. The reader infers line ends from following rows and gives the final row a five-second duration without a later boundary. That duration is a Parse fallback, not an LRC field.
+
+The writer emits line-timed LRC. Writing enhanced word timing back to LRC requires a lossy conversion. The shared schema does not retain the `by` editor tag.

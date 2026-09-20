@@ -1,0 +1,45 @@
+---
+title: ELRC
+description: The word-synchronized extension of LRC.
+---
+
+ELRC, or Enhanced LRC, adds word or syllable timestamps to an LRC line. The line begins with a square-bracket timestamp; angle-bracket markers divide its text into timed units.
+
+## Syntax
+
+```text
+[lineStart]<start>content<nextStart>content
+```
+
+Both timestamp forms use `minutes:seconds.fraction`. Each angle-bracket timestamp starts the content after it. The next marker supplies the preceding unit's end.
+
+## Example
+
+```text
+[00:12.000]<00:12.000>Hel<00:12.400>lo <00:12.700>world
+[00:13.300]
+```
+
+| Text | Start | End |
+| --- | --- | --- |
+| `Hel` | 12.000 seconds | 12.400 seconds |
+| `lo ` | 12.400 seconds | 12.700 seconds |
+| `world` | 12.700 seconds | 13.300 seconds, from the next line boundary |
+
+The text displays as `Hello world`. A marker can divide a word into syllables without inserting a space. The space after `lo` belongs to the text and separates it from `world`.
+
+## Line and word boundaries
+
+The square-bracket timestamp starts the line. Word markers describe the finer timing inside it. Without another word marker, a reader needs a line-end boundary or an inference to close the final unit.
+
+LRC metadata tags and repeated leading line timestamps can still appear. See [LRC](./lrc.mdx) for those conventions.
+
+## ELRC and ESLRC
+
+ELRC uses `<timestamp>` for word boundaries, while [ESLRC](./eslrc.mdx) uses `[timestamp]` throughout. Both can use the `.lrc` extension, so read the contents rather than relying on the filename.
+
+## Parse behavior
+
+Parse identifies this syntax as `lrc`; there is no separate `elrc` format ID or package subpath. Use `read(source, "lrc")` or `@syllables-dev/parse/lrc`. A document with enhanced markers has word timing.
+
+The LRC writer emits line-timed output. Writing this document back as `lrc` therefore needs `{ lossy: true }` and drops its word timing. Choose a word-timed output format when those boundaries must survive.

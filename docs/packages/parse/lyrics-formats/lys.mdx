@@ -1,0 +1,50 @@
+---
+title: LYS
+description: Lyricify's syllable-synchronized lyrics format.
+---
+
+LYS, or Lyricify Syllable, stores a property code at the start of each row and a timing pair after each text unit.
+
+## Syntax
+
+```text
+[property]content(start,duration)content(start,duration)
+```
+
+The property selects the vocal role and duet side. Times are milliseconds, and each pair applies to the preceding content.
+
+## Example
+
+```text
+[4]Hel(12000,400)lo (12400,300)world(12700,600)
+[7](Oh)(12500,500)
+[5]Another (15000,500)line(15500,600)
+```
+
+The first row is a primary vocal on the left. The second is backing vocals on the same side. The third is a primary vocal on the right.
+
+Timing pairs are `(absoluteStart,duration)` in milliseconds and apply to the preceding text. The square brackets hold a property code, not line timing. A line's interval comes from its timed units.
+
+## Property codes
+
+| Code | Backing-vocal status | Duet side |
+| --- | --- | --- |
+| `0` | Unspecified | Unspecified |
+| `1` | Unspecified | Left |
+| `2` | Unspecified | Right |
+| `3` | Primary | Unspecified |
+| `4` | Primary | Left |
+| `5` | Primary | Right |
+| `6` | Backing | Unspecified |
+| `7` | Backing | Left |
+| `8` | Backing | Right |
+
+Consumers can infer a role for codes `0` through `2`; codes `3` through `8` state it explicitly. See [Lyricify's property definitions](https://github.com/WXRIW/Lyricify-App/blob/main/docs/Lyricify%204/Lyrics.md#lyricify-syllable-格式规范).
+
+## Singer identity
+
+Left and right identify display sides, without names, artist IDs, or arbitrary vocalist identities. A TTML conversion can retain alignment while losing its original agent definitions.
+
+## Parse behavior
+
+Use `lys` or `@syllables-dev/parse/lys`. The reader derives left and right agents and attaches backing rows to the preceding compatible primary row. It also recognizes isolated parenthesized backing rows with unspecified role codes. Explicit codes avoid depending on that inference.

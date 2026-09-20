@@ -1,0 +1,38 @@
+---
+title: QRC
+description: QQ Music's word-synchronized lyrics format.
+---
+
+QRC lyric text stores a line interval and separate word or syllable intervals. These examples show decoded text, not an encrypted or compressed download container.
+
+## Syntax
+
+```text
+[lineStart,lineDuration]content(start,duration)content(start,duration)
+```
+
+All times are milliseconds. Each parenthesized pair applies to the content before it.
+
+## Example
+
+```text
+[12000,1300]Hel(12000,400)lo (12400,300)world(12700,600)
+```
+
+The header is `[start,duration]` in milliseconds. This line starts at 12 seconds and lasts 1.3 seconds, ending at 13.3 seconds. Each `(start,duration)` pair belongs to the text before it:
+
+| Text | Start | Duration | End |
+| --- | --- | --- | --- |
+| `Hel` | 12000 | 400 | 12400 |
+| `lo ` | 12400 | 300 | 12700 |
+| `world` | 12700 | 600 | 13300 |
+
+Word starts are absolute audio positions, not offsets from the line start. Text spacing remains significant.
+
+## Metadata and backing vocals
+
+Decoded QRC can carry LRC-style metadata tags. The basic timing syntax has no explicit agent or backing-vocal field. Some consumers interpret isolated parenthesized rows as backing vocals by convention. That does not add a typed track to the row itself.
+
+## Parse behavior
+
+Use `qrc` or `@syllables-dev/parse/qrc` with decoded text. Parse does not decrypt downloads or infer backing tracks from parentheses. Its writer requires word timing; unsupported track information needs an explicit lossy projection.

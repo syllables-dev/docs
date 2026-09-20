@@ -1,4 +1,4 @@
 {
   "title": "歌词格式",
-  "pages": ["ttml", "other-formats"]
+  "pages": ["ttml", "lrc", "elrc", "lyl", "eslrc", "qrc", "yrc", "lys", "lqe"]
 }

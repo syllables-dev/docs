@@ -1,0 +1,52 @@
+---
+title: LQE
+description: Lyricify's lyrics exchange format.
+---
+
+LQE, or Lyricify Quick Export, is a text container. A header identifies the version, and each named section declares the format of its contents.
+
+## Syntax
+
+```text
+[Lyricify Quick Export]
+[version:version]
+
+[section: attribute@value, attribute@value]
+content
+```
+
+The header identifies the container. Each section declares how to interpret its content.
+
+## Example
+
+```text
+[Lyricify Quick Export]
+[version:1.0]
+[ti:Example]
+
+[lyrics: format@Lyricify Syllable]
+[4]Hello (12000,700)world(12700,600)
+[4]Another (16000,500)line(16500,600)
+
+[translation: language@fr, format@LRC]
+[00:12.000]Bonjour le monde
+[00:16.000]Une autre ligne
+```
+
+The lyrics section uses [LYS](./lys.mdx) for word timing and vocal-role flags. The translation section uses [LRC](./lrc.mdx), without word-by-word translation timing.
+
+## Section headers
+
+Attributes use `name@value`, separated by commas. `format` identifies the enclosed syntax; `language` identifies the parallel text language. Container metadata appears before the first section.
+
+The container vocabulary also includes pronunciation sections. A container's ability to carry a section does not mean every reader supports it.
+
+## Matching translated rows
+
+Parse matches a translated timestamp to the start of a primary or backing track. Rows with the same start are matched in occurrence order. Keep empty translated rows where needed to preserve alignment; deleting them can attach later text to the wrong track.
+
+## Parse behavior
+
+The `lqe` codec supports version `1.0`, exactly one Lyricify Syllable lyrics section, and LRC translation sections. Missing translation languages use `und`. Pronunciation sections are not imported into the shared pronunciation model, and the writer does not emit them.
+
+This retains LYS timing, backing vocals, duet alignment, and supported translation text. It does not preserve all Apple track metadata, such as replacement behavior or generated-text flags.

@@ -1,0 +1,42 @@
+---
+title: ESLRC
+description: ESLyric's word-synchronized lyrics format.
+---
+
+ESLRC is the word-timed LRC flavor used by ESLyric. Each square-bracket timestamp opens the text that follows it, and the next timestamp closes that unit.
+
+## Syntax
+
+```text
+[start]content[nextStart]content[end]
+```
+
+Each timestamp uses `minutes:seconds.fraction`. The next marker closes the preceding text unit.
+
+## Example
+
+```text
+[00:12.000]Hel[00:12.400]lo [00:12.700]world[00:13.300]
+```
+
+| Text | Start | End |
+| --- | --- | --- |
+| `Hel` | 12.000 seconds | 12.400 seconds |
+| `lo ` | 12.400 seconds | 12.700 seconds |
+| `world` | 12.700 seconds | 13.300 seconds |
+
+The final timestamp has no following text. It closes `world` and the line, avoiding an inferred end.
+
+## Text boundaries
+
+The example displays as `Hello world`. A timestamp can split a word into syllables; it does not insert a space. A space before a timestamp belongs to the preceding unit.
+
+Consecutive boundary markers normally make one unit end when the next begins. This differs from QRC's independent starts and durations.
+
+## Difference from enhanced LRC
+
+Enhanced LRC combines a square-bracket line timestamp with angle-bracket word markers. ESLRC uses square brackets at every text boundary. Either can appear in a file ending in `.lrc`, so the extension alone does not identify the syntax.
+
+## Parse behavior
+
+Use `eslrc` or `@syllables-dev/parse/eslrc`. The reader accepts LRC-style metadata. Without a final empty timestamp, it derives an end from the following row or a fallback. The writer requires word timing and does not invent word boundaries from line timing.

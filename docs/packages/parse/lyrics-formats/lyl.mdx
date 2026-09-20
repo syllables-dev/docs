@@ -1,0 +1,42 @@
+---
+title: LYL
+description: Lyricify's line-synchronized lyrics format.
+---
+
+LYL, or Lyricify Lines, is a plain-text format for line-synchronized lyrics. Unlike LRC, each row stores both ends of its interval.
+
+## Syntax
+
+```text
+[start,end]content
+```
+
+Both values are absolute timestamps in milliseconds.
+
+## Example
+
+```text
+[type:LyricifyLines]
+[ti:Example]
+[12000,13300]Hello world
+[16000,18000]Another line
+```
+
+The type tag identifies the format. Each lyric row follows `[start,end]text`, with absolute times in integer milliseconds.
+
+| Row | Start | End | Duration |
+| --- | --- | --- | --- |
+| `Hello world` | 12 seconds | 13.3 seconds | 1.3 seconds |
+| `Another line` | 16 seconds | 18 seconds | 2 seconds |
+
+The gap from 13.3 to 16 seconds is represented directly. No empty boundary row is needed.
+
+## The second number is an end
+
+`[12000,13300]` ends at 13.3 seconds. It does not last 13.3 seconds. QRC and YRC have similarly shaped headers, but their second number is a duration.
+
+LYL stores the whole line as one timed text value. There are no nested word intervals, singer declarations, or translation tracks in this row syntax. LRC-style metadata tags can accompany the type header.
+
+## Parse behavior
+
+Use `lyl` or `@syllables-dev/parse/lyl`. The reader retains explicit line ends. Reducing word-timed lyrics to LYL requires `{ lossy: true }` because those word boundaries cannot be represented.

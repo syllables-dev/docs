@@ -1,6 +1,38 @@
 ---
 title: Lyrics formats
-description: Formats Parse can read and write
+description: How lyrics files store text, timing, singers, and parallel tracks.
 ---
 
-TODO
+A lyrics file connects text to an audio timeline. Some formats record only when a line starts. Others record the start and end of each word or syllable, identify different singers, or carry translations and pronunciation tracks.
+
+These pages explain the file formats and show how to read their syntax. Small examples use invented text so the timing and structure are easy to follow. Package behavior is called out separately where it differs from the format.
+
+## Formats at a glance
+
+| Format | What a file contains | Timing notation |
+| --- | --- | --- |
+| [TTML](./ttml/index.mdx) | XML with sections, vocals, metadata, translations, and transliterations | Explicit `begin` and `end` clock values |
+| [LRC](./lrc.mdx) | Line timestamps | `[mm:ss.fff]` |
+| [ELRC](./elrc.mdx) | Enhanced LRC with word timestamps | `[mm:ss.fff]` and `<mm:ss.fff>` |
+| [LYL](./lyl.mdx) | Lyricify Lines, with explicit line ranges | `[start,end]` in milliseconds |
+| [ESLRC](./eslrc.mdx) | Word-boundary timestamps between text units | `[mm:ss.fff]` |
+| [QRC](./qrc.mdx) | Line ranges and timing pairs after each word | `[start,duration]text(start,duration)` |
+| [YRC](./yrc.mdx) | Line ranges and timing triples before each word | `[start,duration](start,duration,0)text` |
+| [LYS](./lys.mdx) | Lyricify Syllable, with vocal-role and duet-side flags | `[property]text(start,duration)` |
+| [LQE](./lqe.mdx) | Lyricify Quick Export, a container for lyrics and parallel text | Section headers select the enclosed format |
+
+## Starts, ends, and durations
+
+An absolute timestamp is measured from the beginning of the audio. A duration is the length of an interval. A unit starting at `12000` with duration `800` ends at `12800` milliseconds.
+
+LYL stores the end itself. QRC, YRC, and LYS store durations. LRC normally stores only starts, so a player decides how long each line remains active. ESLRC uses the next boundary marker to close a text unit.
+
+## Words and syllables
+
+A timed unit does not have to be a whole word. `Hel` and `lo` can have separate times while displaying as `Hello`. Spaces belong to the text: inserting a space between every timed unit would split that word.
+
+Line timing does not imply word timing. A file can say that a line runs from 12 to 15 seconds without saying when each word is sung.
+
+## Working with Parse
+
+For imports, return types, and writer capabilities, see the [API reference](../api-reference.mdx). The [usage guide](../usage.mdx) explains conversion losses.
