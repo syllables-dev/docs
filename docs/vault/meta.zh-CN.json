@@ -1,6 +1,6 @@
 {
   "title": "Vault",
-  "description": "歌词规范、文件格式与贡献指南",
+  "description": "社区共建的 TTML 歌词库",
   "pagesIndex": "index",
   "icon": "Vault",
   "root": true,

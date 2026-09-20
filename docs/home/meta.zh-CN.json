@@ -2,7 +2,7 @@
   "title": "Syllables",
   "description": "文档首页",
   "pagesIndex": "index",
-  "icon": "House",
+  "icon": "logo",
   "root": true,
   "pages": ["index", "about", "contributing", "community"]
 }
