@@ -11,7 +11,7 @@ This page applies to Mandarin and Cantonese alike. Where the two differ, the dif
 
 Submit every Chinese lyric in traditional characters, Mandarin and Cantonese alike, whatever script the release uses. The server derives the simplified version from what you submit, so a reader who wants simplified still gets it. Submitting simplified gives the server nothing to work from.
 
-Traditional is the submission script because conversion only runs safely in that direction. Traditional to simplified is largely many-to-one and needs no judgement. Simplified to traditional is one-to-many, so a converter has to guess which word was meant:
+Traditional is the submission script because far more survives that direction. Traditional to simplified is mostly several characters to one, which loses information but needs no decision. Simplified to traditional is one to several, so a converter has to guess which word was meant:
 
 ```text
 发 -> 髮 or 發
@@ -37,6 +37,51 @@ Use traditional from beginning to end. A song does not switch script partway thr
 
 When the release is simplified, convert it yourself and read every line as you go. Do not paste the output of an automatic converter without checking it, because that is the guess this rule exists to avoid.
 
+## How the simplified version is derived
+
+The two scripts are not a relabeling of each other. Simplification merged groups of traditional characters into one simplified character, and it did not do this evenly, so the relationship runs differently in each direction.
+
+Most of it is several traditional characters to one simplified character. That direction loses information and needs no decision, because each input has exactly one output.
+
+```text
+髮, 發  ->  发
+後, 后  ->  后
+裡, 裏  ->  里
+```
+
+A few characters run the other way. One traditional character corresponds to two simplified characters, and the word it appears in decides which one.
+
+### Characters that depend on the word
+
+Eight characters behave this way. The left column is the common outcome and the right column is the exception.
+
+```text
+著   愛著你 -> 爱着你      原著 -> 原著
+乾   乾燥   -> 干燥        乾坤 -> 乾坤
+瞭   瞭解   -> 了解        瞭望 -> 瞭望
+覆   答覆   -> 答复        覆蓋 -> 覆盖
+藉   藉口   -> 借口        慰藉 -> 慰藉
+於   於是   -> 于是        於戲 -> 於戏
+徵   徵求   -> 征求        宮商角徵羽 -> 宫商角徵羽
+彷   彷彿   -> 仿佛        彷徨 -> 彷徨
+```
+
+`著` is the one that turns up in lyrics, because it carries two unrelated words. `愛著你` and `笑著` use the particle that marks ongoing action, which is `着` in simplified. `著作` and `原著` mean a written work, which stays `著`. Taiwan convention spells both with `著`, so a Taiwan lyric sheet gives no sign of which is which, while Hong Kong convention writes the particle as `着` and keeps the two apart.
+
+<AppleMusicQuote region="hk" songId="1444037351" quote={"有著我便有著你"} />
+
+That line uses the particle, so it becomes `有着我便有着你`. The track is a Hong Kong release written with the Taiwan form, which is the common case rather than the exception.
+
+### How the conversion handles it
+
+Conversion runs on whole words rather than on single characters, because `著` on its own has no correct answer and the word supplies it. Each of the eight characters has one default outcome and a short list of words that keep the other one.
+
+The conversion is automatic and it is not perfect. Report a wrong character in a simplified rendering rather than adjusting your traditional submission, because the submission is what the file keeps and the derivation is what needs the fix.
+
+### What this means for your submission
+
+Nothing changes in what you write. Use the characters the lyric sheet uses, in traditional, and leave the eight above as they are. Do not choose between `著` and `着` to help the converter, and do not convert anything to simplified yourself.
+
 ## Keep the artist's words
 
 Script is the one thing you normalize. Follow the released lyric in everything else: its wording, its register, and the variant characters it chooses. The words the artist approved are the words that belong in the file.
@@ -47,7 +92,6 @@ Several characters have two accepted traditional forms. Both are correct, so pic
 
 ```text
 裡 / 裏
-著 / 着
 什 / 甚
 麼 / 麽
 為 / 爲
@@ -56,6 +100,8 @@ Several characters have two accepted traditional forms. Both are correct, so pic
 Do not normalize one line to a form the rest of the song does not use, and do not let a second form appear because a later verse was transcribed from a different source.
 
 A simplified release often leaves no variant choice to inherit, because several of these pairs collapse to a single simplified character. Pick one form when you convert, and use it everywhere the character appears.
+
+`著` and `着` look like another pair for this list and are not one. They are two characters rather than two forms of one character, and [Characters that depend on the word](#characters-that-depend-on-the-word) covers them.
 
 ### Write Cantonese as the lyric writes it
 
