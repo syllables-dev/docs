@@ -3,4 +3,59 @@ title: Japanese
 description: Guidelines for Japanese lyrics
 ---
 
-TODO
+Write lyrics that match the recording and are easy to follow. Preserve the artist's wording and written forms, and let the vocal phrasing guide the line breaks.
+
+## Keep the artist's words
+
+Keep intentional kanji, kana, contractions, dialect, and mixed-language passages. Do not rewrite the lyric in kana to make it easier to time, or replace an unusual expression with formal Japanese.
+
+Use the exact version of the recording you are transcribing. Check unclear wording against an artist- or publisher-provided lyric source. The audio establishes what is performed; a reliable written source helps distinguish spellings that sound alike.
+
+## Choose a timing approach
+
+- **Per word:** time each word as a unit, using the word divisions of a verified romanization as a guide. Do not combine unrelated words into a single phrase-sized span.
+- **Per character, recommended:** use smaller, reading-aware units of the original text. Keep characters together where separating them would invent a pronunciation boundary. This gives finer highlighting without rewriting the lyric in kana.
+
+More boundaries give finer control, not automatic accuracy. Both approaches need timing checked against the recording. The [splitting guide](./splits.mdx) explains the exceptions to literal character splitting.
+
+## Use sources critically
+
+Apple Music TTML is useful evidence of wording and presentation, but its word-timed files mix character-sized, word-sized, and phrase-sized spans. The `Word` timing label does not guarantee linguistic word boundaries. Imported romanization also needs checking.
+
+Keep these decisions separate: what is written, how it is sung, where the line breaks, and which parts receive individual timestamps. Do not change spelling or add spaces just to expose timing boundaries.
+
+## Make the text readable
+
+- Keep continuous Japanese text continuous, including across timed spans.
+- Use punctuation for meaning, not as a record of every breath or note.
+- Break lines at vocal phrases rather than a fixed character count.
+- Write each repeated passage in full and check its wording and delivery again.
+- Keep reading annotations out of the lyric text, and keep lead and backing vocals distinct.
+- Put verses, choruses, and other musical sections in their own sections in the file.
+
+## In this guide
+
+<Cards>
+  <Card
+    href="/vault/guidelines/lyrics/japanese/text"
+    title="Text"
+    description="Written forms, special readings, numbers, repeated lyrics, and vocal content."
+  />
+  <Card
+    href="/vault/guidelines/lyrics/japanese/spacing"
+    title="Spacing"
+    description="Continuous Japanese text, phrase spaces, mixed scripts, and spaces around punctuation."
+  />
+  <Card
+    href="/vault/guidelines/lyrics/japanese/punctuation"
+    title="Punctuation"
+    description="Line endings, questions, quotations, parentheses, and long-vowel marks."
+  />
+  <Card
+    href="/vault/guidelines/lyrics/japanese/splits"
+    title="Line and timing splits"
+    description="Word-level and reading-aware character timing, kana combinations, kanji, and vocal phrasing."
+  />
+</Cards>
+
+See also [Japanese romanization](../../romanization/japanese.mdx) and the [TTML guide](../../../ttml/index.mdx).

@@ -1,0 +1,135 @@
+---
+title: Punctuation
+description: Line endings, questions, quotations, parentheses, and marks that belong to Japanese spelling
+---
+
+Use punctuation to clarify the lyric's meaning. It does not record every pause, beat, or change of note. [Spacing](./spacing.mdx) covers the spaces around the marks.
+
+## Line endings
+
+Do not add `。` or `、` merely to finish a lyric line. A line break can end a sentence or leave it unfinished. Keep a question mark, exclamation mark, or closing quotation bracket when it carries meaning.
+
+Preserve deliberate punctuation from a reliable lyric source when it is part of the expression. Do not strip every mark from Japanese because the Chinese guide uses a different convention.
+
+## Commas within a line
+
+Use `、` sparingly where it clarifies a list, an address, or the relationship between clauses. A breath does not require a comma, and separate timestamps never require one.
+
+This invented list uses commas for meaning:
+
+```text
+赤、青、白の花
+```
+
+Do not replace every [phrase space](./spacing.mdx#phrase-spaces) with a comma. A phrase space groups the delivery; a comma helps the reader parse the sentence. Preserve a meaningful distinction when the lyric uses both.
+
+## Questions and exclamations
+
+Keep question marks where the phrase is a question, including a question conveyed by intonation rather than a final particle. Do not add one solely because the line contains `何` or `どうして`: those words can occur inside a statement.
+
+An invented question and statement:
+
+```text
+どこへ行くの？
+どこへ行くのか知らない
+```
+
+Read across line breaks before placing the mark. When one question occupies two lines, close it only where the question ends.
+
+Here the question and its surrounding quotation continue across the line break:
+
+<AppleMusicQuote
+  region="jp"
+  songId="1648876814"
+  quote={`「ところで一つ伺いますが
+先日何処かで？...やっぱいいや」`}
+/>
+
+<CodeComparison
+  correct={`この先に
+何があるの？`}
+  incorrect={`この先に？
+何があるの？`}
+/>
+
+Use an exclamation mark for an exclamation, not as a volume meter. Do not add strings of marks to indicate force. Retain deliberate repeated punctuation only when it belongs to verified source styling.
+
+For newly supplied punctuation in Japanese text, use `？` and `！`. Keep punctuation within an English passage in its English form. Do not mistake the archive's mixture of ASCII and full-width marks for a requirement to mix them within the same passage.
+
+## Quotation brackets
+
+Use `「」` for words quoted inside Japanese text, and `『』` for a quotation inside a quotation. Do not wrap the whole lyric in brackets because a character or narrator sings it.
+
+```text
+「またね」と言った
+```
+
+Keep a quotation open across lyric lines until the quoted words end. Put a question mark inside the closing bracket when the quotation itself is a question.
+
+```text
+「この先に
+何があるの？」
+```
+
+The opening and closing brackets can belong to different lyric lines:
+
+<AppleMusicQuote
+  region="jp"
+  songId="1447923405"
+  quote={`「男は最初になりたがり
+女は最後になりたがる」`}
+/>
+
+Quotation brackets do not create a separate singer or vocal part. Identify that from the performance.
+
+## Parentheses
+
+Determine what the parentheses mean before assigning timing. They can enclose a reading annotation, a backing response, or words that belong to the lead phrase.
+
+- A reading annotation explains the reading of another written expression. Drop it from the lyric and let the romanization carry the reading.
+- A backing response is separately performed text. Give it independent timing in a word sync.
+- Parenthetical lead text stays with the lead unless the recording establishes another role.
+
+See [Reading annotations](./text.mdx#reading-annotations) and [Background vocals](./text.mdx#background-vocals). Do not classify parentheses by appearance alone or delete their contents without checking their purpose.
+
+An annotation contributes one performed reading, so remove the parentheses and their kana and keep the expression they explain:
+
+<CodeComparison
+  correct={"いつも心がいるから"}
+  incorrect={"いつも心(きみ)がいるから"}
+  source={{ region: "jp", songId: "1838917139" }}
+/>
+
+The archived pronunciation reads `itsumo kimi ga iru kara`, so `kimi` is what the romanization carries and `心` is what the line displays.
+
+## Long-vowel and repetition marks
+
+The long-vowel mark `ー` belongs to spelling. It is not a dash, a hyphen, or an instruction to insert a pause.
+
+<CodeComparison correct={"コーヒー"} incorrect={"コ-ヒ-"} />
+
+Check look-alikes when importing text. A full-width hyphen-minus `－` is not the same character as `ー`, even if a font makes them look similar. Correct a confirmed transcription error; do not silently change an unusual source form without checking it.
+
+Keep iteration marks such as `々` in the words that use them. Do not treat them as punctuation-only events. See [Kanji and special readings](./splits.mdx#kanji-and-special-readings) for timing.
+
+## Pauses and unfinished phrases
+
+Do not add ellipses for instrumental gaps, held notes, or a sentence that continues onto the next line. Use timing and line breaks for those events.
+
+Preserve a verified ellipsis or interruption mark when it carries the intended unfinished expression. Do not restore a missing ending merely to complete the sentence. If a word is cut off and its written form is uncertain, check the recording and an authoritative lyric rather than borrowing an English fragment convention automatically.
+
+## Punctuation and timing
+
+Punctuation has no sung onset. Attach an opening bracket to the following text and a closing bracket or question mark to the preceding text. Do not create an independent interval for a comma or quotation mark because an import did so.
+
+An import gives the opening bracket of this line a standalone 100 ms interval. Merge it into the unit that follows:
+
+<SyllableChips
+  correct={`<p begin="55.419" end="57.662" itunes:key="L12" ttm:agent="v1"><span begin="55.419" end="56.296">「愛して</span><span begin="56.296" end="57.662">る」</span></p>`}
+  incorrect={`<p begin="55.419" end="57.662" itunes:key="L12" ttm:agent="v1"><span begin="55.419" end="55.519">「</span><span begin="55.519" end="56.296">愛して</span><span begin="56.296" end="57.662">る」</span></p>`}
+  source={{ region: "jp", songId: "1538259004" }}
+/>
+
+The line begins and ends at the same times either way, and the bracket travels with the text it opens instead of holding 100 ms of silence. The closing bracket already sits with `る`, which is how a closing mark is timed. Do not keep an empty interval merely because an import produced it.
+
+This concerns punctuation, not `ー`, `っ`, or `ん`, which affect pronunciation. Their treatment belongs to the [timing rules](./splits.mdx#per-character-timing).

@@ -1,4 +1,4 @@
 {
   "title": "日语",
-  "pages": ["text", "splits"]
+  "pages": ["text", "spacing", "punctuation", "splits"]
 }

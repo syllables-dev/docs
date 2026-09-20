@@ -134,7 +134,7 @@ Split a word only when the split tells the player something a single interval ca
 
 - A gap or breath falls inside the word, so the highlight would otherwise run through a silence.
 - The performance leans hard on one syllable and the others pass quickly.
-- The word is really two words joined together, like `teatime` or `heartbreak`.
+- The word is really two words joined together, like `teatime` or `heartbreak`. This split is optional, and still depends on the recording.
 - The word is spelled out, chanted, or repeated as a vocalization.
 
 If none of these apply, leave the word whole. A held note is not a reason on its own, and neither is a syllable landing on a new note. Here a word is drawn right out and still needs only one interval, because nothing happens inside it:
@@ -159,14 +159,14 @@ The clearest case is an audible gap. The singer holds the first syllable, stops,
 
 The singer drops out entirely between `re` and `peat`. Without the split, the word would highlight straight through a silence the listener plainly hears. The surrounding words in that same line, `hoping` and `history`, stay whole.
 
-The other everyday case is a word that is really two words joined together. `teatime` is `tea` plus `time`, and the singer treats it that way:
+A compound word can be split the same way, but that choice is optional and still depends on the recording. `teatime` is `tea` plus `time`, and here the singer treats the two halves separately:
 
 <SyllableChips
   source={{ region: "us", songId: "1650841515" }}
   ttml={`<p begin="49.386" end="54.252" itunes:key="L12" ttm:agent="v1"><span begin="49.386" end="49.697">At</span> <span begin="49.697" end="50.158">tea</span><span begin="50.887" end="51.508">time,</span> <span begin="52.078" end="53.102">everybody</span> <span begin="53.102" end="54.252">agrees</span></p>`}
 />
 
-The split falls where the two words meet, and the singer leaves a clear break there. `everybody` in the same line is longer still, but it is one word sung straight through, so it takes one interval.
+The split falls where the two words meet, and the singer leaves a clear break there. Sung as one stretch, the same word would stay whole. `everybody` in the same line is longer still, but it is one word sung straight through, so it takes one interval.
 
 ### Follow ordinary syllable boundaries
 

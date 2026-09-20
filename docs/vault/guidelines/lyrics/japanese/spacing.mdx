@@ -1,0 +1,93 @@
+---
+title: Spacing
+description: Continuous Japanese text, phrase spaces, mixed scripts, and punctuation spacing
+---
+
+Spaces belong to the displayed lyric, not to its timing grid. A line can contain many timed units without a single written space. [Line and timing splits](./splits.mdx) covers those boundaries.
+
+## Keep Japanese text continuous
+
+Do not put a space between each word, kana, or kanji. Per-word timing uses verified word divisions internally; it does not turn the Japanese lyric into spaced romaji.
+
+For an invented continuous phrase:
+
+<CodeComparison
+  correct={"青い空を見て"}
+  incorrect={`青い 空 を 見て
+青 い 空 を 見 て`}
+/>
+
+Switching among kanji, hiragana, and katakana does not require a space. Keep kanji and their following kana together in the displayed text, even when those characters have separate timestamps.
+
+The archived timing divides this line into twelve pieces, and it still shows one space:
+
+<AppleMusicQuote region="us" songId="1773515730" quote={"規制まみれ断念 滴るダメージ"} />
+
+That space separates two phrases. The timing boundaries inside each phrase leave no mark on the written line.
+
+## Phrase spaces
+
+A space can separate two phrases that still belong on one lyric line. Use it at a clear phrase boundary, not at every breath or grammatical junction. Keep deliberate phrase spacing from a reliable lyric source when it fits the performance.
+
+An invented line with two short phrases might read:
+
+```text
+目を閉じて 耳を澄まして
+```
+
+A released lyric uses the same kind of selective phrase space:
+
+<AppleMusicQuote region="jp" songId="1484037111" quote={"きみみたいに きれいな女の子が"} />
+
+The space groups the text for reading. It does not assert that the singer is silent there. A larger change of phrase may need a [new line](./splits.mdx#line-splits) instead.
+
+Do not impose a fixed number of spaces on each line or import the Chinese guide's phrase layout into Japanese. One continuous phrase needs no space. Where the performance allows several positions, keep a word, a name, or a closely connected grammatical group whole.
+
+## Use one plain space
+
+Use a single ordinary space, U+0020, where a space is needed. Remove leading and trailing spaces. Do not use tabs or several spaces to line up the text or represent a longer rest.
+
+Check copied text for these characters:
+
+| Character | Name | Action |
+| --- | --- | --- |
+| `U+0020` | Ordinary space | Use for a phrase or word space |
+| `U+3000` | Ideographic space | Replace with one ordinary space |
+| `U+00A0` | No-break space | Replace with one ordinary space |
+| `U+200B` | Zero-width space | Remove if introduced by copying |
+
+An ideographic space is a real Japanese typographic space, but its extra width is not needed in the delivered lyric. Preserve the phrase boundary when replacing it. Do not delete all whitespace indiscriminately: English words still need their spaces.
+
+## Mixed scripts
+
+Put one ordinary space on each side of a Latin run where it meets Japanese text. Capitalize the run's first word, then follow normal English capitalization within it.
+
+<CodeComparison
+  correct={"Okay たちまち独壇場 Listen listen"}
+  incorrect={"Okayたちまち独壇場Listen listen"}
+  source={{ region: "jp", songId: "1704093812" }}
+/>
+
+Apple Music omits both script-boundary spaces in the archived line. Adding them makes the Latin runs visible without creating lyric lines or timing boundaries.
+
+The same rule applies when a Latin unit symbol touches Japanese:
+
+<CodeComparison
+  correct={"半径300mm の体で 必死に鳴いてる"}
+  incorrect={"半径300mmの体で 必死に鳴いてる"}
+  source={{ region: "jp", songId: "1657318765" }}
+/>
+
+Digits do not need spaces against Japanese, so `半径300` stays together. The space goes after the Latin run `mm`, where Japanese resumes. Keep a measurement symbol's standard case rather than changing `mm` to `Mm`.
+
+Drop a boundary space only at the start or end of a line. Preserve acronyms and proper names, and capitalize ordinary English according to the [English text rules](../english/text.mdx#capitalization). A script-boundary space remains part of the displayed text even when the timing spans divide somewhere else.
+
+## Around punctuation
+
+Keep Japanese punctuation tight against the text it belongs to. Do not put spaces immediately inside quotation brackets or parentheses.
+
+<CodeComparison correct={"「おかえり」と言う"} incorrect={"「 おかえり 」 と言う"} />
+
+A line-synced backing response has one space before its opening parenthesis; see [Background vocals](./text.mdx#background-vocals). A reading annotation raises no spacing question, because it does not stay in the lyric; see [Reading annotations](./text.mdx#reading-annotations).
+
+Inside an English passage, follow [English punctuation spacing](../english/spacing.mdx). Do not add spaces around a long-vowel mark, an iteration mark, or an apostrophe within a word.

@@ -1,6 +1,79 @@
 ---
 title: Japanese
-description: Romanizing Japanese lyrics
+description: Verify performed readings, word divisions, and alignment without changing the original lyric
 ---
 
-TODO
+Japanese romanization represents the performed reading in Latin script. Keep it separate from the original written lyric. It is not a translation, and it must not replace an unusual reading with the one a dictionary happens to list first.
+
+This page gives checks that apply across romanization systems. It does not yet select a house system or a complete word-division convention.
+
+## Follow the performed reading
+
+Listen to the exact recording and consult a reliable lyric or reading source. Check special readings, names, dates, counters, contractions, and dialect manually. A kanji-by-kanji conversion cannot reliably recover the reading of a whole expression.
+
+```text
+今日: verify whether the expression is read きょう or こんにち
+1人: ordinarily ひとり, not a reading assembled from each symbol
+```
+
+These are reading checks, not romanization spellings to adopt. The correct reading still needs to be written consistently in the system used for the song.
+
+Keep contracted forms contracted when they are performed that way. Do not romanize `待ってる` as though an extra `い` were sung. Do not rewrite the original kanji simply because the reading track makes its pronunciation explicit.
+
+## Particles and special readings
+
+Identify particles in context. Written `は`, `へ`, and `を` need their particle readings recognized; their shapes alone do not determine what is heard. The spelling used to represent those sounds must then follow the chosen romanization convention consistently.
+
+A source lyric may gloss an expression with a parenthetical reading. That reading belongs here rather than in the lyric text, which keeps the expression alone. Romanize the performed reading once, not the ordinary reading of the written expression and not both in sequence. See [Reading annotations](../lyrics/japanese/text.mdx#reading-annotations).
+
+## Word divisions
+
+Verified romaji word divisions guide [per-word timing](../lyrics/japanese/splits.mdx#per-word-timing). Verify them as words before mapping them to original-text spans.
+
+1. Establish the full performed reading and meaning of the phrase.
+2. Identify its words, checking compounds, particles, inflected forms, and auxiliary constructions in context.
+3. Review the divisions under one consistent convention for the song.
+4. Map those words back to the original text without adding romaji spaces to the Japanese display.
+
+Do not infer words from a change of script, one kanji at a time, or the boundaries in an imported timing track. A tokenizer's output is a proposal to review. Do not combine unrelated words into a phrase-sized unit to avoid resolving a difficult boundary.
+
+```text
+Word: sakura
+Timing pieces: sa | ku | ra
+```
+
+The second line still represents one word. Word spaces and timing boundaries serve different purposes. A pronunciation track can have several timed pieces inside a word without putting spaces between those pieces in its displayed romaji.
+
+The house treatment of particles, auxiliaries, and compound boundaries remains to be settled. Until then, retain a consistently reviewed convention rather than presenting an automatic tokenizer's defaults as the project standard.
+
+## Preserve sound distinctions
+
+Keep long vowels, gemination, and moraic nasals represented according to the selected system. Do not drop a sound because the original-text timing attaches its written marker to another unit.
+
+Check that distinct words have not collapsed through an omitted long vowel or doubled consonant. Check nasal boundaries before vowels and `y` where the chosen system may require a separator. Do not introduce or remove such separators by applying English punctuation rules.
+
+Do not mix macrons, doubled vowels, and other long-vowel conventions casually within a song. Imported tracks can vary even between repeats. Correct inconsistencies only after checking both the reading and the convention, rather than normalizing letter sequences blindly.
+
+## Mixed-language passages
+
+An English phrase is not Japanese romaji. Preserve its words when they are performed as English, rather than transliterating a guessed katakana approximation back into Latin letters.
+
+A Japanese loanword written and performed as Japanese needs its Japanese reading represented. Check the performance and the original text to distinguish the cases. Preserve established names without assuming their familiar spelling always describes the pronunciation in this recording.
+
+## Align reading and text
+
+One kanji need not correspond to one romanized syllable, and one original-text span can cover several morae. Some compounds need one shared reading for the whole written expression.
+
+When a pronunciation track mirrors the original-text timing, check that its pieces concatenate to the complete reading without missing or duplicated sounds. Preserve word spaces separately from internal timing divisions. Do not force equal numbers of letters, kana, or morae into corresponding spans.
+
+A finer pronunciation track needs independently checked timestamps. It cannot recover exact internal boundaries merely by subdividing a coarse original-text interval. Recheck geminates and long vowels at joins, where an import may lose a consonant or duplicate a vowel.
+
+## Before delivery
+
+- Read the romanization alongside the original and listen to the same recording version.
+- Check special readings and word divisions rather than trusting metadata labels or generated spaces.
+- Compare repeated passages for accidental spelling changes and genuine delivery changes.
+- Reconstruct each word from its timed pieces and check that every performed sound appears once.
+- Keep one romanization convention throughout the song.
+
+The remaining project-wide choice is the romanization system and its detailed spelling and word-division rules. This guidance does not select Hepburn, Kunrei-shiki, or another system by implication.

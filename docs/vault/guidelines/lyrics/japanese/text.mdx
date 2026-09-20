@@ -1,6 +1,229 @@
 ---
-title: Text, spacing, and punctuation
-description: Writing Japanese lyrics text correctly
+title: Text
+description: Written forms, readings, numbers, repetition, and vocal content in Japanese lyrics
 ---
 
-TODO
+Transcribe what is performed without losing the lyric's written form. This page covers the words themselves; [Spacing](./spacing.mdx) and [Punctuation](./punctuation.mdx) cover how the line is marked up.
+
+## Keep the written form
+
+Preserve intentional kanji, hiragana, katakana, historical spelling, and variant characters. Two spellings can share a pronunciation without having the same effect on the page. Do not convert everything to kanji, modernize an intentional spelling, or apply the [Chinese script policy](../chinese/text.mdx) to Japanese kanji.
+
+These are possible written choices, not interchangeable corrections:
+
+```text
+君 / きみ / キミ
+僕 / ぼく / ボク
+```
+
+Follow a reliable lyric source for the choice. Keep meaningful changes between verses even when the words sound the same. Where sources disagree, check the release and the surrounding meaning rather than choosing the spelling a converter produces first.
+
+The same pronoun can appear in different scripts without becoming interchangeable:
+
+<AppleMusicQuote region="jp" songId="1444208293" quote={"キミに何処か魅せられてゆく"} />
+
+<AppleMusicQuote region="jp" songId="1444208293" quote={"耳元で君が囁いて"} />
+
+Both are read `kimi` in the archived pronunciation track. Preserve the written distinction instead of normalizing both occurrences to the same form.
+
+### Contractions and dialect
+
+Keep contractions, omitted particles, dialect, fragments, and deliberate nonstandard grammar. Do not restore sounds that are absent from the performance.
+
+For an invented phrase performed in its contracted form:
+
+<CodeComparison correct={"待ってる"} incorrect={"待っている"} />
+
+The longer form is ordinary Japanese, but it is not the same wording. The same principle applies to forms such as `じゃない` and `ちゃう`: do not expand them merely to make the text formal.
+
+The contracted form belongs in the lyric as performed:
+
+<AppleMusicQuote region="jp" songId="1375007474" quote={"平和な世の中じゃないし"} />
+
+Dialect needs the same care:
+
+<AppleMusicQuote region="jp" songId="1444614244" quote={"大阪弁は上手になれへんし"} />
+
+### Expressive spelling
+
+Small vowels, katakana, and unusual spellings can carry the voice of a lyric. Keep them when they belong to the released wording. Do not invent them to make an ordinary line look louder, rougher, or more emotional.
+
+Distinguish an intentional form such as `ねぇ` from an editor adding more copies of `ぇ` for a held note. Preserve the established spelling; timing carries the duration. A track title's decorative spelling is not evidence that every similar word in the lyric uses it.
+
+An unusual spelling can carry deliberate wordplay:
+
+<AppleMusicQuote region="jp" songId="1511078938" quote={"ぁ～勿体ぶっていいから 孤のまんま"} />
+
+## Separate spelling from reading
+
+Resolve the reading of the whole expression before timing it or writing romaji. Kanji can have several readings, and a lyric may assign a reading that a dictionary would not predict.
+
+A source lyric marks an assigned reading in parentheses. Keep the written expression and leave that gloss out:
+
+<CodeComparison
+  correct={"孤独は燃料 卑屈な町を行く"}
+  incorrect={"孤独は燃料(ガソリン) 卑屈な町を行く"}
+  source={{ region: "jp", songId: "1551508124" }}
+/>
+
+The written word `燃料` is performed as `ガソリン`, which the archived pronunciation track confirms as `gasorin`. That reading belongs to the romanization rather than the lyric. Resolve it from the lyric and recording instead of assigning the ordinary reading `nenryou`, and keep the displayed kanji once it is confirmed; a pronunciation correction does not require a spelling change.
+
+### Reading annotations
+
+Parenthetical kana such as `(ガソリン)` above tell a reader how the preceding expression is read. They are a note about the text, not a second phrase to sing, and the lyric does not carry them.
+
+A gloss can also reassign a common word:
+
+<CodeComparison
+  correct={"愛しいこの地球を"}
+  incorrect={"愛しいこの地球(せかい)を"}
+  source={{ region: "jp", songId: "984442915" }}
+/>
+
+The archived pronunciation track reads this line `itoshii kono sekai o`, with no `chikyuu` anywhere in it. One reading is performed, so the lyric shows one written form and the pronunciation track carries `sekai`.
+
+Removing an annotation never changes the expression it explained. `地球` stays `地球`; do not promote `せかい` into the lyric in its place.
+
+Resolve the reading before you delete anything, and record it where the romanization can use it. An annotation kept in the lyric repeats on screen a sound the singer performs once, and it invites an editor to time it as a second utterance or move it into a backing subline. Do not add guessed readings to every kanji; see [Japanese romanization](../../romanization/japanese.mdx).
+
+Parentheses in a Japanese lyric are not all annotations. Check what the recording performs before deleting their contents: a separately sung response is a [backing vocal](#background-vocals), and parenthetical lead text stays in the line.
+
+## Numbers and names
+
+Keep digits or Japanese numerals according to the lyric's written form. Do not rewrite a number just to make its character count match the number of sounds. A counter takes its reading from the number in front of it, so resolve the whole expression instead of assembling it one symbol at a time.
+
+<SyllableChips
+  source={{ region: "jp", songId: "1648108988" }}
+  ttml={`<p begin="2:48.560" end="2:52.212" itunes:key="L38" ttm:agent="v1"><span begin="2:48.560" end="2:49.491">不特定</span><span begin="2:49.491" end="2:49.941">多数</span><span begin="2:49.941" end="2:50.576">じゃなくて</span><span begin="2:50.576" end="2:50.903">ただ</span><span begin="2:50.903" end="2:52.212">1人</span></p>`}
+/>
+
+`1人` is one span read `hitori`. Neither symbol carries that reading alone, and `2人` in the same position would be `futari` rather than a form built from `1人`.
+
+Dates, counters, names, measurements, and number-based wordplay need particular care. A string of digits may be read as a number, digit by digit, or as a word. Confirm which before dividing it for timing.
+
+<SyllableChips
+  source={{ region: "jp", songId: "1648272180" }}
+  ttml={`<p begin="1:25.246" end="1:28.264" itunes:key="L22" ttm:agent="v1"><span begin="1:25.246" end="1:25.962">444</span><span begin="1:25.962" end="1:26.242">3</span><span begin="1:26.242" end="1:26.382">で</span><span begin="1:26.382" end="1:26.849">外</span><span begin="1:26.849" end="1:27.175">れる</span><span begin="1:27.175" end="1:27.711">炭酸</span><span begin="1:27.711" end="1:28.264">水</span></p>`}
+/>
+
+The archived pronunciation reads `4443` as `yon yon yon san`, four separate digits rather than the number 4,443. Its first chip therefore holds three sounds while the second holds one. Establish the reading first; a split that looks even in the text can sit anywhere in the sound.
+
+Digits can also take their reading from another language:
+
+<AppleMusicQuote region="jp" songId="726965341" quote={"感度良好 524"} />
+
+The archived pronunciation gives `five two four`. Write the digits as the lyric prints them and let the pronunciation track carry what is sung.
+
+Preserve established spelling and capitalization in names and acronyms. Check how an acronym is performed rather than assuming each printed letter has its own sung interval.
+
+<SyllableChips
+  source={{ region: "jp", songId: "1479397583" }}
+  ttml={`<p begin="2:34.082" end="2:45.602" itunes:key="L17" ttm:agent="v1"><span begin="2:34.082" end="2:34.982">道の</span><span begin="2:34.982" end="2:35.965">途中</span><span begin="2:35.965" end="2:36.235">で</span><span begin="2:36.235" end="2:36.959">聞こえ</span><span begin="2:36.959" end="2:37.464">た</span><span begin="2:37.700" end="2:38.046">S</span><span begin="2:38.046" end="2:39.308">OS</span><span begin="2:39.437" end="2:39.854">さ</span><span begin="2:39.854" end="2:40.350">え</span><span begin="2:40.481" end="2:41.657">気づかない</span><span begin="2:41.657" end="2:42.403">ふ</span><span begin="2:42.403" end="2:42.753">り</span><span begin="2:42.753" end="2:45.602">で</span></p>`}
+/>
+
+`SOS` is divided into `S` and `OS`, which matches neither its three letter names nor a single unit. Keep the acronym's established spelling and take its boundaries from the performance.
+
+## Other languages
+
+Keep foreign-language passages in their written language, with their accents, apostrophes, and word spaces. Do not turn an English phrase into katakana solely because it appears in a Japanese song.
+
+Conversely, a Japanese loanword written in katakana stays in katakana. Its English origin is not a reason to replace the lyric's spelling with an English word. Follow the [English guide](../english/index.mdx) inside an English passage, and the relevant language's rules for other passages.
+
+Put one ordinary space where Latin and Japanese scripts meet, and capitalize the first word of each Latin run. This archived line needs both script boundaries made visible:
+
+<CodeComparison
+  correct={"Okay たちまち独壇場 Listen listen"}
+  incorrect={"Okayたちまち独壇場Listen listen"}
+  source={{ region: "jp", songId: "1704093812" }}
+/>
+
+Continue to follow English capitalization inside the run. Preserve the established case of acronyms, names, and symbols; see [Mixed scripts](./spacing.mdx#mixed-scripts).
+
+## Repeated lyrics
+
+Write each repeated word and line in full. Do not replace performed text with a repeat instruction.
+
+<CodeComparison
+  correct={`もう一度
+もう一度`}
+  incorrect={"もう一度 (repeat twice)"}
+/>
+
+Check every recurrence. A last chorus may change a particle, shorten a word, or add a response. Copying the first chorus without listening loses those differences.
+
+Repeated phrasing can also change its written wordplay:
+
+<AppleMusicQuote region="jp" songId="1511078938" quote={"ぁ～勿体ぶっていいから このまんま"} />
+
+<AppleMusicQuote region="jp" songId="1511078938" quote={"ぁ～勿体ぶっていいから 個のまんま"} />
+
+The archived pronunciation is the same at the end of both lines. That does not make the displayed forms equivalent.
+
+Keep iteration marks that belong to a word, such as `々` in `日々`. They are part of its spelling, not instructions to repeat a line. Do not expand or remove them to make timing easier.
+
+## Background vocals
+
+### Line-synced lyrics
+
+Put a short backing response in half-width parentheses after the associated lead line, separated by one space. Keep any punctuation belonging to the response inside the parentheses.
+
+<AppleMusicQuote
+  region="jp"
+  songId="1720332181"
+  quote={"相変わらず脱皮してる毎日 (Bling Bling)"}
+/>
+
+### Word-synced lyrics
+
+Give the backing phrase its own subline with independent timing. Preserve overlaps instead of making the response wait for the lead to finish. Use the structure in [Background vocals in TTML](../../../ttml/background-vocals.mdx); parentheses alone do not create a vocal part.
+
+The backing response in this word-synced passage is structurally marked and has its own timing. Display it beneath the lead:
+
+<AppleMusicQuote
+  region="jp"
+  songId="1551508124"
+  quote={`ギラ
+(ギラ)`}
+/>
+
+Identify the role from the recording. A short interjection by the lead stays in the lead text. A parenthetical reading stays with its expression. Neither becomes backing merely because it is short or enclosed in parentheses.
+
+## Non-word vocals
+
+Include recognizable vocalizations when they form part of the melody, hook, or a meaningful response. Use familiar spellings that match the sound and the lyric's script.
+
+**Japanese script**
+
+<AppleMusicQuote region="jp" songId="1551508124" quote={"あー"} />
+
+**Latin script**
+
+<CodeComparison
+  correct={"Aye wah, oh-oh-oh"}
+  incorrect={"Aye wah oh oh oh"}
+  source={{ region: "jp", songId: "1704093812" }}
+/>
+
+These use different scripts because that is how each vocalization is established in the lyric. Choose the spelling by listening; do not treat every open vowel, repeated syllable, or hum as interchangeable.
+
+A Latin run also follows the [English non-word vocals](../english/text.mdx#non-word-vocals) rules: a hyphen joins connected sounds and a comma marks an audible pause. The archived line uses neither. Its three `oh` intervals run back to back, and a second of silence separates them from `wah`.
+
+Distinguish a repeat from a sustained sound. Write a sound again when it is performed again, not once for every note it crosses. Do not remove a meaningful long-vowel mark or repeated vowel from an established spelling, but do not add extra characters to measure duration.
+
+Leave out incidental breaths, instrumental descriptions, and production effects that no longer carry intelligible vocal text. A delay tail is not a new backing response. Processed vocals that still deliver intelligible words remain part of the lyric.
+
+## Spoken passages
+
+Transcribe audible dialogue and spoken interludes as performed. Keep contractions and dialect in speech just as in singing. Do not put a whole passage in quotation marks merely because it is spoken.
+
+Keep speaker labels and stage directions outside the lyric text. Assign the passage to the appropriate performer using [Agents and voices](../../../ttml/agents.mdx#spoken-passages).
+
+## Clean and explicit lyrics
+
+Match the recording version. Keep uncensored words when they are audible. When the audio bleeps or mutes part or all of a word, replace the whole word with asterisks rather than revealing the missing text from another version. If a clean version performs a replacement word, write that word.
+
+## Check for look-alikes
+
+Confirm suspicious characters against a reliable written source. `口` and `ロ`, or `力` and `カ`, may look similar but are different characters. A radical copied from a PDF may also resemble a normal kanji without being the same Unicode character.
+
+Do not apply blanket width or script conversion to solve these problems. Verify half-width kana, full-width Latin letters, and decorative forms before changing them. Keep a base character and its voicing mark together, including when the mark is stored as a separate combining character.

@@ -1,4 +1,4 @@
 {
   "title": "Japanese",
-  "pages": ["text", "splits"]
+  "pages": ["text", "spacing", "punctuation", "splits"]
 }

@@ -1,6 +1,304 @@
 ---
-title: Line and syllable splits
-description: Where to break lines and syllables in Japanese
+title: Line and timing splits
+description: Vocal phrases, per-word timing, and recommended reading-aware character timing
 ---
 
-TODO
+Line splits decide which words the reader sees together. Timing splits decide which parts of that line highlight separately. A line sync needs one start and end per line; a word sync needs intervals inside it as well.
+
+Japanese supports two timing modes here: **per word**, using verified romaji word divisions, and **per character, recommended**, using fine, reading-aware units of the original text. More boundaries give finer control, not automatic accuracy. Both modes need checking against the recording.
+
+## Line splits
+
+### Follow the vocal phrase
+
+Start a new line where a melodic or rhythmic phrase ends, a distinct response begins, or the delivery moves into a new thought. A breath alone need not start a new line. A smaller division can use a [phrase space](./spacing.mdx#phrase-spaces).
+
+A line may be a complete sentence, a fragment, or a single short call. Do not add words to complete its grammar or join clearly separate phrases just to make one sentence. A question or quotation can continue over several lines; close it where its meaning ends, as described in [Punctuation](./punctuation.mdx).
+
+This quotation keeps its performed two-line shape without closing at the first break:
+
+<AppleMusicQuote
+  region="jp"
+  songId="1447923405"
+  quote={`「男は最初になりたがり
+女は最後になりたがる」`}
+/>
+
+### Keep connected text together
+
+When two breaks fit the performance equally well, keep a word or name whole and keep a particle beside the expression it belongs to. Do not strand an inflection on the next line to balance character counts.
+
+This invented comparison assumes either break fits the musical phrase:
+
+<CodeComparison
+  correctLabel="Prefer"
+  incorrectLabel="Avoid"
+  correct={`遠い街へ
+手紙を送る`}
+  incorrect={`遠い街
+へ手紙を送る`}
+/>
+
+The preferred break keeps `街へ` together. A clearly separate delivery of the particle can justify a different line break; grammar is a tie-breaker, not permission to move words away from their performed phrase.
+
+### Keep line lengths natural
+
+Do not impose a fixed character count. A kanji, a kana, and an English word carry different amounts of sound and occupy different amounts of screen space.
+
+- Keep a short hook or response short when it forms its own phrase.
+- Split a long passage at a clear musical or grammatical boundary.
+- Leave screen-width wrapping to the player rather than encoding it as lyric lines.
+- Compare repeated sections, keeping the same breaks when the delivery is unchanged.
+
+### Sections and vocal parts
+
+Put verses, choruses, bridges, and other distinct musical parts in their own [song sections](../../../ttml/sections.mdx). Do not insert blank lyric lines or singable labels such as `Chorus` into the text. A sentence ending or singer handoff does not by itself require a new section.
+
+Identify lead and backing phrases before splitting them. A backing response can overlap the lead or end later; it need not complete the lead's sentence. Use a separate timed subline for word-synced backing vocals, following [Background vocals](./text.mdx#background-vocals).
+
+## Words, written units, and sound
+
+Keep four different things separate:
+
+- A word is a lexical unit. Giving its parts different timestamps does not turn them into different words.
+- A written unit is the text assigned to an interval. It may be a kana combination, one kanji, or a whole expression.
+- Syllables and morae describe pronunciation. A mora is a Japanese phonological timing unit, not a musical beat.
+- Musical timing describes this performance. A syllable can span several notes, and a short written unit can last longer than a whole word beside it.
+
+For example, `きゃ` contains two written kana but normally represents one mora. `きゃく` has two morae. In `きっと`, the small `っ` represents a geminate closure and counts toward the mora structure, but our original-text convention attaches it to the left. None of those facts supplies timestamps.
+
+The examples below are invented language examples. `|` shows a possible written timing boundary, not a space or punctuation to insert into the lyric. They do not claim that any particular recording has those acoustic boundaries.
+
+## Per-word timing
+
+Give each word one interval, guided by verified romaji word divisions. Verify the whole phrase's Japanese grammar and performed reading first. Spaces in an automatic romanization, dictionary output, or imported TTML are not sufficient verification.
+
+The two modes can divide the same written word differently:
+
+```text
+Original: さくら
+Verified word: sakura
+Per word: さくら
+Per character: さ | く | ら
+```
+
+The finer mode still represents one word. Conversely, a whole clause does not become one word because Japanese writes it without spaces. Do not group several independently sung words into a phrase-sized interval under the name of per-word timing.
+
+Map the reviewed romaji words back to the original text without inserting their spaces into the Japanese. Keep a compound whole when it is one word under the reviewed division; a change from kanji to kana does not necessarily start another word.
+
+Particle, auxiliary, and compound divisions can differ between romanization conventions. Use a consistently reviewed division for the song rather than switching tokenizers between lines. The [romanization guide](../../romanization/japanese.mdx#word-divisions) explains what to check without imposing an unapproved system. If a boundary is uncertain, resolve it before calling the per-word sync verified; do not hide the uncertainty inside a larger phrase span.
+
+Apple Music labels the following line `Word`, but its only interval contains a phrase with several words:
+
+<SyllableChips
+  source={{ region: "jp", songId: "382156650" }}
+  ttml={`<p begin="21.611" end="23.170" itunes:key="L3" ttm:agent="v1"><span begin="21.611" end="23.170">文句のないシチュエーション</span></p>`}
+/>
+
+That is line-level highlighting stored inside a word-timed file, not verified per-word timing. Split it only after the words and their onsets have been checked against the recording.
+
+## Per-character timing
+
+This is the recommended mode for Japanese. Give small original-text units their own intervals where their readings can be assigned confidently. It is not literal Unicode-character splitting and does not require converting kanji to kana.
+
+The recommended examples below use the manually aligned TTML supplied for this guide. Their Apple Music footers identify the recordings; the boundaries come from that manual sync. Examples described as imports preserve the archived Apple Music boundaries so the problem remains visible.
+
+Keep a base character with any combining marks. Never divide a written character into graphical pieces, repeat it to cover several notes, or insert kana into the original-text track to expose sounds hidden inside a kanji.
+
+This fine sync mixes whole expressions, individual kanji, and separate full-size kana according to the reading:
+
+<SyllableChips
+  source={{ region: "us", songId: "1773515730" }}
+  ttml={`<p begin="00:23.783" end="00:26.244" ttm:agent="v1" itunes:key="L7"><span begin="00:23.783" end="00:24.311">今宵 </span><span begin="00:24.311" end="00:24.473">思</span><span begin="00:24.473" end="00:24.582">い</span><span begin="00:24.582" end="00:24.687">切</span><span begin="00:24.687" end="00:24.816">り </span><span begin="00:24.816" end="00:25.294">白</span><span begin="00:25.294" end="00:25.560">黒</span><span begin="00:25.560" end="00:25.632">つ</span><span begin="00:25.632" end="00:25.777">け</span><span begin="00:25.777" end="00:25.897">よ</span><span begin="00:25.897" end="00:26.059">う</span><span begin="00:26.059" end="00:26.244">ぜ</span></p>`}
+/>
+
+`今宵` remains whole because its reading belongs naturally to the expression. The full-size `よ` and `う` have separate intervals. The written spaces group phrases rather than exposing every internal boundary.
+
+### Small modifying kana
+
+Keep small kana that modify a preceding kana with that kana. Common combinations include `きゃ`, `しゅ`, `ちょ`, `ファ`, and `ティ`.
+
+<CodeComparison
+  correctLabel="Keep the combination"
+  incorrectLabel="Do not isolate the modifier"
+  correct={`きゃ | く
+シャ | ツ`}
+  incorrect={`き | ゃ | く
+シ | ャ | ツ`}
+/>
+
+Small size alone is not the rule. Small `っ` and `ッ` represent gemination, not the same modification as `ゃ` or `ィ`. A stylized small vowel used independently also needs its actual reading checked rather than being merged by a character-size test.
+
+The first chip keeps `じゃ` together:
+
+<SyllableChips
+  source={{ region: "us", songId: "1773515730" }}
+  ttml={`<p begin="00:28.138" end="00:30.522" ttm:agent="v1" itunes:key="L9"><span begin="00:28.138" end="00:28.374">じゃ</span><span begin="00:28.374" end="00:28.484">木っ</span><span begin="00:28.484" end="00:28.635">端</span><span begin="00:28.635" end="00:28.904">微</span><span begin="00:28.904" end="00:29.199">塵</span><span begin="00:29.199" end="00:29.322">に</span><span begin="00:29.322" end="00:29.703">叩</span><span begin="00:29.703" end="00:29.982">き</span><span begin="00:29.982" end="00:30.252">潰</span><span begin="00:30.252" end="00:30.522">せ</span></p>`}
+/>
+
+By contrast, this import isolates `ゃ` from `じ`:
+
+<SyllableChips
+  source={{ region: "jp", songId: "1375007474" }}
+  ttml={`<p begin="50.275" end="54.283" itunes:key="L8" ttm:agent="v1"><span begin="50.275" end="50.598">平</span><span begin="50.598" end="51.018">和な</span><span begin="51.018" end="51.900">世の</span><span begin="51.900" end="52.416">中</span><span begin="52.416" end="52.597">じ</span><span begin="52.597" end="53.499">ゃ</span><span begin="53.499" end="53.798">ない</span><span begin="53.798" end="54.283">し</span></p>`}
+/>
+
+Under this guide's original-text convention, merge those two chips as `じゃ`. The modifier does not become an independent written timing unit.
+
+### Small tsu attaches left
+
+Keep `っ` or `ッ` with the preceding written unit, including when that unit is kanji. Preserve the geminate consonant in the reading.
+
+```text
+きっと: きっ | と
+ラッパ: ラッ | パ
+切った: 切っ | た
+```
+
+This is a grouping convention for original text. It does not say that the closure is silent or that it has no duration. Listen through the closure and the following release when placing the boundary; do not create a vowel sound for `っ` or divide the interval evenly by character count.
+
+The same left attachment works in katakana:
+
+<SyllableChips
+  source={{ region: "us", songId: "1773515730" }}
+  ttml={`<p begin="00:34.713" end="00:37.013" ttm:agent="v1" itunes:key="L12"><span begin="00:34.713" end="00:34.988">乱</span><span begin="00:34.988" end="00:35.332">破</span><span begin="00:35.332" end="00:35.608">道 </span><span begin="00:35.608" end="00:35.857">ラッ</span><span begin="00:35.857" end="00:36.001">パ </span><span begin="00:36.001" end="00:36.244">駆</span><span begin="00:36.244" end="00:36.517">け</span><span begin="00:36.517" end="00:36.853">抜</span><span begin="00:36.853" end="00:37.013">け</span></p>`}
+/>
+
+`ラッ` carries the closure up to the onset of `パ`; the source text still reconstructs to `ラッパ`.
+
+An isolated, initial, or phrase-final small tsu may represent a clipped sound rather than ordinary word-internal gemination. Check that use individually. Do not attach it across a line or vocal-part boundary merely to satisfy the left-attachment rule.
+
+### Long-vowel marks attach left
+
+Keep `ー` with the preceding unit. Do not give the mark its own original-text interval.
+
+```text
+コーヒー: コー | ヒー
+ケーキ: ケー | キ
+```
+
+Time the unit through the sustained sound. A note change during that sound does not require another copy of the kana or a separate punctuation-like event for the mark.
+
+Here `メー` stays one written timing unit:
+
+<SyllableChips
+  source={{ region: "us", songId: "1773515730" }}
+  ttml={`<p begin="00:26.176" end="00:28.363" ttm:agent="v1" itunes:key="L8"><span begin="00:26.176" end="00:26.276">規</span><span begin="00:26.276" end="00:26.399">制</span><span begin="00:26.399" end="00:26.483">ま</span><span begin="00:26.483" end="00:26.558">み</span><span begin="00:26.558" end="00:26.721">れ</span><span begin="00:26.721" end="00:26.976">断</span><span begin="00:26.976" end="00:27.262">念 </span><span begin="00:27.262" end="00:27.589">滴</span><span begin="00:27.589" end="00:27.805">る</span><span begin="00:27.805" end="00:27.965">ダ</span><span begin="00:27.965" end="00:28.255">メー</span><span begin="00:28.255" end="00:28.363">ジ</span></p>`}
+/>
+
+This import instead leaves `ー` as a standalone chip at the end:
+
+<SyllableChips
+  source={{ region: "jp", songId: "865960626" }}
+  ttml={`<p begin="2:50.720" end="2:56.080" itunes:key="L26" ttm:agent="v1"><span begin="2:50.720" end="2:51.099">空</span><span begin="2:51.099" end="2:51.343">を</span><span begin="2:51.343" end="2:51.628">刺</span><span begin="2:51.628" end="2:51.963">し</span><span begin="2:51.963" end="2:52.508">た</span> <span begin="2:52.568" end="2:53.137">のっ</span><span begin="2:53.137" end="2:53.592">ぽの</span><span begin="2:53.592" end="2:53.952">タ</span><span begin="2:53.952" end="2:54.234">ワ</span><span begin="2:54.234" end="2:56.080">ー</span></p>`}
+/>
+
+Merge the final mark left as `ワー` when applying this guide. Preserve the full duration while removing the false written boundary.
+
+### Full-size vowels can split
+
+Full-size vowel kana are not long-vowel marks. They can receive their own intervals when their place in the performed reading can be identified.
+
+```text
+きょう: きょ | う
+ありがとう: あ | り | が | と | う
+```
+
+Do not merge every final `う` or `い` by a spelling rule. Do not assume they always have a fresh vocal onset either: vowel sequences can be connected or rearticulated in performance. If the audio does not support a reliable internal boundary, keep the connected portion together rather than inventing a precise timestamp.
+
+### Written nasal kana
+
+Treat written `ん` and `ン` according to the performance. A clearly identifiable nasal portion may support its own interval; a connected portion without a reliable internal boundary can stay with the preceding unit.
+
+```text
+ほん: ほ | ん, when the nasal portion can be timed separately
+ほん: ほん, when keeping the connected portion together is better supported
+```
+
+There is no universal independent-versus-attached default here yet. Do not use the geminate rule to settle it: a moraic nasal and a geminate closure are different sounds. Nor should a nasal inside a kanji reading be pulled out as a new written `ん` that the lyric never contained.
+
+### Kanji and special readings
+
+Resolve a whole word's performed reading before assigning portions to its characters. One kanji may carry several morae. A compound's reading may not have a defensible character-by-character division at all.
+
+```text
+東京, read とうきょう: 東 | 京
+今日, read きょう: 今日
+大人, read おとな: 大人
+```
+
+The first example has a clear mapping between characters and portions of the reading. The other two stay whole rather than assigning sounds arbitrarily to their kanji. Keeping `大人` together does not claim that `おとな` is one syllable; it preserves an original-text unit whose reading belongs to the whole word.
+
+A single kanji can carry a long reading while surrounding text uses finer divisions:
+
+<SyllableChips
+  source={{ region: "jp", songId: "1538127486" }}
+  ttml={`<p begin="34.797" end="40.341" itunes:key="L6" ttm:agent="v1"><span begin="34.797" end="35.648">裸</span><span begin="35.648" end="35.881">の</span><span begin="35.881" end="36.432">言</span><span begin="36.432" end="37.149">葉</span><span begin="37.149" end="37.916">胸</span><span begin="37.916" end="38.060">に</span><span begin="38.060" end="38.741">閉</span><span begin="38.741" end="38.983">じ</span><span begin="38.983" end="39.604">こめ</span><span begin="39.604" end="40.341">た</span></p>`}
+/>
+
+The paired pronunciation maps `裸` to `hadaka`. Do not replace that one written chip with kana or pretend that its duration contains only one mora.
+
+An exceptional compound can likewise stay whole:
+
+<SyllableChips
+  source={{ region: "jp", songId: "1538127486" }}
+  ttml={`<p begin="2:50.810" end="2:55.634" itunes:key="L24" ttm:agent="v1"><span begin="2:50.810" end="2:51.723">物語</span><span begin="2:51.723" end="2:52.422">る</span><span begin="2:52.643" end="2:53.246">大人</span><span begin="2:53.246" end="2:53.681">の</span><span begin="2:53.681" end="2:53.977">よう</span><span begin="2:53.977" end="2:55.634">に</span></p>`}
+/>
+
+`大人` is read `otona` as a whole. A literal `大 | 人` split would require an arbitrary division of that reading.
+
+Apply the same care to names, number expressions, and artist-specified readings. An artist-specified reading is timed across the expression that carries it; the parenthetical [annotation is not in the lyric](./text.mdx#reading-annotations) and never receives an interval of its own. Do not divide a special reading merely because an automatic aligner returned a plausible result.
+
+Keep an iteration mark with the written text it repeats, as in `日々`. The mark contributes to the word's reading, but it has no fixed pronunciation to time in isolation.
+
+When a whole original-text unit hides several audible parts, a separate reading track can expose them if the format supports it. That track needs its own checked alignment; replacing or duplicating the original spelling is not a solution.
+
+### Mixed-language passages
+
+English is not timed letter by letter. Use whole words and, where warranted, the [English syllable rules](../english/splits.mdx#syllable-splits). Apply other languages' rules to their passages rather than extending Japanese character timing to every script.
+
+```text
+English words: blue | sky
+Not letters: b | l | u | e | s | k | y
+```
+
+A word spelled aloud is different: its letter names are performed sounds. Check acronyms and abbreviations against the audio before deciding which case applies. A katakana loanword written as Japanese still follows the Japanese rules above.
+
+In a mixed line, the Japanese units remain fine while the English call stays whole:
+
+<SyllableChips
+  source={{ region: "us", songId: "1773515730" }}
+  ttml={`<p begin="01:23.351" end="01:24.830" ttm:agent="v1" itunes:key="L34"><span begin="01:23.351" end="01:23.645">酔</span><span begin="01:23.645" end="01:23.753">い</span><span begin="01:23.753" end="01:23.858">覚</span><span begin="01:23.858" end="01:24.013">ま</span><span begin="01:24.013" end="01:24.298">せ </span><span begin="01:24.298" end="01:24.830">Yah</span></p>`}
+/>
+
+Character timing applies to `酔い覚ませ`; it does not turn `Yah` into three letter intervals.
+
+## Place the timestamps
+
+Set each interval from the performed sound, not from text length. Listen for the beginning of the assigned reading and its audible end. Do not divide a word into equal durations, snap every boundary to a beat, or stretch a unit through an actual vocal rest just to fill the line.
+
+A sustained vowel can cross several notes without changing its written unit. A repeated call has another onset and needs another occurrence of the text. Check the difference by listening, not by counting notes or copied characters.
+
+Finer timing is useful when its boundaries are defensible. A coarse but accurately placed interval is better than several invented timestamps. Where a reading or onset is unclear, review it instead of claiming the finer version is automatically correct.
+
+## Check imported splits
+
+Apple Music's `itunes:timing="Word"` label identifies timing below the line level. It does not guarantee dictionary words, syllables, morae, or one character per span. The archive mixes all of these with larger phrase-like groups and sometimes isolates small kana or punctuation.
+
+- Review spans containing several words before accepting them in per-word mode.
+- In per-character mode, check modifying kana, small tsu, long-vowel marks, and special readings against the rules above.
+- Attach punctuation to its text instead of inventing a sung onset for it.
+- Reconstruct each line after editing to catch lost characters, doubled readings, or altered spaces.
+- Check every repeated passage; keep matching divisions for matching delivery and preserve actual changes.
+- Verify pronunciation separately from timestamps, even when an import gives both tracks identical boundaries.
+
+The same written line can arrive with very different internal boundaries:
+
+<SyllableChips
+  source={{ region: "jp", songId: "1594814706" }}
+  ttml={`<p begin="42.451" end="48.018" itunes:key="L5" ttm:agent="v1"><span begin="42.451" end="43.357">選ば</span><span begin="43.357" end="44.390">れなけ</span><span begin="44.390" end="44.704">れ</span><span begin="44.704" end="45.081">ば</span> <span begin="45.081" end="45.733">選</span><span begin="45.733" end="46.115">べ</span><span begin="46.115" end="47.020">ば</span><span begin="47.090" end="48.018">いい</span></p><p begin="2:09.320" end="2:16.010" itunes:key="L17" ttm:agent="v1"><span begin="2:09.320" end="2:09.987">選</span><span begin="2:09.987" end="2:10.327">ば</span><span begin="2:10.327" end="2:10.645">れ</span><span begin="2:10.645" end="2:11.403">なけ</span><span begin="2:11.403" end="2:12.107">れば</span> <span begin="2:12.107" end="2:12.788">選</span><span begin="2:12.788" end="2:13.132">べ</span><span begin="2:13.132" end="2:14.213">ば</span><span begin="2:14.213" end="2:14.623">い</span><span begin="2:14.623" end="2:16.010">い</span></p>`}
+/>
+
+Both lines reconstruct to `選ばれなければ 選べばいい`, but their grouping is inconsistent. Compare the audio before deciding whether the delivery changed; matching text alone neither proves nor excuses matching boundaries.
+
+For file structure and intervals, see [Timing in TTML](../../../ttml/timing.mdx).

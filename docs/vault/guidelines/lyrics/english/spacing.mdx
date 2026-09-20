@@ -19,11 +19,11 @@ Use one space between words. Put a space after a comma, question mark, or exclam
 
 A non-breaking space (U+00A0) and an ideographic space (U+3000) look like a space and are not one. A zero-width space (U+200B) is invisible in every editor and still ends up in the file. All three survive a copy and paste out of a word processor or a lyric website.
 
-```text
-U+0020 correct
-U+00A0 no-break space
-U+3000 ideographic space
-U+200B zero-width space
-```
+| Character | Name | Action |
+| --- | --- | --- |
+| `U+0020` | Ordinary space | Use this one |
+| `U+00A0` | No-break space | Replace with an ordinary space |
+| `U+3000` | Ideographic space | Replace with an ordinary space |
+| `U+200B` | Zero-width space | Remove |
 
 Check for them before delivery. A line that looks right and sorts, searches, or splits wrongly usually contains one.
