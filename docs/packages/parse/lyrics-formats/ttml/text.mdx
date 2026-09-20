@@ -13,6 +13,10 @@ XML markup divides the text, but does not automatically add spaces between its e
 
 The literal space between these spans separates their displayed words. Removing it joins the content.
 
+<Callout type="info" title="Where the space goes">
+Apple's own files put the space between the spans, as a bare text node. That is valid, and it is what the player produces. Ending the word's last span with the space instead, for example `<span begin="12.000" end="12.700">Hello </span>`, is more resistant to reformatting: the character sits inside an element, out of reach of a formatter that trims or collapses the text between tags. It also states that the space is lyric data rather than source layout.
+</Callout>
+
 ## Example
 
 ```xml

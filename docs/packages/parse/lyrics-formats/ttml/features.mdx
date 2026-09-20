@@ -9,7 +9,7 @@ This reference uses the internal playback vocabulary. See [structure](./structur
 
 | Element | Attribute | Meaning |
 | --- | --- | --- |
-| `tt` | `xml:lang` | Original lyric language |
+| `tt` | `xml:lang` | Original lyric language as a BCP 47 tag such as `en` |
 | `tt` | `itunes:timing` | Line or word synchronization; the Apple client otherwise falls back to untimed |
 | `tt` | `itunes:lyricGenId` | Opaque lyric generation ID |
 | `body` | `dur` | Song duration |
@@ -47,10 +47,10 @@ Names are element text: `<ttm:name>` names an agent and `<songwriter>` names a s
 
 | Element | Attribute | Meaning |
 | --- | --- | --- |
-| `translation` | `xml:lang` | Translation language |
+| `translation` | `xml:lang` | Translation language as a BCP 47 tag such as `fr` |
 | `translation` | `type` | `subtitle` or `replacement` |
 | `translation` | `automaticallyCreated` | Generated-text flag |
-| `transliteration` | `xml:lang` | Pronunciation language, script, and optional variant |
+| `transliteration` | `xml:lang` | Pronunciation language, script, and optional variant as a BCP 47 tag such as `ja-Latn` |
 | `transliteration` | `automaticallyCreated` | Generated-text flag |
 | `text` | `for` | Original line's `itunes:key` |
 
