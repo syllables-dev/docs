@@ -1,0 +1,89 @@
+---
+title: 规范
+description: 怎样书写、翻译和罗马字转写歌词文本
+---
+
+本规范涵盖歌词文本相关的贡献：实际演唱的字句、并行的翻译，以及标明发音的罗马字转写。文件结构与时间戳属于文件本身而非文本，详见 [TTML 指南](../ttml/index.mdx)。
+
+各语言的书写约定各不相同，请从录音所用语言对应的指南开始。
+
+## 各语言通用规则
+
+- 严格以当前转写的录音版本为准。现场版、洁版或其他录音版本用词都可能有所不同。
+- 忠于歌手原有用词。更正转写错误与拼写错误，但不要擅自改写原词。
+- 唱出的重复词与重复行，每次均须完整写出。
+- 依演唱的自然乐句断行，一个完整句子可以跨越多行。
+- 主歌、副歌等每个部分各自独立成段。
+- 相信自己的耳朵。已发行的歌词转写，包括 Apple Music 的版本，也难免出错。
+
+## 歌词
+
+歌词即演唱的文本本身。各语言指南分别说明拼写、空格、标点与断行位置。
+
+<Cards>
+  <Card
+    href="/zh-CN/vault/guidelines/lyrics/english"
+    title="英语"
+    description="拼写、大小写、标点、断行和音节切分。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/lyrics/chinese"
+    title="中文"
+    description="繁体中文、乐句空格，以及普通话与粤语的断行。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/lyrics/japanese"
+    title="日语"
+    description="文字选用、注音标记，以及断行方式。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/lyrics/korean"
+    title="韩语"
+    description="韩文拼写、空格与断行方式。"
+  />
+</Cards>
+
+穿插多种语言的歌曲参见[多语言歌词](./lyrics/multilingual/index.mdx)。尚未单独立页的语言参见[其他语言](./lyrics/other-languages/index.mdx)。
+
+## 翻译
+
+翻译将每一行的含义转入另一种语言。它作为独立的音轨与原行对应，因此演唱的文本得以完全保留。关于文件如何存储翻译，参见[翻译](../../packages/parse/lyrics-formats/ttml/translations.mdx)。
+
+<Cards>
+  <Card
+    href="/zh-CN/vault/guidelines/translation/english"
+    title="英语"
+    description="把歌词翻译成英语。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/translation/chinese"
+    title="中文"
+    description="把歌词翻译成中文。"
+  />
+</Cards>
+
+## 罗马字转写
+
+罗马字转写用拉丁字母拼写出每一行的读音，供不识原文的听众参考。它同样是独立的音轨，不会替换演唱的文本。关于文件如何存储转写，参见[音译与转写](../../packages/parse/lyrics-formats/ttml/transliterations.mdx)。
+
+<Cards>
+  <Card
+    href="/zh-CN/vault/guidelines/romanization/mandarin"
+    title="普通话"
+    description="普通话歌词罗马字转写。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/romanization/cantonese"
+    title="粤语"
+    description="粤语歌词罗马字转写。"
+  />
+  <Card
+    href="/zh-CN/vault/guidelines/romanization/japanese"
+    title="日语"
+    description="日语歌词罗马字转写。"
+  />
+</Cards>
+
+## 提出改进建议
+
+发现某条规则表述模糊，或是遇到这些页面尚未涵盖的情况？欢迎通过[参与贡献](../../home/contributing/index.mdx)提出。请注明涉及的页面、建议的修改，以及能说明其必要性的具体示例。
