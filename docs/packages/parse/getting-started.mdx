@@ -3,4 +3,64 @@ title: Getting started
 description: Install Parse and read your first lyrics file
 ---
 
-TODO
+## Install
+
+```package-install
+@syllables-dev/parse
+```
+
+The package provides ES module exports and TypeScript declarations. No separate `@types` package is needed.
+
+## Read lyrics
+
+Pass the file contents as a string. `parse()` detects the format and returns both the document and its format ID.
+
+```ts
+import { parse } from "@syllables-dev/parse";
+
+const source = `[ti:Example]
+[00:01.000]Hello world
+[00:04.000]Another line`;
+
+const { doc, format } = parse(source);
+
+console.log(format); // "lrc"
+console.log(doc.timing); // "line"
+console.log(doc.lines[0]?.begin); // 1000
+console.log(doc.lines[0]?.p.map((part) => part.text).join("")); // "Hello world"
+```
+
+`p` contains the primary vocal text; `b` contains backing vocals. Keep the text's existing spaces when joining syllables. Adding a separator would insert spaces inside words that span several syllables.
+
+Parse accepts text, not a filename or URL. Load the text with the file or network API used by the application, then pass it to the reader.
+
+## Choose a reader
+
+When the format is known, use `read()` to skip detection:
+
+```ts
+import { read } from "@syllables-dev/parse";
+
+const doc = read("[00:01.000]Hello world", "lrc");
+```
+
+For an application that only handles one format, import its codec directly. The format is selected by the import, so it is not passed as an argument:
+
+```ts
+import { read, write } from "@syllables-dev/parse/lrc";
+
+const doc = read("[00:01.000]Hello world");
+const output = write(doc);
+```
+
+## Write another format
+
+```ts
+import { convert } from "@syllables-dev/parse";
+
+const ttml = convert("[00:01.000]Hello world", "ttml");
+```
+
+`convert()` detects the input format, reads it, and writes the requested output. It follows the same strict conversion rules as `write()`.
+
+Continue with [conversion and editing examples](./usage.mdx), or look up the [public API](./api-reference.mdx).

@@ -3,4 +3,88 @@ title: Usage and examples
 description: Common parsing tasks with worked examples
 ---
 
-TODO
+## Check conversion losses
+
+Inspect the document before offering an export that drops information. `losses()` reports the reductions supported by `{ lossy: true }`.
+
+```ts
+import { losses, read, write } from "@syllables-dev/parse";
+
+const doc = read("[0,1300]Hel(0,400)lo (400,300)world(700,600)", "qrc");
+
+console.log(losses(doc, "lrc")); // ["wordTiming", "lineRange"]
+
+const output = write(doc, "lrc", { lossy: true });
+console.log(output); // "[00:00.000]Hello world"
+```
+
+Without `lossy`, this write throws. With it, the writer removes word timing and uses LRC's inferred line ends. The input document stays unchanged.
+
+An empty loss list does not guarantee a successful write. A format can still reject text, metadata, or timing it cannot encode. In particular, `{ lossy: true }` cannot turn line timing into word timing: the missing word boundaries would have to be authored separately.
+
+## Expand repeated LRC timestamps
+
+By default, only the first leading timestamp on an LRC row becomes a line. Enable `expandRepeats` to produce a line for each timestamp:
+
+```ts
+import { read } from "@syllables-dev/parse";
+
+const doc = read("[00:01.000][00:10.000]Repeated line", "lrc", {
+  expandRepeats: true,
+});
+
+console.log(doc.lines.map((line) => line.begin)); // [1000, 10000]
+```
+
+This option is specific to LRC input. Passing `expandRepeats: true` to another reader throws.
+
+## Build an editable document
+
+`createDocument()` returns an empty line-timed document with independent arrays and metadata. Assign stable IDs when adding lines and syllables; use them to associate editor state with the content.
+
+```ts
+import { createDocument, validate, write } from "@syllables-dev/parse";
+
+const doc = createDocument();
+doc.meta.title = "Example";
+doc.lines.push({
+  id: "line-1",
+  agent: null,
+  begin: 1000,
+  end: 4000,
+  p: [{ id: "line-1-word-1", begin: 1000, end: 4000, text: "Hello world" }],
+  b: [],
+});
+
+const problems = validate(doc);
+if (problems.length > 0) {
+  throw new Error(problems.map((problem) => problem.message).join("\n"));
+}
+
+const output = write(doc, "ttml");
+```
+
+`validate()` checks timing without repairing or mutating the document. It is not a general JSON schema validator or a guarantee that every writer will accept the document.
+
+When editing an imported Apple TTML document, retain its structured fields. If a syllable has `content`, that ordered structure is authoritative and `text` is its derived visible text. Translation `pWords` and `bWords` similarly take precedence over their flattened strings. See [document types](./document-types.mdx) before editing these fields.
+
+## Handle invalid input
+
+Readers use `ParseError` when the input cannot produce a document. Detection alone is not validation: recognizable syntax can still contain invalid data.
+
+```ts
+import { ParseError, parse } from "@syllables-dev/parse";
+
+try {
+  const { doc } = parse("not a timed lyrics file");
+  console.log(doc);
+} catch (error) {
+  if (error instanceof ParseError) {
+    console.error("Cannot read lyrics:", error.message);
+  } else {
+    throw error;
+  }
+}
+```
+
+Writers and unsupported options can throw ordinary `Error` instances. Handle those at the application's export boundary as well; do not rely on `ParseError` to catch every package error.

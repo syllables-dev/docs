@@ -1,6 +1,34 @@
 ---
 title: Parse
-description: Parse lyrics files into a structured format
+description: Read, edit, and convert lyrics with one shared document model.
 ---
 
-TODO
+`@syllables-dev/parse` reads and writes TTML, LRC, LYL, ESLRC, QRC, YRC, LYS, and LQE. Each reader returns a plain `LyricsDocument`; each writer accepts that same model.
+
+<Callout type="info" title="TTML support">
+
+The TTML codec specifically supports [Apple Music TTML](./lyrics-formats/ttml/index.mdx) with Apple's `itunes:` extensions. Plain TTML 1 and TTML 2 documents are not supported.
+
+</Callout>
+
+```ts
+import { parse, write } from "@syllables-dev/parse";
+
+const { doc, format } = parse("[00:01.000]Hello world");
+const ttml = write(doc, "ttml");
+```
+
+Documents are JSON-serializable. Times are absolute integer milliseconds, and repeated reads of the same input produce the same IDs. Readers and writers do not mutate their inputs, so a document can be stored, edited, and passed to several writers.
+
+Conversion is strict by default. If a format cannot preserve a feature, the writer throws instead of silently dropping it. Use `losses()` to inspect the changes and `{ lossy: true }` to accept supported reductions. Parse never invents word timing from line timing.
+
+## Start here
+
+<Cards>
+  <Card title="Getting started" href="/packages/parse/getting-started" description="Install the package and read a lyrics file." />
+  <Card title="Usage and examples" href="/packages/parse/usage" description="Convert formats, edit documents, and handle errors." />
+  <Card title="API reference" href="/packages/parse/api-reference" description="Functions, options, and format-specific entry points." />
+  <Card title="Document types" href="/packages/parse/document-types" description="Schema tables generated from the package's TypeScript declarations." />
+</Cards>
+
+See [lyrics formats](./lyrics-formats/index.mdx) for file syntax, timing conventions, and examples.
