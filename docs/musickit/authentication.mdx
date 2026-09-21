@@ -1,0 +1,88 @@
+---
+title: Authentication
+description: Tokens and headers for API requests
+---
+
+Catalog requests require a developer token. Personalized endpoints under `/v1/me/` and playback asset requests also require a music user token.
+
+## Request headers
+
+| Header | Value | Required for |
+| --- | --- | --- |
+| `Authorization` | `Bearer <developer token>` | All media API requests. |
+| `Origin` | `https://music.apple.com` | All media API requests. |
+| `Referer` | `https://music.apple.com/` | Include alongside `Origin`. |
+| `Media-User-Token` | `<music user token>` | Personalized requests and `/v1/play/assets`. |
+
+## Developer token
+
+Send a valid, unexpired JWT issued for the web player in the `Authorization` header. Catalog reads do not require a music user token unless the requested resource or filter is personalized.
+
+<Callout title="Token scope">
+The web player uses `amp-api.music.apple.com`. Developer tokens issued for the public API at `api.music.apple.com` are not interchangeable with this host's credentials. Marketing requests to `amp-api-edge.media.apple.com` use a separate token scope.
+</Callout>
+
+## Origin is part of the credential
+
+The web player token is scoped to `apple.com` through its `root_https_origin` claim. Supply a matching `Origin` header. A missing or invalid origin returns 401 with an empty body.
+
+For `GET /v1/catalog/us/songs/1752214923` with a valid developer token:
+
+| Headers | HTTP status | Result |
+| --- | --- | --- |
+| `Authorization` only | 401 | Empty response body |
+| `Authorization`, valid `Origin`, and `Referer` | 200 | Catalog resource returned |
+
+Include these headers:
+
+```http
+Origin: https://music.apple.com
+Referer: https://music.apple.com/
+```
+
+The origin must use HTTPS on `apple.com` or one of its subdomains. Server-side requests must also supply it. `Referer` does not replace `Origin` and is not checked independently.
+
+## The music user token
+
+Sent as `media-user-token` and obtained through the sign-in flow rather than minted. Without it, every personalized path fails:
+
+| GET request | HTTP status | Error code | Message |
+| --- | --- | --- | --- |
+| `/v1/me/account` | 403 | `40300` | Authentication required for request |
+| `/v1/me/library/songs?limit=1` | 403 | `40300` | Authentication required for request |
+| `/v1/me/storefront` | 403 | `40300` | Authentication required for request |
+
+Playback resolution reports it differently:
+
+`GET /v1/play/assets?id=...&kind=song`
+
+| HTTP status | Error code | Message |
+| --- | --- | --- |
+| 403 | `40301` | The music user token is not valid. |
+
+MusicKit distinguishes further inside the 403 body: code `40303` means the account has no eligible subscription rather than no valid token, and it raises a subscription error instead of an access-denied error.
+
+Some endpoints need the token only for particular inputs. `/v1/catalog/{storefront}/stations` is public, but filtering it by identity is not:
+
+`GET /v1/catalog/us/stations?filter[identity]=personal`
+
+| HTTP status | Error code | Message |
+| --- | --- | --- |
+| 403 | `40300` | Authentication required for the 'identity' filter |
+
+## Playback headers
+
+Playback on `play.itunes.apple.com` takes the identical value in `X-Apple-Music-User-Token` rather than `Media-User-Token`. Requests there also send `Authorization: Bearer <developer token>` as usual, and Widevine key requests add `X-Apple-Renewal: true`.
+
+## Social request signatures
+
+Reading followers or followees requires valid request signature data in addition to a user token. Missing or invalid signature data returns `40013`:
+
+`GET /v1/me/social/profile?include=followers,followees`
+
+| HTTP status | Error code | Message |
+| --- | --- | --- |
+| 400 | `40013` | 'followees, followers' entities requires a valid request signature but signature data is invalid |
+
+Reading the profile does not require the same signature data as reading followers and followees. If a graph request returns `40013`, check that the credentials came from a full web sign-in session.
+

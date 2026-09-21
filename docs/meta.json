@@ -1,5 +1,5 @@
 {
   "title": "Syllables",
   "description": "Documentation home",
-  "pages": ["home", "packages", "vault"]
+  "pages": ["home", "packages", "vault", "musickit"]
 }

@@ -1,0 +1,85 @@
+---
+title: Artist details and shelves
+description: Artist artwork, biographies, and catalog shelves
+---
+
+Use [Artist](/musickit/reference/catalog/getCatalogArtist) to retrieve artist details and the collections that make up an artist page. Request `canvas` to include the shelf tree, and `format[resources]=map` to resolve its resources by type and ID.
+
+## Request an artist page
+
+```js
+const url = new URL(
+  "https://amp-api.music.apple.com/v1/catalog/us/artists/390647681"
+);
+url.search = new URLSearchParams({
+  platform: "web",
+  "format[resources]": "map",
+  extend: [
+    "artistBio", "editorialArtwork", "editorialVideo", "extendedAssetUrls",
+    "hasBiographyContent", "hero", "keyColor", "plainEditorialNotes",
+  ].join(","),
+  include: "canvas,default-playable-content",
+  "include[canvas-shelves-group]": "children",
+  "include[canvas-shelves-collection]": "contents",
+  "include[songs]": "albums",
+  "extend[canvas-shelves-header]": "badge",
+  "relate[canvas-shelves-collection]": "see-all",
+  "limit[canvas-shelves-collection:contents]": "12",
+}).toString();
+```
+
+Send the headers described in [Authentication](/musickit/authentication). Attribute and shelf availability varies by artist and storefront.
+
+| Option | Purpose |
+| --- | --- |
+| `extend=artistBio,hasBiographyContent,plainEditorialNotes` | Request biography-related attributes and plain editorial notes |
+| `extend=editorialArtwork,editorialVideo,extendedAssetUrls,hero,keyColor` | Request additional artwork, motion artwork, asset URLs, hero content, and color metadata |
+| `include=canvas,default-playable-content` | Include the shelf tree and the artist's default playable content |
+| `include[canvas-shelves-group]=children` | Include the shelves inside a group |
+| `include[canvas-shelves-collection]=contents` | Include each collection's catalog items |
+| `extend[canvas-shelves-header]=badge` | Request header badges |
+| `relate[canvas-shelves-collection]=see-all` | Request references to expanded collections |
+
+Combine all desired `extend` values in one comma-separated parameter. [Artist](/musickit/reference/catalog/getCatalogArtist) lists every value the endpoint accepts.
+
+## Read the shelf tree
+
+Start with `data[0]`, then resolve it through `resources[type][id]`. The artist's `relationships.canvas.data` contains the ordered shelf identifiers. Resolve each of those through the same map.
+
+| Resource type | Fields to read |
+| --- | --- |
+| `canvas-shelves-group` | `attributes.display` and `relationships.children.data` |
+| `canvas-shelves-collection` | `attributes.title`, `attributes.display`, and `relationships.contents.data` |
+| `canvas-shelves-header` | `attributes.display` and optional `attributes.badge` |
+| `canvas-shelves-text` | `attributes.display`, `attributes.title`, and `attributes.text` |
+| `canvas-shelves-client-marker` | `attributes.display.style`, which identifies a section to build from artist details |
+
+`attributes.display.style` identifies how a shelf is presented. Collection styles include `artist-featured-content`, `artist-featured-track-lockup`, `track-lockup`, `square-lockup`, `circle-lockup`, and `calendar-event-lockup`. Group and header styles use their own names, such as `artist-featured-content-and-tracks` and `artist-detail-header`.
+
+A shelf is a resource in the response graph, not a catalog type you should assume is available through every generic catalog path. Skip unrecognized styles or render their contents using a fallback layout.
+
+## Limits and expanded collections
+
+`limit[canvas-shelves-collection:contents]=12` sets the initial number of items per collection. Override a particular display style with `limit[canvas-shelves-collection:contents{displayStyle}]=artist-featured-track-lockup:24`.
+
+For another page of a collection, follow `relationships.contents.next`. For its expanded view, use the `href` in `relationships["see-all"].data[0]`. These are server-provided paths; do not construct a shelf URL from its ID.
+
+The expanded collection request uses:
+
+| Parameter | Value |
+| --- | --- |
+| `extend` | `plainEditorialNotes,seeAllDisplay` |
+| `include` | `contents` |
+| `limit[contents]` | `100` |
+| `format[resources]` | `map` |
+| `omit[resource]` | `autos` |
+
+Prefer `attributes.seeAllDisplay` when rendering the expanded collection, falling back to `attributes.display` if it is absent. A collection can also supply `attributes.seeMoreUrl` as a navigation link.
+
+## Concert shelves
+
+Add `include[concerts]=artists,venues` and `extend[concerts]=tickets` for concert details. `geoHashLocation` supplies location context for nearby shows. The artist request uses a four-character geohash when a location is available.
+
+## Artwork fallback
+
+Artist motion variants include `motionArtistWide16x9` and `motionArtistSingular16x9`. They are optional. For static artwork, `editorialArtwork.centeredFullscreenBackground` is one available background source; hero artwork can provide a fallback. Keep a static artwork path when motion assets are absent or animation is disabled.

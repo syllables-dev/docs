@@ -1,0 +1,17 @@
+{
+  "title": "MusicKit",
+  "description": "Apple Music API reference",
+  "pagesIndex": "index",
+  "icon": "Radio",
+  "root": true,
+  "pages": [
+    "index",
+    "authentication",
+    "conventions",
+    "album-details",
+    "artist-details",
+    "resources",
+    "errors",
+    "reference"
+  ]
+}

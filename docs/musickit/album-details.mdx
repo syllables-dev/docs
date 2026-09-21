@@ -1,0 +1,83 @@
+---
+title: Album details and artwork
+description: Album metadata, motion artwork, and related content
+---
+
+One request to [Album](/musickit/reference/catalog/getCatalogAlbum) returns the header metadata, the track list, and the related content the web player shows below it. That page lists every accepted parameter and value; this one shows how to put them together and how to read the response back.
+
+## Request an album
+
+```js
+const url = new URL(
+  "https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909"
+);
+url.search = new URLSearchParams({
+  l: "en-US",
+  platform: "web",
+  "format[resources]": "map",
+  extend: "editorialArtwork,editorialVideo,extendedAssetUrls,offers",
+  "art[url]": "f",
+  include: "record-labels,artists",
+  "include[songs]": "artists,composers,albums",
+  "fields[artists]": "name,url",
+  "fields[record-labels]": "name,url",
+  "meta[albums:tracks]": "popularity",
+  views: "appears-on,more-by-artist,other-versions,you-might-also-like",
+}).toString();
+```
+
+Send the headers described in [Authentication](/musickit/authentication). Add `seoTitle,seoDescription` to `extend` for the page title and description the web player writes into its metadata.
+
+## Read the album
+
+With `format[resources]=map`, `data[0]` is an identifier. Resolve it through `resources.albums[id]`, then read from `attributes`:
+
+| Field | Use |
+| --- | --- |
+| `name`, `artistName`, `releaseDate`, `trackCount` | Header text |
+| `artwork` | Cover art, always present |
+| `contentRating` | Explicit badge |
+| `audioTraits`, `isMasteredForItunes` | Audio quality badges such as Lossless and Dolby Atmos |
+| `editorialNotes.standard` | Long-form album notes |
+| `offers` | Availability, including `offers[].hlsUrl` for playback |
+| `editorialArtwork`, `editorialVideo` | Larger still and motion header artwork |
+
+`relationships.tracks.data` holds the ordered track identifiers. Resolve each through `resources.songs[id]` or `resources["music-videos"][id]`, since an album can contain both.
+
+## Artwork and the motion header
+
+`attributes.artwork` is the square cover and is the only artwork you can rely on. The editorial keys are optional, vary by album, and come back only when you ask for them.
+
+| Key | Shape | Placement |
+| --- | --- | --- |
+| `editorialArtwork.staticDetailSquare` | Artwork | Square header image |
+| `editorialArtwork.staticDetailTall` | Artwork | Tall header image |
+| `editorialVideo.motionDetailSquare` | Motion variant | Square motion header |
+| `editorialVideo.motionDetailTall` | Motion variant | Tall motion header |
+
+A motion variant carries a `video` URL and a `previewFrame` artwork object. Play `video` directly; it is a URL string, not a nested object.
+
+Resolve the header in this order, falling back at each step:
+
+1. Prefer the motion variant matching the layout. The web player tries `motionDetailSquare` then `motionDetailTall` on wide viewports, and reverses that order on narrow ones.
+2. When a motion variant is present but you are not animating, use its `previewFrame` as the still image.
+3. When there is no motion variant, use `editorialArtwork.staticDetailSquare` or `staticDetailTall`.
+4. When neither is present, use `attributes.artwork`.
+
+Keep step 4 reachable. Motion artwork is absent for most albums, and the player also skips animation when the element is off screen, when a modal is open, or when the viewer prefers reduced motion.
+
+Artwork objects give a `url` template with `{w}`, `{h}`, and `{f}` placeholders. Substitute the pixel size you need. With `art[url]=f` the template has no file extension, so you supply one through `{f}`. See [Request conventions](/musickit/conventions#set-valued-parameters).
+
+## Related content
+
+Each requested view arrives under `views`, with its own `attributes.title` and `data`. Request only the views you render, since each one adds resources to the response. A view is omitted when the album has nothing for it, so check for its presence rather than assuming an empty array. Views paginate independently through `views[name].next`.
+
+## Tracks
+
+Album tracks come back inside the album response, so a separate request is rarely needed. When you do need a page of tracks on their own, follow the `href` on the `tracks` relationship rather than building a path. Scope track fields to keep the response small:
+
+```
+fields[songs]=name,artistName,artwork,playParams,contentRating,durationInMillis,audioTraits,url
+```
+
+For one track with its lyrics and credits, use [Song](/musickit/reference/catalog/getCatalogSong) instead.

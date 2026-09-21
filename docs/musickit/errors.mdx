@@ -1,0 +1,54 @@
+---
+title: Errors
+description: Error codes and response handling
+---
+
+Failures come back as an `errors` array. The HTTP status matches `status`, and `code` is the value worth branching on: it is finer-grained than the status and stable across endpoints.
+
+```json
+{
+  "errors": [
+    {
+      "id": "IT5VQ2GJTAE3JWS2RE2UD5FKXE",
+      "title": "Invalid Parameter Value",
+      "detail": "Value must be an integer less than or equal to 300, but was: 301",
+      "status": "400",
+      "code": "40005",
+      "source": { "parameter": "limit" }
+    }
+  ]
+}
+```
+
+`source.parameter` names the offending parameter when one is at fault, which makes most 400s self-diagnosing. `id` matches the `x-apple-jingle-correlation-key` response header.
+
+## Codes
+
+| Code | Status | Title | When |
+| --- | --- | --- | --- |
+| `40000` | 400 | Bad Request | A constraint spanning several parameters failed, such as needing one of `ids`, `name` or `genre`. |
+| `40003` | 400 | Missing Parameter | A required parameter was absent. `source.parameter` names it. |
+| `40004` | 400 | Invalid Parameter | The parameter name is not allowed on this endpoint. |
+| `40005` | 400 | Invalid Parameter Value | The name is valid, the value is not. |
+| `40008` | 400 | Invalid Path Value | A path segment does not resolve: an unknown resource type, relationship or view. |
+| `40009` | 400 | Unknown Storefront | The storefront code does not exist. |
+| `40013` | 400 | Invalid Request Signature | The user token lacks the signature data the social graph requires. |
+| `40300` | 403 | Forbidden | Authentication required. |
+| `40301` | 403 | Invalid Music User Token | The music user token is absent or invalid. |
+| `40303` | 403 | Not specified | Returned in the body by `/v1/play/assets` when the account has no subscription. |
+| `40400` | 404 | Resource Not Found | No resource with that id. |
+| `40401` | 404 | Path Not Found | The API does not route that path at all. |
+| `40403` | 404 | No related resources | The relationship name resolves but has nothing to return. |
+| `50000` | 500 | Internal Service Error | Server-side failure. |
+
+## Endpoint-specific behavior
+
+**`40403` is not "no such relationship".** It means the relationship exists and is empty for this resource. An unknown relationship name answers `40008` instead. See [Resource model](/musickit/resources) for relationship names.
+
+**`40403` also stands in for "not entitled".** Requesting `/v1/catalog/{storefront}/songs/{id}/lyrics` without a subscribed account returns 404 `40403`, not 403. A 404 here does not mean the song has no lyrics.
+
+**`40401` distinguishes a missing route from a missing method.** `/v1/me/favorites` and `/v1/social/recommended-friends` both answer `40401` when read, because those routes require write methods.
+
+**A 200 is not always a success.** The leasing key server at `/v1/hls/streaming-key-delivery` returns 200 with a per-key `status` field inside the body, and a non-zero value there is a failure the client surfaces as a playback error.
+
+Parameter names are an allowlist and a typo answers `40004`, while unknown values inside `extend` or `views` are dropped silently. See [Request conventions](/musickit/conventions#set-valued-parameters).

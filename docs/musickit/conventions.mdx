@@ -1,0 +1,175 @@
+---
+title: Request conventions
+description: Hosts, parameters, pagination, and caching
+---
+
+Every endpoint inherits the behaviour on this page.
+
+## Hosts
+
+Use the host listed for each endpoint:
+
+| Host | Used for |
+| --- | --- |
+| `amp-api.music.apple.com` | Catalog, search, library, account, and other media API requests. |
+| `amp-api-edge.music.apple.com` | Alternative host for editorial content and search. |
+| `amp-api-edge.media.apple.com` | `POST /v1/engagement/{storefront}/upsell`. |
+| `play.itunes.apple.com` | Purchased and uploaded playback assets and DRM key exchange. |
+
+The reference uses `amp-api.music.apple.com` unless an endpoint specifies another host. The upsell endpoint requires `amp-api-edge.media.apple.com`; requests to the default host return 500.
+
+Playback reaches past the media API entirely. Asset resolution for purchased and uploaded items, and every DRM key exchange, run on `play.itunes.apple.com` under `/WebObjects/MZPlay.woa/`. That host takes the user token in `X-Apple-Music-User-Token` rather than `Media-User-Token`, and its paths are not versioned. The endpoints are documented under [Playback](/musickit/reference/playback/resolveWebPlaybackAsset).
+
+## Headers
+
+| Header | Sent on | Notes |
+| --- | --- | --- |
+| `Authorization` | Every request | `Bearer <developer token>`. |
+| `Origin` | Every request | **Required.** `https://music.apple.com`. Without it the API answers 401 with an empty body, whatever the token. |
+| `Referer` | Every request | `https://music.apple.com/`. A browser sets it; send it explicitly outside one. |
+| `Media-User-Token` | Every `/v1/me/*` request and `/v1/play/assets` | Identifies the signed-in account. |
+| `X-Apple-Music-User-Token` | Requests to `play.itunes.apple.com` | The same value under a different name. |
+| `X-Apple-Client-Version` | Every request | The build string, for example `2638.7.0-external`. |
+| `X-Apple-Renewal` | Widevine key requests | `true`. |
+
+The API checks `Origin` against the developer token scope, including on server-side requests. See [Authentication](/musickit/authentication#origin-is-part-of-the-credential) for accepted origins.
+
+Responses carry `x-apple-jingle-correlation-key`, which matches the `id` on any error in the body.
+
+## Query parameters
+
+Every endpoint takes these:
+
+| Parameter | Value |
+| --- | --- |
+| `l` | Language tag, such as `en-US`. |
+| `platform` | `web` for browser requests. |
+| `format[resources]` | `map` to return resources in a separate lookup map. |
+| `timezone` | The client's UTC offset, where supported. |
+
+Library deletion sends no query parameters. Social profile updates and shared-playlist updates omit `format[resources]`.
+
+`l` and `platform` reject unknown values:
+
+| GET request | HTTP status | Error code | Message |
+| --- | --- | --- | --- |
+| `/v1/catalog/us/albums/1752214909?l=zz-ZZ` | 400 | `40005` | Invalid language tag 'zz-ZZ' |
+| `/v1/catalog/us/albums/1752214909?platform=bogus` | 400 | `40005` | Invalid platform value bogus |
+
+Beyond those, most endpoints draw on the same families:
+
+| Parameter | Effect |
+| --- | --- |
+| `extend` | Add optional attributes to the returned resources |
+| `include` | Resolve relationships in the same response |
+| `views` | Attach editorial shelves to the resource |
+| `with` | Add optional top-level sections to the response |
+| `types` | Restrict a mixed response to these resource types |
+| `sparse` | Return these types in reduced form |
+| `fields[type]` | Return only these attributes for resources of one type |
+| `limit[...]` | Cap items in a relationship, view, or collection |
+| `meta[...]` | Request extra metadata alongside a resource or relationship |
+| `relate[type]` | Return references to related resources |
+| `associate[type:relationship]` | Attach association data, such as playlist collaborators |
+| `omit[resource]` | Leave out parts of the response; the web player sends `autos` |
+| `displayFilter[kind]` | Restrict shelves to display kinds the client can render |
+| `art[url]` | Control the shape of artwork URL templates |
+| `filter[...]` | Narrow results, such as `filter[personal-mix]` |
+| `ids[type]` | Fetch several resources of one type by ID |
+
+Each endpoint page lists the values it accepts. [Album details and artwork](/musickit/album-details) builds a complete request.
+
+## Scoping a parameter to a type
+
+`extend`, `include`, `fields`, `relate`, `meta`, and `limit` all take an optional resource type in brackets. Without one, the parameter applies to the resource you requested. With one, it applies to every resource of that type anywhere in the response.
+
+```http
+GET /v1/catalog/us/albums/1752214909?extend=offers&extend[playlists]=trackCount
+```
+
+`extend=offers` adds offers to the album. `extend[playlists]=trackCount` adds a track count to every playlist the response happens to contain, including ones inside views.
+
+A few parameters scope to a relationship rather than a type, written `type:relationship`. `meta[albums:tracks]=popularity` adds metadata to the album's `tracks` relationship, and `limit[view.more-by-curator]=15` caps one named view.
+
+## Set-valued parameters
+
+Pass multiple values for `extend`, `include`, `views`, `with`, `types`, `sparse`, `displayFilter[kind]`, `art[url]`, and the scoped forms as a comma-separated list:
+
+```http
+GET /v1/catalog/us/albums/1752214909?extend=editorialArtwork,editorialVideo,offers
+```
+
+Combine every value into one parameter. Repeating the parameter does not merge the lists.
+
+`art[url]` takes two flags: `c` omits the artwork crop code and `f` omits the file extension, giving a URL template the client fills in itself. Artwork `url` values are templates either way, with `{w}`, `{h}`, and `{f}` placeholders to substitute.
+
+Whole parameter names are an allowlist. Anything unrecognised is rejected rather than ignored:
+
+`GET /v1/catalog/us/albums/1752214909?__probe=1`
+
+| HTTP status | Error code | Message |
+| --- | --- | --- |
+| 400 | `40004` | Parameter '__probe' is not allowed |
+
+Set *values* are the opposite: an unknown entry in `extend` or `views` returns 200 and is quietly dropped. Do not read a 200 as confirmation that a value is supported, and treat the values listed on an endpoint page as the ones the web player sends rather than everything the server accepts.
+
+## The resource-map response
+
+With `format[resources]=map`, `data` contains ordered resource identifiers. Look up each full object in `resources` by type and ID:
+
+```json
+{
+  "data": [
+    { "id": "1752214909", "type": "albums", "href": "/v1/catalog/us/albums/1752214909?l=en-US" }
+  ],
+  "resources": {
+    "albums": {
+      "1752214909": {
+        "id": "1752214909",
+        "type": "albums",
+        "href": "/v1/catalog/us/albums/1752214909?l=en-US",
+        "attributes": { "name": "Short n' Sweet", "artistName": "Sabrina Carpenter" },
+        "relationships": {
+          "tracks": { "href": "...", "data": [{ "id": "1752214923", "type": "songs" }] }
+        }
+      }
+    }
+  }
+}
+```
+
+A shared resource appears once in the map, even when several results reference it. Resolve each identifier through `resources[type][id]`.
+
+Dropping `format[resources]=map` returns the conventional shape, with full objects inline in `data`.
+
+## Pagination
+
+Paginated responses carry `next`, a path plus query string rather than a full URL:
+
+```json
+{ "next": "/v1/catalog/us/playlists/pl.../tracks?offset=2&limit=2", "data": [] }
+```
+
+Request the returned `next` path on the same API host to fetch the next page. Relationships paginate independently through a `next` field inside the relationship object.
+
+`limit` ceilings are per endpoint and enforced:
+
+| Endpoint | Maximum `limit` |
+| --- | --- |
+| `/v1/catalog/{storefront}/search` | 50 |
+| `/v1/catalog/{storefront}/charts` | 200 |
+| Playlist `tracks` relationships | 300 |
+
+`GET /v1/catalog/us/playlists/pl.../tracks?limit=301`
+
+| HTTP status | Error code | Message |
+| --- | --- | --- |
+| 400 | `40005` | Value must be an integer less than or equal to 300, but was: 301 |
+
+## Errors
+
+Errors come back as `{ "errors": [...] }` with a status code that matches. [Errors](/musickit/errors) lists error codes.
+
+## Caching
+
+Use the response `Cache-Control` and `Date` headers to determine freshness. Catalog reads typically return `max-age=60`. For fresh account state or recently played radio, request revalidation with `cache: "no-cache"` when using `fetch`.

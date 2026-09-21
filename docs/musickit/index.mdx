@@ -1,0 +1,86 @@
+---
+title: MusicKit
+description: Apple Music endpoints for catalog, library, and playback
+---
+
+Apple Music's web player runs on an HTTP API at `amp-api.music.apple.com` that Apple does not document. [Syllables](../home/about.mdx) researches how Apple Music represents music and lyrics, so we read the web player's own client, checked what it sends against the live API, and wrote the result down here.
+
+This reference is the tidied result: every endpoint the player calls, the parameters it sends, and the response fields it reads, grouped so you can find what you need without disassembling anything yourself.
+
+## What this covers
+
+Each endpoint page lists its parameters with the values the web player actually sends, rather than a prose summary. Where a value came from a request builder in the client, it is recorded as such; where an endpoint was found by probing the live API instead, the page says so.
+
+Two limits are worth knowing before you rely on this:
+
+- **The listed values are not a closed set.** The API drops an unrecognised entry in `extend` or `views` and still answers 200, so a value missing from a page is not proof the server rejects it.
+- **This is a private API.** Apple can change it without notice, and nothing here is a stability guarantee. For the supported, documented API, use [Apple's own MusicKit reference](https://developer.apple.com/documentation/applemusicapi/).
+
+Found something out of date or missing? [Contributing](../home/contributing/index.mdx) explains how to send it in.
+
+<Callout title="API host">
+These endpoints use the web player's credentials. Developer tokens issued for `api.music.apple.com` are not interchangeable with tokens for this host.
+</Callout>
+
+## A first request
+
+Send a developer token with the `Origin` and `Referer` headers. The API checks the origin against the token scope; a missing or invalid origin returns 401.
+
+```http
+GET /v1/catalog/us/songs/1752214923?l=en-US&platform=web HTTP/1.1
+Host: amp-api.music.apple.com
+Authorization: Bearer <developer token>
+Origin: https://music.apple.com
+Referer: https://music.apple.com/
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "1752214923",
+      "type": "songs",
+      "href": "/v1/catalog/us/songs/1752214923",
+      "attributes": {
+        "name": "Espresso",
+        "artistName": "Sabrina Carpenter",
+        "durationInMillis": 175459
+      }
+    }
+  ]
+}
+```
+
+`data` is always an array, even for a single resource. [Authentication](/musickit/authentication#origin-is-part-of-the-credential) covers the origin check, and [Request conventions](/musickit/conventions) covers the rest: query parameters, resource maps, pagination, and caching.
+
+## Start here
+
+<Cards>
+  <Card title="Album details and artwork" href="/musickit/album-details" description="Album metadata, motion artwork, and related content" />
+  <Card title="Artist details and shelves" href="/musickit/artist-details" description="Biographies, artwork, and the artist shelf tree" />
+  <Card title="Authentication" href="/musickit/authentication" description="Tokens and required headers." />
+  <Card title="Request conventions" href="/musickit/conventions" description="Hosts, parameters, responses, and pagination." />
+  <Card title="Resource model" href="/musickit/resources" description="Resource types, relationships, and views." />
+  <Card title="Errors" href="/musickit/errors" description="Error codes and response handling." />
+</Cards>
+
+Every endpoint has its own page under **Endpoints**, grouped by service.
+
+## Services
+
+| Service | What it covers |
+| --- | --- |
+| [Catalog](/musickit/reference/catalog/getCatalogResource) | Albums, songs, artists, playlists, stations, charts and genres. |
+| [Search](/musickit/reference/search/searchCatalog) | Catalog search, suggestions and hints. |
+| [Storefronts](/musickit/reference/storefronts/listStorefronts) | Storefront and region metadata. |
+| [Editorial](/musickit/reference/editorial/getEditorialGroupings) | Curated rooms, groupings, multirooms and multiplexes. |
+| [Recommendations](/musickit/reference/recommendations/getRecommendations) | Storefront and personal recommendation shelves. |
+| [Concerts](/musickit/reference/concerts/getConcertsHub) | The concerts hub. |
+| [Lyrics](/musickit/reference/lyrics/getLyricSnippet) | Lyric snippets for search highlights. |
+| [Engagement](/musickit/reference/engagement/getUpsellMarketingItems) | Subscription upsell surfaces. |
+| [Account](/musickit/reference/account/getAccount) | Account state, favorites, taste preferences and connected apps. |
+| [Library](/musickit/reference/library/getLibrarySongs) | The signed-in account's library. |
+| [Playlists](/musickit/reference/playlists/getLibraryPlaylists) | Library playlist creation, editing and sharing. |
+| [Pins](/musickit/reference/pins/getLibraryPins) | Pinned items on the library landing page. |
+| [Social](/musickit/reference/social/getSocialProfile) | Profiles, following and shared playlists. |
+| [Playback](/musickit/reference/playback/getPlayAssets) | Asset resolution, radio continuation and DRM key exchange. |
