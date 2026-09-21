@@ -150,6 +150,18 @@ Ain't nothin' but a heartache`}
 
 `flames` 一个词就比这行其余部分加起来还长，但仍然只占一个时间区间。音是拖住了，可这个词本身没有停下来再起头，内部也就没有什么需要标记的。
 
+最常见的错误是把每个词都按词典音节切开。下面这些片段一个紧接一个，节奏均匀，中间没有停顿，多出来的分界只是徒增工作量，对播放器没有任何意义：
+
+<SyllableChips
+  source={{ region: "us", songId: "1538004217" }}
+  correctLabel="推荐"
+  incorrectLabel="避免"
+  correct={`<p begin="10.002" end="12.167" itunes:key="L4" ttm:agent="v1"><span begin="10.002" end="10.146">I</span> <span begin="10.146" end="10.326">had</span> <span begin="10.326" end="10.476">a</span> <span begin="10.476" end="11.006">premonition</span> <span begin="11.006" end="11.146">that</span> <span begin="11.146" end="11.295">we</span> <span begin="11.295" end="11.446">fell</span> <span begin="11.446" end="11.586">into</span> <span begin="11.586" end="11.726">a</span> <span begin="11.726" end="12.167">rhythm</span></p>`}
+  incorrect={`<p begin="10.002" end="12.167" itunes:key="L4" ttm:agent="v1"><span begin="10.002" end="10.146">I</span> <span begin="10.146" end="10.326">had</span> <span begin="10.326" end="10.476">a</span> <span begin="10.476" end="10.615">pre</span><span begin="10.615" end="10.746">mo</span><span begin="10.746" end="10.866">ni</span><span begin="10.866" end="11.006">tion</span> <span begin="11.006" end="11.146">that</span> <span begin="11.146" end="11.295">we</span> <span begin="11.295" end="11.446">fell</span> <span begin="11.446" end="11.516">in</span><span begin="11.516" end="11.586">to</span> <span begin="11.586" end="11.726">a</span> <span begin="11.726" end="11.866">rhy</span><span begin="11.866" end="12.167">thm</span></p>`}
+/>
+
+`premonition`、`into`、`rhythm` 内部都没有任何变化，各占一个时间区间就够了。`thm` 连一个唱出来的音节都算不上。
+
 ### 在发音断开处切分
 
 如果确实需要切分，把分界点落在录音中下一个音节开始的地方。

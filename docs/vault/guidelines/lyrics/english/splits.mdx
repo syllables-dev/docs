@@ -146,6 +146,16 @@ If none of these apply, leave the word whole. A held note is not a reason on its
 
 `flames` runs longer than the rest of the line put together and still takes one interval. The note is held, but the word itself never stops and restarts, so there is nothing inside it to mark.
 
+Splitting every word into its dictionary syllables is the most common mistake. The parts below follow each other at an even pace with no gap between them, so the extra boundaries add work without telling the player anything:
+
+<SyllableChips
+  source={{ region: "us", songId: "1538004217" }}
+  correct={`<p begin="10.002" end="12.167" itunes:key="L4" ttm:agent="v1"><span begin="10.002" end="10.146">I</span> <span begin="10.146" end="10.326">had</span> <span begin="10.326" end="10.476">a</span> <span begin="10.476" end="11.006">premonition</span> <span begin="11.006" end="11.146">that</span> <span begin="11.146" end="11.295">we</span> <span begin="11.295" end="11.446">fell</span> <span begin="11.446" end="11.586">into</span> <span begin="11.586" end="11.726">a</span> <span begin="11.726" end="12.167">rhythm</span></p>`}
+  incorrect={`<p begin="10.002" end="12.167" itunes:key="L4" ttm:agent="v1"><span begin="10.002" end="10.146">I</span> <span begin="10.146" end="10.326">had</span> <span begin="10.326" end="10.476">a</span> <span begin="10.476" end="10.615">pre</span><span begin="10.615" end="10.746">mo</span><span begin="10.746" end="10.866">ni</span><span begin="10.866" end="11.006">tion</span> <span begin="11.006" end="11.146">that</span> <span begin="11.146" end="11.295">we</span> <span begin="11.295" end="11.446">fell</span> <span begin="11.446" end="11.516">in</span><span begin="11.516" end="11.586">to</span> <span begin="11.586" end="11.726">a</span> <span begin="11.726" end="11.866">rhy</span><span begin="11.866" end="12.167">thm</span></p>`}
+/>
+
+Nothing happens inside `premonition`, `into`, or `rhythm`, so each takes one interval. `thm` is not even a sung syllable.
+
 ### Split where the sound breaks
 
 When a split is warranted, put the boundary where the next syllable begins in the recording.
