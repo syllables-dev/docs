@@ -12062,8 +12062,9 @@ paths:
         `iTunesMetadata` with `songwriters`, `translations` and a `leadingSilence` offset.
 
 
-        Needs a subscribed account. Without one the response is 404 `40403`, the same answer a song with
-        no lyrics gives, so the two cases cannot be told apart from the status.'
+        Needs a subscribed account, and `storefront` must match the account''s own storefront. A
+        mismatched storefront, an unsubscribed account and a song with no lyrics all return 404
+        `40403`, so the cases cannot be told apart from the status.'
       x-feature: Lyrics panel
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -12163,7 +12164,8 @@ paths:
         whitespace between them are syllables of one word, which is what drives the karaoke-style highlight.
 
 
-        Backs Apple Music Sing. Same subscription requirement and same 404 as `lyrics`.'
+        Backs Apple Music Sing. Same subscription requirement, same storefront-match requirement and
+        same 404 as `lyrics`.'
       x-feature: Lyrics panel, Apple Music Sing
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -12260,7 +12262,10 @@ paths:
 
         `data` holds `role-categories` rather than artists. Each category has a `kind` such as `performer`
         or `composer` and a localized `title`, and its `credit-artists` relationship holds the people
-        in it. Credit artist ids are not catalog artist ids: they look like `4-ami:identity:<hash>`.'
+        in it. Credit artist ids are not catalog artist ids: they look like `4-ami:identity:<hash>`.
+
+
+        Needs no `Media-User-Token`, unlike the lyrics relationships on the same song.'
       x-feature: Credits sheet
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -12385,7 +12390,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-        musicUserToken: []
 components:
   securitySchemes:
     developerToken:
