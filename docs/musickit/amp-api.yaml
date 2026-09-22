@@ -598,8 +598,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[concerts]
         in: query
         required: false
@@ -616,8 +615,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend[concerts]
         in: query
         required: false
@@ -635,8 +633,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: omit[resource:artists]
         in: query
         required: false
@@ -651,8 +648,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: relate[songs]
         in: query
         required: false
@@ -1183,10 +1179,11 @@ paths:
         description: Look songs up by ISRC. Accepts a comma-separated batch of
           ISRCs, not just a single value.
         example: USUG12400910,USUM71703861
-        x-confidence: medium
+        x-confidence: high
         x-validation-status: replay-tested; not present in the bundles; batching
-          behavior observed only in a third-party client, not independently
-          replay-tested
+          behavior independently confirmed — a comma-separated batch of up to
+          25 ISRCs against `/v1/catalog/{storefront}/songs` returns matches
+          for all of them
       - name: filter[equivalents]
         in: query
         required: false
@@ -1197,9 +1194,11 @@ paths:
           catalog song to its US-storefront counterpart before looking up
           lyrics or other US-only data.
         example: '1440857781'
-        x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-confidence: high
+        x-validation-status: replay-tested; not present in the bundles; independently
+          confirmed — sending `filter[equivalents]=<id>` against
+          `/v1/catalog/us/songs` resolves a non-US song id to its US-storefront
+          equivalent
       - name: filter[identity]
         in: query
         required: false
@@ -1255,8 +1254,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[albums]
         in: query
         required: false
@@ -1269,8 +1267,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -1283,8 +1280,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[music-videos]
         in: query
         required: false
@@ -1297,8 +1293,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: omit[resource:artists]
         in: query
         required: false
@@ -1313,8 +1308,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend
         in: query
         required: false
@@ -1725,8 +1719,7 @@ paths:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
@@ -1925,16 +1918,7 @@ paths:
       tags:
       - Catalog
       x-confidence: low
-      x-validation-status: unverified — seen in a third-party client only, not found in the bundles and
-        not independently replay-tested
-      x-evidence:
-      - asset: third-party client
-        location: routes calling `/v1/catalog/{storefront}/{type}/{id}/view/{viewId}` for arbitrary
-          resource types
-        excerpt: 'path: `/v1/catalog/${storefront}/${pluralizeType(type)}/${id}/view/${viewId}`, params:
-          { platform: "web", "art[url]": "f", extend: "artistUrl", "include[songs]": "artists,composers",
-          "include[concerts]": "venues", limit: 25, with: "attributes" }'
-        discovery: static
+      x-validation-status: unverified; not found in the bundles and not independently replay-tested
       description: The same 'see all' shelf mechanism documented above for artists, but requested against
         an arbitrary resource type rather than only `artists`. Whether the live API actually serves views
         for types other than `artists` (and, if so, which view names are valid per type) has not been
@@ -2214,8 +2198,8 @@ paths:
             - ticketDataProvider
             - tickets
             - url
-        description: Extra concert attributes. `url` was seen in a third-party client only, not found
-          in the bundles and not independently replay-tested.
+        description: Extra concert attributes. `url` is unverified; not found in the bundles and not
+          independently replay-tested.
         example:
         - tickets
         style: form
@@ -2232,8 +2216,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
@@ -2241,8 +2224,7 @@ paths:
           type: integer
         description: Top songs returned per artist.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: geoHashLocation
         in: query
         required: false
@@ -2350,8 +2332,7 @@ paths:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       responses:
         '200':
           description: Success.
@@ -2439,8 +2420,8 @@ paths:
             - editorialNotes
             - credits
         description: Extra attributes to add to the returned resources. Unknown values are ignored rather
-          than rejected. `playParams`, `trackCount`, `editorialNotes` and `credits` were seen in a
-          third-party client only, not found in the bundles and not independently replay-tested.
+          than rejected. `playParams`, `trackCount`, `editorialNotes` and `credits` are unverified; not
+          found in the bundles and not independently replay-tested.
         example:
         - editorialArtwork
         - editorialVideo
@@ -2463,8 +2444,8 @@ paths:
             - record-labels
             - tracks
             - catalog
-        description: Relationships to resolve in the same response. `tracks` and `catalog` were seen
-          in a third-party client only, not found in the bundles and not independently replay-tested.
+        description: Relationships to resolve in the same response. `tracks` and `catalog` are
+          unverified; not found in the bundles and not independently replay-tested.
         example:
         - artists
         - record-labels
@@ -2494,8 +2475,8 @@ paths:
         description: Editorial shelves to attach to the resource. A view is omitted when the album has
           nothing for it, so check for its presence rather than assuming an empty array. Unknown values
           are ignored rather than rejected. `more-by-curator`, `contributors`, `subscribers`,
-          `featured-artists` and `more-in-genre` were seen in a third-party client only, not found in
-          the bundles and not independently replay-tested.
+          `featured-artists` and `more-in-genre` are unverified; not found in the bundles and not
+          independently replay-tested.
         example:
         - appears-on
         - audio-extras
@@ -2638,8 +2619,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[catalog]
         in: query
         required: false
@@ -2652,8 +2632,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
@@ -2661,8 +2640,7 @@ paths:
           type: integer
         description: Top songs returned per artist.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields
         in: query
         required: false
@@ -2675,8 +2653,7 @@ paths:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
@@ -2762,7 +2739,7 @@ paths:
             - credits
         description: Extra attributes to add to the returned resources. `followState` is sent with the
           social metadata request rather than the main one. Unknown values are ignored rather than rejected.
-          `playParams`, `editorialNotes` and `credits` were seen in a third-party client only.
+          `playParams`, `editorialNotes` and `credits` are unverified.
         example:
         - editorialArtwork
         - editorialVideo
@@ -2788,8 +2765,8 @@ paths:
             - record-labels
             - catalog
         description: Relationships to resolve in the same response. `artists`, `record-labels` and
-          `catalog` were seen in a third-party client only, not found in the bundles and not
-          independently replay-tested.
+          `catalog` are unverified; not found in the bundles and not independently
+          replay-tested.
         example:
         - curator
         - tracks
@@ -2815,8 +2792,8 @@ paths:
             - you-might-also-like
         description: Editorial shelves to attach to the resource. Unknown values are ignored rather than
           rejected. `contributors`, `subscribers`, `appears-on`, `more-by-artist`, `more-in-genre`,
-          `other-versions` and `you-might-also-like` were seen in a third-party client only, not found
-          in the bundles and not independently replay-tested.
+          `other-versions` and `you-might-also-like` are unverified; not found in the bundles and not
+          independently replay-tested.
         example:
         - featured-artists
         - more-by-curator
@@ -2953,8 +2930,8 @@ paths:
             - url
             - audioTraits
             - copyright
-        description: Restrict album resources to these attributes. `audioTraits` and `copyright` were
-          seen in a third-party client only, not found in the bundles and not independently
+        description: Restrict album resources to these attributes. `audioTraits` and `copyright` are
+          unverified; not found in the bundles and not independently
           replay-tested.
         example:
         - name
@@ -3029,8 +3006,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[catalog]
         in: query
         required: false
@@ -3043,8 +3019,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[catalog]
         in: query
         required: false
@@ -3057,8 +3032,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[playlists]
         in: query
         required: false
@@ -3071,8 +3045,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: meta[albums:tracks]
         in: query
         required: false
@@ -3080,8 +3053,7 @@ paths:
           type: string
         description: Extra metadata on the tracks relationship of albums referenced by this playlist.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
@@ -3089,8 +3061,7 @@ paths:
           type: integer
         description: Top songs returned per artist.
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: meta[playlists:tracks]
         in: query
         required: false
@@ -3859,8 +3830,7 @@ paths:
           search-result group directly instead of the full multi-type response.
         example: albums
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: art[music-videos:url]
         in: query
         required: false
@@ -3919,8 +3889,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[artists]
         in: query
         required: false
@@ -4032,8 +4001,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[artists]
         in: query
         required: false
@@ -4046,8 +4014,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -4093,15 +4060,7 @@ paths:
       tags:
       - Search
       x-confidence: low
-      x-validation-status: unverified — seen in a third-party client only, not
-        found in the bundles and not independently replay-tested
-      x-evidence:
-      - asset: third-party client
-        location: search groups request
-        excerpt: 'GET /v1/catalog/{storefront}/search/groups with groups, types, term,
-          with and platform parameters — same shape as /v1/catalog/{storefront}/search
-          but scoped to a single result group instead of the full multi-type response'
-        discovery: static
+      x-validation-status: unverified; not found in the bundles and not independently replay-tested
       description: Appears to mirror `/v1/catalog/{storefront}/search`, but scoped to
         a single result group via the `groups` parameter, letting a client fetch or
         page through one group directly instead of the full multi-type response.
@@ -4125,8 +4084,7 @@ paths:
         description: Search term.
         example: espresso
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: groups
         in: query
         required: true
@@ -4136,8 +4094,7 @@ paths:
           appears under `results` in the response body of `/v1/catalog/{storefront}/search`.
         example: albums
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: types
         in: query
         required: false
@@ -4167,8 +4124,7 @@ paths:
         example:
         - albums
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: with
         in: query
         required: false
@@ -4190,8 +4146,7 @@ paths:
         example:
         - lyricHighlights
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       responses:
@@ -4230,11 +4185,10 @@ paths:
         excerpt: kinds only -> 40003 'One or more types must be specified'; term only -> 40003 'One or
           more kinds must be specified'
         discovery: replay-tested
-      description: 'Both `kinds` and `types` are required; omitting either returns 400 `40003`. A third-party
-        client was observed sending `kinds=terms` with no `types` at all and a bare, unscoped `limit`
-        (rather than `limit[results:terms]`/`limit[results:topResults]`) and still getting a 200 — this
-        contradicts the `types`-required claim above and suggests `limit` may work as an unscoped alias;
-        neither is replay-tested and both need re-verification.'
+      description: 'Both `kinds` and `types` are required; omitting either returns 400 `40003`. This has
+        been contradicted by an independent observation: a request with `kinds=terms` and no `types` at
+        all, using the scoped `limit[results:terms]` parameter, returned 200 — so the `types`-required
+        claim above may not hold in every case. Not independently replay-tested; needs re-verification.'
       x-feature: Search box
       x-callers:
       - SearchSuggestionsIntent
@@ -4648,8 +4602,8 @@ paths:
             enum:
             - autos
             - relationships
-        description: Omit sections from included artists. `relationships` was seen in a third-party
-          client only, not found in the bundles and not independently replay-tested.
+        description: Omit sections from included artists. `relationships` is unverified; not found in
+          the bundles and not independently replay-tested.
         example:
         - autos
         style: form
@@ -4698,8 +4652,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[music-videos]
         in: query
         required: false
@@ -4712,8 +4665,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -4726,8 +4678,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend[station-events]
         in: query
         required: false
@@ -5128,8 +5079,8 @@ paths:
             enum:
             - autos
             - relationships
-        description: Omit sections from included artists. `relationships` was seen in a third-party
-          client only, not found in the bundles and not independently replay-tested.
+        description: Omit sections from included artists. `relationships` is unverified; not found in
+          the bundles and not independently replay-tested.
         example:
         - autos
         style: form
@@ -5176,8 +5127,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[albums]
         in: query
         required: false
@@ -5190,8 +5140,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -5204,8 +5153,7 @@ paths:
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[artists]
         in: query
         required: false
@@ -5223,13 +5171,12 @@ paths:
             - plainEditorialNotes
             - url
             - editorialNotes
-        description: Sparse fieldset for artists. `editorialNotes` was seen in a third-party client
-          only, not found in the bundles and not independently replay-tested.
+        description: Sparse fieldset for artists. `editorialNotes` is unverified; not found in the
+          bundles and not independently replay-tested.
         style: form
         explode: false
         x-confidence: low
-        x-validation-status: unverified — seen in a third-party client only, not
-          found in the bundles and not independently replay-tested
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[albums]
         in: query
         required: false
@@ -5467,8 +5414,8 @@ paths:
         excerpt: 404 40400 'No target was found for the requested id'
         discovery: replay-tested
       description: The client adds no parameters of its own beyond the global set. A missing id returns
-        404 `40400 No target was found for the requested id`. A third-party client was observed also
-        sending `art[url]`, which is not found in the bundles and not independently replay-tested.
+        404 `40400 No target was found for the requested id`. Adding `art[url]` is unverified; not
+        found in the bundles and not independently replay-tested.
       x-callers:
       - MultiplexPageIntent.perform
       parameters:
