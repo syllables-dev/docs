@@ -2415,13 +2415,8 @@ paths:
             - offers
             - seoDescription
             - seoTitle
-            - playParams
-            - trackCount
-            - editorialNotes
-            - credits
         description: Extra attributes to add to the returned resources. Unknown values are ignored rather
-          than rejected. `playParams`, `trackCount`, `editorialNotes` and `credits` are unverified; not
-          found in the bundles and not independently replay-tested.
+          than rejected.
         example:
         - editorialArtwork
         - editorialVideo
@@ -2442,10 +2437,7 @@ paths:
             enum:
             - artists
             - record-labels
-            - tracks
-            - catalog
-        description: Relationships to resolve in the same response. `tracks` and `catalog` are
-          unverified; not found in the bundles and not independently replay-tested.
+        description: Relationships to resolve in the same response.
         example:
         - artists
         - record-labels
@@ -2467,16 +2459,9 @@ paths:
             - related-videos
             - video-extras
             - you-might-also-like
-            - more-by-curator
-            - contributors
-            - subscribers
-            - featured-artists
-            - more-in-genre
         description: Editorial shelves to attach to the resource. A view is omitted when the album has
           nothing for it, so check for its presence rather than assuming an empty array. Unknown values
-          are ignored rather than rejected. `more-by-curator`, `contributors`, `subscribers`,
-          `featured-artists` and `more-in-genre` are unverified; not found in the bundles and not
-          independently replay-tested.
+          are ignored rather than rejected.
         example:
         - appears-on
         - audio-extras
@@ -2734,12 +2719,8 @@ paths:
             - seoDescription
             - seoTitle
             - trackCount
-            - playParams
-            - editorialNotes
-            - credits
         description: Extra attributes to add to the returned resources. `followState` is sent with the
           social metadata request rather than the main one. Unknown values are ignored rather than rejected.
-          `playParams`, `editorialNotes` and `credits` are unverified.
         example:
         - editorialArtwork
         - editorialVideo
@@ -2761,12 +2742,7 @@ paths:
             enum:
             - curator
             - tracks
-            - artists
-            - record-labels
-            - catalog
-        description: Relationships to resolve in the same response. `artists`, `record-labels` and
-          `catalog` are unverified; not found in the bundles and not independently
-          replay-tested.
+        description: Relationships to resolve in the same response.
         example:
         - curator
         - tracks
@@ -2783,17 +2759,8 @@ paths:
             enum:
             - featured-artists
             - more-by-curator
-            - contributors
-            - subscribers
-            - appears-on
-            - more-by-artist
-            - more-in-genre
-            - other-versions
-            - you-might-also-like
         description: Editorial shelves to attach to the resource. Unknown values are ignored rather than
-          rejected. `contributors`, `subscribers`, `appears-on`, `more-by-artist`, `more-in-genre`,
-          `other-versions` and `you-might-also-like` are unverified; not found in the bundles and not
-          independently replay-tested.
+          rejected.
         example:
         - featured-artists
         - more-by-curator
@@ -3824,13 +3791,14 @@ paths:
         required: false
         schema:
           type: string
-        description: Restricts results to a specific result group, keyed by the
-          same group name that appears under `results` in the response body
-          (e.g. a group id derived from `types`). Used to fetch a single
-          search-result group directly instead of the full multi-type response.
+        description: Accepted on this endpoint, but every value tested returned an empty
+          `results` object with an empty `meta.results.order`, including group names that
+          the same request returns when `groups` is omitted. The intended selector
+          behaviour could not be reproduced, so do not rely on this parameter.
         example: albums
         x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+        x-validation-status: replay-tested; accepted rather than rejected with 40004, unlike on
+          other endpoints, but no value produced a non-empty response
       - name: art[music-videos:url]
         in: query
         required: false
@@ -4051,118 +4019,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
           x-validation-status: replay-tested
-        default:
-          $ref: '#/components/responses/Error'
-  /v1/catalog/{storefront}/search/groups:
-    get:
-      summary: Search, restricted to one result group
-      operationId: searchCatalogGroup
-      tags:
-      - Search
-      x-confidence: low
-      x-validation-status: unverified; not found in the bundles and not independently replay-tested
-      description: Appears to mirror `/v1/catalog/{storefront}/search`, but scoped to
-        a single result group via the `groups` parameter, letting a client fetch or
-        page through one group directly instead of the full multi-type response.
-        Not found in the bundled web client and not independently replay-tested.
-      parameters:
-      - $ref: '#/components/parameters/hOrigin'
-      - $ref: '#/components/parameters/hReferer'
-      - name: storefront
-        in: path
-        required: true
-        schema:
-          type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
-        example: us
-      - name: term
-        in: query
-        required: true
-        schema:
-          type: string
-        description: Search term.
-        example: espresso
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
-      - name: groups
-        in: query
-        required: true
-        schema:
-          type: string
-        description: The result group to fetch, keyed by the same group name that
-          appears under `results` in the response body of `/v1/catalog/{storefront}/search`.
-        example: albums
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
-      - name: types
-        in: query
-        required: false
-        style: form
-        explode: false
-        schema:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-            enum:
-            - activities
-            - albums
-            - apple-curators
-            - artists
-            - curators
-            - editorial-items
-            - music-movies
-            - music-videos
-            - playlists
-            - record-labels
-            - songs
-            - stations
-            - tv-episodes
-            - uploaded-videos
-        description: Resource types to return.
-        example:
-        - albums
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
-      - name: with
-        in: query
-        required: false
-        style: form
-        explode: false
-        schema:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-            enum:
-            - lyricHighlights
-            - lyrics
-            - naturalLanguage
-            - serverBubbles
-            - subtitles
-        description: Optional top-level sections to add to the response. Unknown values are ignored rather
-          than rejected.
-        example:
-        - lyricHighlights
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
-      - $ref: '#/components/parameters/qL'
-      - $ref: '#/components/parameters/qPlatform'
-      responses:
-        '200':
-          description: Success.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceResponse'
-        '400':
-          description: '`40003` missing parameter, `40004` parameter not allowed, `40005` invalid parameter
-            value, or `40009` unknown storefront.'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/search/suggestions:
