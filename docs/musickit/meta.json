@@ -4,14 +4,5 @@
   "pagesIndex": "index",
   "icon": "Radio",
   "root": true,
-  "pages": [
-    "index",
-    "authentication",
-    "conventions",
-    "album-details",
-    "artist-details",
-    "resources",
-    "errors",
-    "reference"
-  ]
+  "pages": ["index", "authentication", "conventions", "errors", "reference"]
 }

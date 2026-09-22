@@ -1,0 +1,28 @@
+---
+title: 身份验证
+description: API 请求所需的令牌和请求头
+---
+
+读取音乐目录需要网页播放器的开发者令牌。访问账号的个人内容还需要登录后取得的用户令牌（Music User Token）。具体要求见各接口页面。
+
+## 请求头
+
+| 请求头 | 值 | 使用场景 |
+| --- | --- | --- |
+| `Authorization` | `Bearer <developer token>` | 媒体 API 请求。 |
+| `Origin` | `https://music.apple.com` | 媒体 API 请求。 |
+| `Referer` | `https://music.apple.com/` | 与 `Origin` 一起发送。 |
+| `Media-User-Token` | `<music user token>` | 个人内容请求和 `/v1/play/assets`。 |
+| `X-Apple-Music-User-Token` | `<music user token>` | 向 `play.itunes.apple.com` 发送需要身份验证的播放请求。 |
+
+## 令牌的适用范围
+
+开发者令牌必须是为 `amp-api.music.apple.com` 签发的有效 JWT，且不能过期。公开 API `api.music.apple.com` 的开发者令牌不能用于这里。营销接口 `amp-api-edge.media.apple.com` 所需令牌的授权范围也不同。
+
+用户令牌需要通过登录取得，不能自行签发。读取音乐目录时，如果按账号筛选结果，或请求需要订阅的内容，也可能需要用户令牌。是否需要令牌，要看接口要求，不能只看请求路径。
+
+## Origin 也是验证的一部分
+
+网页播放器令牌的 `root_https_origin` 声明限定了允许的来源。`Origin` 必须使用 HTTPS，域名为 `apple.com` 或其子域名。缺少 `Origin` 或值无效时，令牌有效也会返回 401，响应正文为空。
+
+服务端发起的请求也必须带上 `Origin`。`Referer` 不能替代它，API 也不会单独检查 `Referer`。

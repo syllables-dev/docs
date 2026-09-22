@@ -1,0 +1,62 @@
+---
+title: MusicKit
+description: Apple Music 音乐目录、资料库和播放接口
+---
+
+本文档记录 Apple Music 网页播放器使用的私有 HTTP API，地址为 `amp-api.music.apple.com`。我们分析了网页客户端，并用实际请求核对接口参数和响应字段。
+
+Syllables 希望为使用这套未公开 API 的开发者提供一份可参考的文档。我们会尽力核实内容，但仍可能有错误或遗漏。开发时，请以实际接口行为为准，尤其要核对应用依赖的功能。
+
+各接口页面列出了网页播放器实际使用的参数和值，并注明依据：客户端代码、观察到的请求，或对线上 API 的测试。
+
+使用时请留意：
+
+- **参数值可能不止这些。** API 会忽略 `extend` 或 `views` 中无法识别的值，仍然返回 200。文档没有列出的值，服务端也可能支持。
+- **这是私有 API。** Apple 可能随时更改接口，文档不保证其稳定性。如需官方支持的公开 API，请参阅 [Apple 官方文档](https://developer.apple.com/documentation/applemusicapi/)。
+
+如需补充或更正文档，请参阅[参与贡献](../home/contributing/index.mdx)。
+
+<Callout title="API 凭据">
+这些接口使用网页播放器的凭据。为 `api.music.apple.com` 签发的开发者令牌不能用于此处。
+</Callout>
+
+## 发起第一个请求
+
+请求需要带上开发者令牌，以及 `Origin` 和 `Referer` 请求头。API 会检查 `Origin` 是否在令牌允许的范围内；缺少或无效时返回 401。
+
+```http
+GET /v1/catalog/us/songs/1752214923?l=en-US&platform=web HTTP/1.1
+Host: amp-api.music.apple.com
+Authorization: Bearer <developer token>
+Origin: https://music.apple.com
+Referer: https://music.apple.com/
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "1752214923",
+      "type": "songs",
+      "href": "/v1/catalog/us/songs/1752214923",
+      "attributes": {
+        "name": "Espresso",
+        "artistName": "Sabrina Carpenter",
+        "durationInMillis": 175459
+      }
+    }
+  ]
+}
+```
+
+只返回一个资源时，`data` 也是数组。[身份验证](./authentication.mdx#origin-也是验证的一部分)介绍了来源检查；[请求约定](./conventions.mdx)介绍了查询参数、资源映射、分页和缓存。
+
+## 基础说明
+
+<Cards>
+  <Card title="身份验证" href="/zh-CN/musickit/authentication" description="令牌和必需的请求头。" />
+  <Card title="请求约定" href="/zh-CN/musickit/conventions" description="服务地址、参数、响应和分页。" />
+  <Card title="错误处理" href="/zh-CN/musickit/errors" description="错误码和响应处理。" />
+</Cards>
+
+每个接口都有独立页面，按服务分组列在 **Endpoints** 下。接口参考文档保留英文。

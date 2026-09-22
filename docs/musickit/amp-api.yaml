@@ -374,9 +374,10 @@ paths:
         location: music.apple.com album page, 2026-09-20
         excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
         discovery: observed-in-browser
-      description: The generic single-resource read. Every catalog detail page in the web client goes
-        through this shape; the album, artist and playlist pages differ only in which `include`, `extend`,
-        `fields` and `views` they ask for.
+      description: |
+        The generic single-resource read. Every catalog detail page in the web client goes through this shape; the album, artist and playlist pages differ only in which `include`, `extend`, `fields` and `views` they ask for.
+
+        `genres` returns 500 `Error extracting the attribute 'parentId' for genres` for a nonexistent ID rather than 404. Prefer [Genres](/musickit/reference/catalog/getCatalogGenres) for genre reads. Unknown values in `views` are silently dropped; `genres` and `station-genres` do not reliably reject unknown view names, so a 200 response alone does not establish support.
       x-feature: Album / artist / playlist / station detail pages
       x-callers:
       - SongDetailPageIntent.perform
@@ -1277,9 +1278,34 @@ paths:
         location: GET /v1/catalog/us/songs/1752214923/credits
         excerpt: 200; data[].attributes.kind / .title, relationships.credit-artists
         discovery: replay-tested
-      description: Generic relationship read. `tracks` and `credits` were replay-confirmed. `lyrics` and
-        `syllable-lyrics` resolve as relationship names but return 404 `40403 No related resources` without
-        a subscribed `Media-User-Token`, so their response shape is not documented here.
+      description: |
+        Generic relationship read. `tracks` and `credits` were replay-confirmed. `lyrics` and `syllable-lyrics` resolve as relationship names but return 404 `40403 No related resources` without a subscribed `Media-User-Token`, so their response shape is not documented here.
+
+        An unknown relationship returns `40008`. A supported relationship with no related resources returns `40403`. The `library` relationship maps a catalog resource to the signed-in account's copy.
+
+        | Type | Relationships |
+        | --- | --- |
+        | `albums` | `artists`, `genres`, `library`, `record-labels`, `tracks`, `works` |
+        | `apple-curators` | `events`, `playlists` |
+        | `artists` | `albums`, `genres`, `music-videos`, `playlists`, `songs`, `station` |
+        | `audio-analysis` | Not listed. |
+        | `classical-works` | `composers` |
+        | `concerts` | `artists`, `playlists`, `venues` |
+        | `curators` | `playlists` |
+        | `genres` | Not listed. |
+        | `music-movies` | `genres` |
+        | `music-videos` | `albums`, `artists`, `genres`, `library`, `songs` |
+        | `playlists` | `curator`, `library`, `tracks` |
+        | `record-labels` | Not listed. |
+        | `songs` | `albums`, `artists`, `audio-analysis`, `composers`, `credits`, `genres`, `library`, `lyrics`, `music-videos`, `station`, `syllable-lyrics` |
+        | `station-genres` | `stations` |
+        | `stations` | `events` |
+        | `tv-episodes` | `genres`, `seasons` |
+        | `tv-seasons` | `episodes`, `genres` |
+        | `tv-shows` | `tv-seasons` |
+        | `uploaded-audios` | `artists`, `curator` |
+        | `uploaded-videos` | `artists`, `curator` |
+        | `venues` | Not listed. |
       x-callers:
       - requestContainerTracks
       - iz (playlist tracks)
@@ -1367,7 +1393,7 @@ paths:
         x-confidence: high
         x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
           before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it. Which of these a given type accepts is listed on the Resource model page.
+          it. See the relationship table above for the names supported by each type.
       - name: limit
         in: query
         required: false
@@ -1740,9 +1766,12 @@ paths:
         location: music.apple.com artist page, 2026-09-20
         excerpt: GET /v1/catalog/us/artists/390647681?...&include=canvas,default-playable-content&include[canvas-shelves-collection]=contents&include[canvas-shelves-group]=children&limit[canvas-shelves-collection:contents]=12&limit[canvas-shelves-collection:contents{displayStyle}]=artist-featured-track-lockup:24&relate[canvas-shelves-collection]=see-all
         discovery: observed-in-browser
-      description: Retrieve an artist and optional artwork, biography, and catalog shelves. Include canvas
-        to load the shelf tree and resolve each identifier through the resource map. See [Artist details
-        and shelves](/musickit/artist-details) for a complete request and response traversal.
+      description: |
+        Retrieve an artist and optional artwork, biography, and catalog shelves. Include `canvas` to load the shelf tree.
+
+        With `format[resources]=map`, resolve `data[0]` through `resources[type][id]`, then follow the artist's ordered `relationships.canvas.data`. Resolve shelf identifiers through the same map: groups contain `relationships.children.data`, and collections contain `relationships.contents.data`. Text shelves carry `attributes.title` and `attributes.text`; client markers identify sections to build from artist details through `attributes.display.style`. Skip unknown styles or render their contents with a fallback layout.
+
+        Follow `relationships.contents.next` for another page of a collection. For an expanded collection, follow `relationships["see-all"].data[0].href`; do not construct shelf URLs from IDs. Request `include=contents` and `extend=plainEditorialNotes,seeAllDisplay` on the expanded collection, and prefer `attributes.seeAllDisplay` over `attributes.display` when present.
       x-feature: Artist page
       x-callers:
       - ArtistDetailPage2IntentController
@@ -2010,9 +2039,12 @@ paths:
         location: music.apple.com album page, 2026-09-20
         excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
         discovery: observed-in-browser
-      description: Retrieve an album with its tracks, label, artists and related-content shelves. Extend
-        the album for editorial still and motion artwork. See [Album details and artwork](/musickit/album-details)
-        for the artwork fallback order and a worked example.
+      description: |
+        Retrieve an album with its tracks, label, artists and related-content shelves. Extend the album for editorial still and motion artwork.
+
+        With `format[resources]=map`, resolve the album and its ordered `relationships.tracks.data` through `resources[type][id]`. Tracks can include both `songs` and `music-videos`.
+
+        Motion artwork is optional. The `editorialVideo.motionDetailSquare` and `motionDetailTall` variants carry a `video` URL string and a `previewFrame` artwork object. Use the preview frame when animation is disabled. When motion artwork is absent, fall back to `editorialArtwork.staticDetailSquare` or `staticDetailTall`, then to `attributes.artwork`.
       x-feature: Album page
       x-callers:
       - ContainerDetailPageIntent
@@ -10210,7 +10242,10 @@ paths:
         excerpt: '"/v1/social/recommended-friends" path literal; the reachable call site in the archived
           assets is the DELETE'
         discovery: static
-      description: List recommended friends.
+      description: |
+        List recommended friends.
+
+        The tested session returned 404 `40401 Path Not Found` for GET. The client bundle builds this request, but availability may depend on storefront or account state.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11953,8 +11988,7 @@ components:
         attributes:
           type: object
           description: Optional, type-specific fields. Request additional attributes with extend. An unavailable
-            attribute can be absent even when requested. See the album details, artist details, and request
-            options guides.
+            attribute can be absent even when requested. See the endpoint descriptions and [Request conventions](/musickit/conventions).
           properties:
             artwork:
               $ref: '#/components/schemas/Artwork'

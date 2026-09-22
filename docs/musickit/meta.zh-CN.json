@@ -1,0 +1,8 @@
+{
+  "title": "MusicKit",
+  "description": "Apple Music API 参考文档",
+  "pagesIndex": "index",
+  "icon": "Radio",
+  "root": true,
+  "pages": ["index", "authentication", "conventions", "errors", "reference"]
+}

@@ -1,0 +1,138 @@
+---
+title: 请求约定
+description: 服务地址、参数、分页和缓存
+---
+
+以下约定适用于多种请求。各接口支持的参数和服务地址见对应页面。
+
+## 服务地址
+
+使用接口页面指定的地址：
+
+| 域名 | 用途 |
+| --- | --- |
+| `amp-api.music.apple.com` | 音乐目录、搜索、资料库、账号及其他媒体 API 请求。 |
+| `amp-api-edge.music.apple.com` | 编辑精选内容和搜索的备用地址。 |
+| `amp-api-edge.media.apple.com` | `POST /v1/engagement/{storefront}/upsell`。 |
+| `play.itunes.apple.com` | 已购和已上传内容的播放资源，以及 DRM 密钥交换。 |
+
+除非接口另有注明，本文档默认使用 `amp-api.music.apple.com`。令牌和必需的请求头见[身份验证](./authentication.mdx)。
+
+## 查询参数
+
+常用查询参数包括：
+
+| 参数 | 值 |
+| --- | --- |
+| `l` | 语言标签，如 `en-US`。 |
+| `platform` | 浏览器请求使用 `web`。 |
+| `format[resources]` | 设为 `map`，将资源放在单独的映射表中返回。 |
+| `timezone` | 客户端的 UTC 偏移量，仅部分接口支持。 |
+
+其他常用参数：
+
+| 参数 | 作用 |
+| --- | --- |
+| `extend` | 为返回的资源补充可选属性 |
+| `include` | 在同一响应中返回关联资源 |
+| `views` | 附带资源的编辑精选集合 |
+| `with` | 在响应顶层加入可选内容 |
+| `types` | 将混合结果限制为指定资源类型 |
+| `sparse` | 精简指定类型的返回内容 |
+| `fields[type]` | 只返回某类资源的指定属性 |
+| `limit[...]` | 限制关联、视图或集合中的条目数 |
+| `meta[...]` | 请求资源或关联的额外元数据 |
+| `relate[type]` | 返回关联资源的引用 |
+| `associate[type:relationship]` | 附加关联数据，如播放列表协作者 |
+| `omit[resource]` | 省略部分响应内容；网页播放器发送的值为 `autos` |
+| `displayFilter[kind]` | 只返回客户端能展示的内容栏类型 |
+| `art[url]` | 控制图片 URL 模板的格式 |
+| `filter[...]` | 筛选结果，如 `filter[personal-mix]` |
+| `ids[type]` | 按 ID 批量获取资源 |
+
+各接口页面会列出可用的值。
+
+## 指定参数的作用范围
+
+`extend`、`include`、`fields`、`relate`、`meta` 和 `limit` 可以在方括号内指定资源类型。省略类型时，参数只影响当前请求的资源；写明类型后，响应中所有该类型的资源都会受影响。
+
+```http
+GET /v1/catalog/us/albums/1752214909?extend=offers&extend[playlists]=trackCount
+```
+
+`extend=offers` 为专辑补充 `offers`。`extend[playlists]=trackCount` 则为响应中的所有播放列表补充曲目数，包括视图中的播放列表。
+
+部分参数可以作用于某个关联，写法为 `type:relationship`。例如，`meta[albums:tracks]=popularity` 为专辑的 `tracks` 关联补充元数据，`limit[view.more-by-curator]=15` 则限制指定视图的条目数。
+
+## 传入多个值
+
+`extend`、`include`、`views`、`with`、`types`、`sparse`、`displayFilter[kind]`、`art[url]` 及其带作用范围的形式，都用逗号分隔多个值：
+
+```http
+GET /v1/catalog/us/albums/1752214909?extend=editorialArtwork,editorialVideo,offers
+```
+
+把所有值放在同一个参数中。重复传入同名参数不会合并这些值。
+
+`art[url]` 接受两个标记：`c` 省略图片裁剪代码，`f` 省略文件扩展名，交由客户端填入。无论是否设置这些标记，图片的 `url` 都是模板，需要替换其中的 `{w}`、`{h}` 和 `{f}` 占位符。
+
+参数名写错会返回 `40004`，但 `extend` 或 `views` 中无法识别的值会被忽略，响应仍为 200。不能用 200 判断某个值是否可用。接口页面列出的是网页播放器实际发送的值，服务端还可能接受其他值。
+
+## 资源、关联和视图
+
+资源代表歌曲、专辑等条目。关联连接相关资源，视图则是一组编辑精选内容。音乐目录使用以下路径形式：
+
+```http
+GET /v1/catalog/{storefront}/{type}/{id}
+GET /v1/catalog/{storefront}/{type}/{id}/{relationship}
+GET /v1/catalog/{storefront}/{type}/{id}/view/{view}
+```
+
+使用 `include` 随资源一并请求关联内容，使用 `views` 请求视图。支持的类型和名称见接口参考文档；具体可用内容取决于资源和商店地区。
+
+资料库资源代表登录账号收藏的条目，类型名称带有 `library-` 前缀。音乐目录资源的 `library` 关联指向该账号资料库中的对应条目。
+
+## 读取资源映射
+
+设置 `format[resources]=map` 后，`data` 只按顺序列出资源的类型和 ID 等标识信息。完整对象要到 `resources` 中查找：
+
+```json
+{
+  "data": [
+    { "id": "1752214909", "type": "albums", "href": "/v1/catalog/us/albums/1752214909?l=en-US" }
+  ],
+  "resources": {
+    "albums": {
+      "1752214909": {
+        "id": "1752214909",
+        "type": "albums",
+        "href": "/v1/catalog/us/albums/1752214909?l=en-US",
+        "attributes": { "name": "Short n' Sweet", "artistName": "Sabrina Carpenter" },
+        "relationships": {
+          "tracks": { "href": "...", "data": [{ "id": "1752214923", "type": "songs" }] }
+        }
+      }
+    }
+  }
+}
+```
+
+多个结果引用同一资源时，映射表也只存一份。通过 `resources[type][id]` 即可取得完整对象。
+
+不传 `format[resources]=map` 时，完整对象会直接放在 `data` 中返回。
+
+## 分页
+
+分页响应会提供 `next`，其值是路径和查询字符串，不是完整 URL：
+
+```json
+{ "next": "/v1/catalog/us/playlists/pl.../tracks?offset=2&limit=2", "data": [] }
+```
+
+在同一 API 域名下请求返回的 `next` 路径，即可获取下一页。关联内容单独分页，下一页路径位于关联对象自己的 `next` 字段中。
+
+各接口页面会注明每页条目数的上限。
+
+## 缓存
+
+根据响应头中的 `Cache-Control` 和 `Date` 判断缓存是否仍然有效。音乐目录请求通常返回 `max-age=60`。客户端何时要求重新验证缓存，会在接口说明中注明。

@@ -3,7 +3,7 @@ title: Errors
 description: Error codes and response handling
 ---
 
-Failures come back as an `errors` array. The HTTP status matches `status`, and `code` is the value worth branching on: it is finer-grained than the status and stable across endpoints.
+Media API errors generally come back as an `errors` array. Check `code` for the specific failure; the HTTP status alone does not distinguish invalid parameters, credentials, and missing resources. Authentication can also fail with an empty 401 response body.
 
 ```json
 {
@@ -41,14 +41,4 @@ Failures come back as an `errors` array. The HTTP status matches `status`, and `
 | `40403` | 404 | No related resources | The relationship name resolves but has nothing to return. |
 | `50000` | 500 | Internal Service Error | Server-side failure. |
 
-## Endpoint-specific behavior
-
-**`40403` is not "no such relationship".** It means the relationship exists and is empty for this resource. An unknown relationship name answers `40008` instead. See [Resource model](/musickit/resources) for relationship names.
-
-**`40403` also stands in for "not entitled".** Requesting `/v1/catalog/{storefront}/songs/{id}/lyrics` without a subscribed account returns 404 `40403`, not 403. A 404 here does not mean the song has no lyrics.
-
-**`40401` distinguishes a missing route from a missing method.** `/v1/me/favorites` and `/v1/social/recommended-friends` both answer `40401` when read, because those routes require write methods.
-
-**A 200 is not always a success.** The leasing key server at `/v1/hls/streaming-key-delivery` returns 200 with a per-key `status` field inside the body, and a non-zero value there is a failure the client surfaces as a playback error.
-
-Parameter names are an allowlist and a typo answers `40004`, while unknown values inside `extend` or `views` are dropped silently. See [Request conventions](/musickit/conventions#set-valued-parameters).
+An unknown relationship returns `40008`; an existing relationship with nothing to return normally returns `40403`. Endpoint descriptions document exceptions, including subscription requirements and errors returned inside successful HTTP responses.

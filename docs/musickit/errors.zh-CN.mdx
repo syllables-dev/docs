@@ -1,0 +1,44 @@
+---
+title: 错误处理
+description: 错误码和响应处理
+---
+
+媒体 API 通常在 `errors` 数组中返回错误详情。`code` 比 HTTP 状态码更具体，可用来区分参数、凭据或资源方面的问题。身份验证失败时，也可能只返回 401，没有响应正文。
+
+```json
+{
+  "errors": [
+    {
+      "id": "IT5VQ2GJTAE3JWS2RE2UD5FKXE",
+      "title": "Invalid Parameter Value",
+      "detail": "Value must be an integer less than or equal to 300, but was: 301",
+      "status": "400",
+      "code": "40005",
+      "source": { "parameter": "limit" }
+    }
+  ]
+}
+```
+
+参数有误时，`source.parameter` 会给出参数名。排查 400 错误可以先看这个字段。`id` 与响应头 `x-apple-jingle-correlation-key` 的值一致。
+
+## 错误码
+
+| 错误码 | HTTP 状态码 | 错误标题 | 原因 |
+| --- | --- | --- | --- |
+| `40000` | 400 | Bad Request | 参数组合不符合要求，例如 `ids`、`name` 和 `genre` 中至少需要提供一个。 |
+| `40003` | 400 | Missing Parameter | 缺少必需参数，`source.parameter` 会指出参数名。 |
+| `40004` | 400 | Invalid Parameter | 接口不接受这个参数名。 |
+| `40005` | 400 | Invalid Parameter Value | 参数名有效，但值无效。 |
+| `40008` | 400 | Invalid Path Value | 路径中包含无法识别的资源类型、关联名称或视图名称。 |
+| `40009` | 400 | Unknown Storefront | 商店地区代码不存在。 |
+| `40013` | 400 | Invalid Request Signature | 用户令牌缺少社交关系请求所需的签名数据。 |
+| `40300` | 403 | Forbidden | 请求需要身份验证。 |
+| `40301` | 403 | Invalid Music User Token | 缺少用户令牌，或令牌无效。 |
+| `40303` | 403 | 未注明 | 账号没有订阅时，`/v1/play/assets` 在响应正文中返回此错误码。 |
+| `40400` | 404 | Resource Not Found | 没有与该 ID 对应的资源。 |
+| `40401` | 404 | Path Not Found | API 没有匹配该路径的路由。 |
+| `40403` | 404 | No related resources | 关联名称有效，但没有可返回的资源。 |
+| `50000` | 500 | Internal Service Error | 服务端发生错误。 |
+
+关联名称不存在时返回 `40008`；关联存在但没有内容时，通常返回 `40403`。有些接口会用其他方式报错，例如用 404 表示账号没有订阅，或在 HTTP 成功响应中返回错误。具体见各接口说明。

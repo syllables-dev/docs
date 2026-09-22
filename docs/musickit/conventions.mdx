@@ -3,7 +3,7 @@ title: Request conventions
 description: Hosts, parameters, pagination, and caching
 ---
 
-Every endpoint inherits the behaviour on this page.
+These conventions explain shared request and response mechanics. Check each endpoint for the parameters and hosts it supports.
 
 ## Hosts
 
@@ -16,29 +16,11 @@ Use the host listed for each endpoint:
 | `amp-api-edge.media.apple.com` | `POST /v1/engagement/{storefront}/upsell`. |
 | `play.itunes.apple.com` | Purchased and uploaded playback assets and DRM key exchange. |
 
-The reference uses `amp-api.music.apple.com` unless an endpoint specifies another host. The upsell endpoint requires `amp-api-edge.media.apple.com`; requests to the default host return 500.
-
-Playback reaches past the media API entirely. Asset resolution for purchased and uploaded items, and every DRM key exchange, run on `play.itunes.apple.com` under `/WebObjects/MZPlay.woa/`. That host takes the user token in `X-Apple-Music-User-Token` rather than `Media-User-Token`, and its paths are not versioned. The endpoints are documented under [Playback](/musickit/reference/playback/resolveWebPlaybackAsset).
-
-## Headers
-
-| Header | Sent on | Notes |
-| --- | --- | --- |
-| `Authorization` | Every request | `Bearer <developer token>`. |
-| `Origin` | Every request | **Required.** `https://music.apple.com`. Without it the API answers 401 with an empty body, whatever the token. |
-| `Referer` | Every request | `https://music.apple.com/`. A browser sets it; send it explicitly outside one. |
-| `Media-User-Token` | Every `/v1/me/*` request and `/v1/play/assets` | Identifies the signed-in account. |
-| `X-Apple-Music-User-Token` | Requests to `play.itunes.apple.com` | The same value under a different name. |
-| `X-Apple-Client-Version` | Every request | The build string, for example `2638.7.0-external`. |
-| `X-Apple-Renewal` | Widevine key requests | `true`. |
-
-The API checks `Origin` against the developer token scope, including on server-side requests. See [Authentication](/musickit/authentication#origin-is-part-of-the-credential) for accepted origins.
-
-Responses carry `x-apple-jingle-correlation-key`, which matches the `id` on any error in the body.
+The reference uses `amp-api.music.apple.com` unless an endpoint specifies another host. See [Authentication](/musickit/authentication) for tokens and required headers.
 
 ## Query parameters
 
-Every endpoint takes these:
+Common query parameters include:
 
 | Parameter | Value |
 | --- | --- |
@@ -47,16 +29,7 @@ Every endpoint takes these:
 | `format[resources]` | `map` to return resources in a separate lookup map. |
 | `timezone` | The client's UTC offset, where supported. |
 
-Library deletion sends no query parameters. Social profile updates and shared-playlist updates omit `format[resources]`.
-
-`l` and `platform` reject unknown values:
-
-| GET request | HTTP status | Error code | Message |
-| --- | --- | --- | --- |
-| `/v1/catalog/us/albums/1752214909?l=zz-ZZ` | 400 | `40005` | Invalid language tag 'zz-ZZ' |
-| `/v1/catalog/us/albums/1752214909?platform=bogus` | 400 | `40005` | Invalid platform value bogus |
-
-Beyond those, most endpoints draw on the same families:
+Most endpoints also draw on these parameter families:
 
 | Parameter | Effect |
 | --- | --- |
@@ -77,7 +50,7 @@ Beyond those, most endpoints draw on the same families:
 | `filter[...]` | Narrow results, such as `filter[personal-mix]` |
 | `ids[type]` | Fetch several resources of one type by ID |
 
-Each endpoint page lists the values it accepts. [Album details and artwork](/musickit/album-details) builds a complete request.
+Each endpoint page lists the values it accepts.
 
 ## Scoping a parameter to a type
 
@@ -103,15 +76,21 @@ Combine every value into one parameter. Repeating the parameter does not merge t
 
 `art[url]` takes two flags: `c` omits the artwork crop code and `f` omits the file extension, giving a URL template the client fills in itself. Artwork `url` values are templates either way, with `{w}`, `{h}`, and `{f}` placeholders to substitute.
 
-Whole parameter names are an allowlist. Anything unrecognised is rejected rather than ignored:
+An unknown parameter name returns `40004`. Set *values* behave differently: an unknown entry in `extend` or `views` returns 200 and is quietly dropped. Do not read a 200 as confirmation that a value is supported, and treat the values listed on an endpoint page as the ones the web player sends rather than everything the server accepts.
 
-`GET /v1/catalog/us/albums/1752214909?__probe=1`
+## Resources, relationships, and views
 
-| HTTP status | Error code | Message |
-| --- | --- | --- |
-| 400 | `40004` | Parameter '__probe' is not allowed |
+A resource represents an item such as a song or album. A relationship links it to related resources; a view is an editorially assembled collection. Catalog paths follow these forms:
 
-Set *values* are the opposite: an unknown entry in `extend` or `views` returns 200 and is quietly dropped. Do not read a 200 as confirmation that a value is supported, and treat the values listed on an endpoint page as the ones the web player sends rather than everything the server accepts.
+```http
+GET /v1/catalog/{storefront}/{type}/{id}
+GET /v1/catalog/{storefront}/{type}/{id}/{relationship}
+GET /v1/catalog/{storefront}/{type}/{id}/view/{view}
+```
+
+Use `include` to request relationships alongside a resource, and `views` to request its views. The endpoint reference lists supported types and names. Availability can vary by resource and storefront.
+
+Library resources represent the signed-in account's items and carry a `library-` type prefix. A catalog resource's `library` relationship points to the account's copy.
 
 ## The resource-map response
 
@@ -152,24 +131,8 @@ Paginated responses carry `next`, a path plus query string rather than a full UR
 
 Request the returned `next` path on the same API host to fetch the next page. Relationships paginate independently through a `next` field inside the relationship object.
 
-`limit` ceilings are per endpoint and enforced:
-
-| Endpoint | Maximum `limit` |
-| --- | --- |
-| `/v1/catalog/{storefront}/search` | 50 |
-| `/v1/catalog/{storefront}/charts` | 200 |
-| Playlist `tracks` relationships | 300 |
-
-`GET /v1/catalog/us/playlists/pl.../tracks?limit=301`
-
-| HTTP status | Error code | Message |
-| --- | --- | --- |
-| 400 | `40005` | Value must be an integer less than or equal to 300, but was: 301 |
-
-## Errors
-
-Errors come back as `{ "errors": [...] }` with a status code that matches. [Errors](/musickit/errors) lists error codes.
+Page-size limits are listed on each endpoint.
 
 ## Caching
 
-Use the response `Cache-Control` and `Date` headers to determine freshness. Catalog reads typically return `max-age=60`. For fresh account state or recently played radio, request revalidation with `cache: "no-cache"` when using `fetch`.
+Use the response `Cache-Control` and `Date` headers to determine freshness. Catalog reads typically return `max-age=60`. Endpoint descriptions note when the client requests revalidation.
