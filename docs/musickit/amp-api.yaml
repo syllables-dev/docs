@@ -586,6 +586,69 @@ paths:
         - curator
         style: form
         explode: false
+      - name: include[groupings]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on groupings.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[concerts]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - venues
+            - artists
+            - playlists
+        description: Relationships to include on concerts.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: extend[concerts]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - eventDataProviders
+            - ticketDataProvider
+            - tickets
+            - url
+        description: Extra concert attributes.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: omit[resource:artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - autos
+        description: Omit sections from included artists.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: relate[songs]
         in: query
         required: false
@@ -1113,9 +1176,29 @@ paths:
         required: false
         schema:
           type: string
-        description: Look songs up by ISRC.
+        description: Look songs up by ISRC. Accepts a comma-separated batch of
+          ISRCs, not just a single value.
+        example: USUG12400910,USUM71703861
         x-confidence: high
-        x-validation-status: replay-tested; not present in the bundles
+        x-validation-status: replay-tested; not present in the bundles; batching
+          behavior independently confirmed — a comma-separated batch of up to
+          25 ISRCs against `/v1/catalog/{storefront}/songs` returns matches
+          for all of them
+      - name: filter[equivalents]
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Resolve a song id from another storefront to its equivalent
+          id in the `storefront` of the request path. Used to map a non-US
+          catalog song to its US-storefront counterpart before looking up
+          lyrics or other US-only data.
+        example: '1440857781'
+        x-confidence: high
+        x-validation-status: replay-tested; not present in the bundles; independently
+          confirmed — sending `filter[equivalents]=<id>` against
+          `/v1/catalog/us/songs` resolves a non-US song id to its US-storefront
+          equivalent
       - name: filter[identity]
         in: query
         required: false
@@ -1159,6 +1242,73 @@ paths:
         example:
         - episodes
         - show
+      - name: include[groupings]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on groupings.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on albums.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on songs.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on music videos.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: omit[resource:artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - autos
+        description: Omit sections from included artists.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend
         in: query
         required: false
@@ -1557,6 +1707,20 @@ paths:
         - seoTitle
         - trackCount
         - uber
+      - name: fields
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Sparse fieldset shorthand, unscoped to a resource type.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
         '200':
@@ -1747,6 +1911,135 @@ paths:
           x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
+  /v1/catalog/{storefront}/{type}/{id}/view/{viewId}:
+    get:
+      summary: Resource shelf (generic)
+      operationId: getCatalogResourceView
+      tags:
+      - Catalog
+      x-confidence: low
+      x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      description: The same 'see all' shelf mechanism documented above for artists, but requested against
+        an arbitrary resource type rather than only `artists`. Whether the live API actually serves views
+        for types other than `artists` (and, if so, which view names are valid per type) has not been
+        confirmed.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - name: storefront
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
+          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        example: us
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Plural resource type (e.g. `albums`, `playlists`, `artists`, `concerts`).
+        example: albums
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Resource id.
+        example: '1752214909'
+      - name: viewId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: View/shelf name. Valid names are presumed to vary by resource type; only the `artists`
+          set documented above is confirmed.
+        example: top-songs
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Page size.
+        example: 25
+      - name: with
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Optional top-level sections to add to the response.
+        example:
+        - attributes
+      - name: include[songs]
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on songs.
+        example:
+        - artists
+        - composers
+      - name: include[concerts]
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on concerts.
+        example:
+        - venues
+      - $ref: '#/components/parameters/qPlatform'
+      - name: extend
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Extra attributes to add to the returned resources.
+        example:
+        - artistUrl
+      - $ref: '#/components/parameters/qArtUrl'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '400':
+          description: '`40008 Invalid Path Value` — no view matching the name for this type, if that
+            restriction applies here the way it does for artists.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: '`40400 Resource Not Found`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        default:
+          $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/artists/{id}:
     get:
       summary: Artist
@@ -1904,11 +2197,34 @@ paths:
             - eventDataProviders
             - ticketDataProvider
             - tickets
-        description: Extra concert attributes.
+            - url
+        description: Extra concert attributes. `url` is unverified; not found in the bundles and not
+          independently replay-tested.
         example:
         - tickets
         style: form
         explode: false
+      - name: extend[playlists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Extra playlist attributes.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: limit[artists:top-songs]
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Top songs returned per artist.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: geoHashLocation
         in: query
         required: false
@@ -2004,6 +2320,19 @@ paths:
         - albums
         style: form
         explode: false
+      - name: fields
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Sparse fieldset shorthand, unscoped to a resource type.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       responses:
         '200':
           description: Success.
@@ -2263,6 +2592,53 @@ paths:
         - name
         style: form
         explode: false
+      - name: fields[catalog]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict catalog resources to these attributes.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[catalog]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include for the catalog relationship.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: limit[artists:top-songs]
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Top songs returned per artist.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: fields
+        in: query
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Sparse fieldset shorthand, unscoped to a resource type.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
@@ -2519,7 +2895,11 @@ paths:
             - releaseDate
             - trackCount
             - url
-        description: Restrict album resources to these attributes.
+            - audioTraits
+            - copyright
+        description: Restrict album resources to these attributes. `audioTraits` and `copyright` are
+          unverified; not found in the bundles and not independently
+          replay-tested.
         example:
         - name
         - artwork
@@ -2581,6 +2961,74 @@ paths:
         - handle
         style: form
         explode: false
+      - name: fields[record-labels]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict record-label resources to these attributes.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: fields[catalog]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict catalog resources to these attributes.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[catalog]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include for the catalog relationship.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[playlists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include for the playlists relationship.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: meta[albums:tracks]
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Extra metadata on the tracks relationship of albums referenced by this playlist.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: limit[artists:top-songs]
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Top songs returned per artist.
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: meta[playlists:tracks]
         in: query
         required: false
@@ -3338,6 +3786,19 @@ paths:
         - naturalLanguage
         - serverBubbles
         - subtitles
+      - name: groups
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Accepted on this endpoint, but every value tested returned an empty
+          `results` object with an empty `meta.results.order`, including group names that
+          the same request returns when `groups` is omitted. The intended selector
+          behaviour could not be reproduced, so do not rely on this parameter.
+        example: albums
+        x-confidence: low
+        x-validation-status: replay-tested; accepted rather than rejected with 40004, unlike on
+          other endpoints, but no value produced a non-empty response
       - name: art[music-videos:url]
         in: query
         required: false
@@ -3384,6 +3845,19 @@ paths:
         - albums
         style: form
         explode: false
+      - name: relate[editorial-items]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relate editorial items to another type.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[artists]
         in: query
         required: false
@@ -3483,6 +3957,32 @@ paths:
         - radio-show
         style: form
         explode: false
+      - name: include[editorial-items]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on editorial items.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on artists.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -3541,7 +4041,10 @@ paths:
         excerpt: kinds only -> 40003 'One or more types must be specified'; term only -> 40003 'One or
           more kinds must be specified'
         discovery: replay-tested
-      description: Both `kinds` and `types` are required; omitting either returns 400 `40003`.
+      description: 'Both `kinds` and `types` are required; omitting either returns 400 `40003`. This has
+        been contradicted by an independent observation: a request with `kinds=terms` and no `types` at
+        all, using the scoped `limit[results:terms]` parameter, returned 200 — so the `types`-required
+        claim above may not hold in every case. Not independently replay-tested; needs re-verification.'
       x-feature: Search box
       x-callers:
       - SearchSuggestionsIntent
@@ -3954,7 +4457,9 @@ paths:
             type: string
             enum:
             - autos
-        description: Omit sections from included artists.
+            - relationships
+        description: Omit sections from included artists. `relationships` is unverified; not found in
+          the bundles and not independently replay-tested.
         example:
         - autos
         style: form
@@ -3991,6 +4496,45 @@ paths:
         - radio-show
         style: form
         explode: false
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on albums.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on music videos.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on songs.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend[station-events]
         in: query
         required: false
@@ -4390,7 +4934,9 @@ paths:
             type: string
             enum:
             - autos
-        description: Omit sections from included artists.
+            - relationships
+        description: Omit sections from included artists. `relationships` is unverified; not found in
+          the bundles and not independently replay-tested.
         example:
         - autos
         style: form
@@ -4425,6 +4971,68 @@ paths:
         - artistUrl
         style: form
         explode: false
+      - name: include[groupings]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on groupings.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on albums.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on songs.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - artwork
+            - editorialArtwork
+            - genreNames
+            - inFavorites
+            - name
+            - plainEditorialNotes
+            - url
+            - editorialNotes
+        description: Sparse fieldset for artists. `editorialNotes` is unverified; not found in the
+          bundles and not independently replay-tested.
+        style: form
+        explode: false
+        x-confidence: low
+        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[albums]
         in: query
         required: false
@@ -4662,7 +5270,8 @@ paths:
         excerpt: 404 40400 'No target was found for the requested id'
         discovery: replay-tested
       description: The client adds no parameters of its own beyond the global set. A missing id returns
-        404 `40400 No target was found for the requested id`.
+        404 `40400 No target was found for the requested id`. Adding `art[url]` is unverified; not
+        found in the bundles and not independently replay-tested.
       x-callers:
       - MultiplexPageIntent.perform
       parameters:
@@ -4685,6 +5294,7 @@ paths:
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
+      - $ref: '#/components/parameters/qArtUrl'
       responses:
         '200':
           description: Success.
@@ -11452,8 +12062,9 @@ paths:
         `iTunesMetadata` with `songwriters`, `translations` and a `leadingSilence` offset.
 
 
-        Needs a subscribed account. Without one the response is 404 `40403`, the same answer a song with
-        no lyrics gives, so the two cases cannot be told apart from the status.'
+        Needs a subscribed account, and `storefront` must match the account''s own storefront. A
+        mismatched storefront, an unsubscribed account and a song with no lyrics all return 404
+        `40403`, so the cases cannot be told apart from the status.'
       x-feature: Lyrics panel
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11553,7 +12164,8 @@ paths:
         whitespace between them are syllables of one word, which is what drives the karaoke-style highlight.
 
 
-        Backs Apple Music Sing. Same subscription requirement and same 404 as `lyrics`.'
+        Backs Apple Music Sing. Same subscription requirement, same storefront-match requirement and
+        same 404 as `lyrics`.'
       x-feature: Lyrics panel, Apple Music Sing
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11650,7 +12262,10 @@ paths:
 
         `data` holds `role-categories` rather than artists. Each category has a `kind` such as `performer`
         or `composer` and a localized `title`, and its `credit-artists` relationship holds the people
-        in it. Credit artist ids are not catalog artist ids: they look like `4-ami:identity:<hash>`.'
+        in it. Credit artist ids are not catalog artist ids: they look like `4-ami:identity:<hash>`.
+
+
+        Needs no `Media-User-Token`, unlike the lyrics relationships on the same song.'
       x-feature: Credits sheet
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11775,7 +12390,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-        musicUserToken: []
 components:
   securitySchemes:
     developerToken:
