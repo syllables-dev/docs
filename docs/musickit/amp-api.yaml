@@ -82,8 +82,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: ids[albums]
         in: query
@@ -298,8 +297,7 @@ paths:
             - seoTitle
             - trackCount
             - uber
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - artistBio
@@ -388,8 +386,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: type
         in: path
@@ -1095,6 +1092,14 @@ paths:
           include: "episodes", ids: t.join(","), extend: "credits" })'
         discovery: static
       - asset: assets/index~8bc3c631ba.js
+        location: TV season collection request builder
+        excerpt: '"fields[tv-episodes]":"name,artwork,previews,url,description,episodeNumber,episodeSubNumber,episodeSeasonNumber,kind,offers,releaseDate"'
+        discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: station collection request builder
+        excerpt: 'fields:"inflectionPoints,airTime,supportsAirTimeUpdates"'
+        discovery: static
+      - asset: assets/index~8bc3c631ba.js
         location: line 41908
         excerpt: 'const l = new it(`/v1/catalog/${a}/${j.Stations}`, e); l.queryString.addParameters({
           ids: o.join(","), "meta[stations]": "inflectionPoints", ... })'
@@ -1103,7 +1108,7 @@ paths:
         location: GET /v1/catalog/us/songs?filter[isrc]=USUG12400910
         excerpt: 200; filter[isrc] and filter[upc] both resolve
         discovery: replay-tested
-      description: Collection form of the resource read. The web client uses it for stations and TV seasons.
+      description: Collection form of the resource read. Used for stations and TV seasons.
         `filter[upc]` on albums and `filter[isrc]` on songs were confirmed by replay but were not seen
         in the bundles.
       x-callers:
@@ -1117,8 +1122,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: type
         in: path
@@ -1219,6 +1223,38 @@ paths:
         - inflectionPoints
         style: form
         explode: false
+      - name: fields
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on the requested resource type.
+        example:
+        - inflectionPoints
+        - airTime
+        - supportsAirTimeUpdates
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[tv-episodes]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included TV episodes.
+        example:
+        - name
+        - artwork
+        - previews
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -1368,8 +1404,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -1383,7 +1418,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size. The client sends `1`.
+        description: Page size.
         example: 1
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
@@ -1464,8 +1499,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: type
         in: path
@@ -1598,7 +1632,7 @@ paths:
             - social-profile
             - tracks
             - tv-seasons
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - albums
@@ -1670,8 +1704,7 @@ paths:
             - seoTitle
             - trackCount
             - uber
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - artistBio
@@ -1771,8 +1804,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -1813,7 +1845,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size. The client sends `20`.
+        description: Page size.
         example: 20
       - name: with
         in: query
@@ -1928,8 +1960,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: type
         in: path
@@ -2068,8 +2099,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -2372,8 +2402,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -2658,11 +2687,18 @@ paths:
           }'
         discovery: static
       - asset: assets/index~8bc3c631ba.js
+        location: collaborative playlist request builder
+        excerpt: '"fields[playlists]":"tracks","limit[collaborators]":"100","fields[collaborators]":"name,handle,artwork,socialProfileUrl,role",with:"lightProfiles"'
+        discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: collaborative playlist request builder
+        excerpt: '"include[playlists]":"tracks","include[reactions]":"social-profile"'
+        discovery: static
+      - asset: assets/index~8bc3c631ba.js
         location: line 53303
         excerpt: h = new it(`/v1/catalog/${g}/playlists/${f?.id}`, n)
         discovery: static
-      description: Retrieve a catalog playlist with its tracks and curator. The web client makes a second
-        request to the same path for social metadata when the signed-in account has a social profile.
+      description: Retrieve a catalog playlist with its tracks and curator. Social metadata can be requested from the same path when the account has a social profile.
       x-feature: Playlist page
       x-callers:
       - ContainerDetailPageIntent
@@ -2674,8 +2710,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -2684,6 +2719,66 @@ paths:
           type: string
         description: Playlist id.
         example: pl.u-8aAVZAlsPDpvLo
+      - name: fields[playlists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on the playlist resource.
+        example:
+        - tracks
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[collaborators]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included collaborators.
+        example:
+        - name
+        - handle
+        - artwork
+        - socialProfileUrl
+        - role
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: include[reactions]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on reactions.
+        example:
+        - social-profile
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: with
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Optional response features.
+        example:
+        - lightProfiles
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -3126,8 +3221,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -3268,6 +3362,10 @@ paths:
           "albums,songs,music-videos,playlists", limit: "50", genre: t, include: "tracks", with: "cityCharts,dailyGlobalTopCharts",
           extend: "artistUrl", ... })'
         discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: chart request builders
+        excerpt: '"include[songs]":"artists","relate[songs]":"albums","include[albums]":"artists","include[music-videos]":"artists","fields[artists]":"name"'
+        discovery: static
       description: Fetch catalog charts.
       x-feature: Charts page
       x-callers:
@@ -3281,8 +3379,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: types
         in: query
@@ -3326,7 +3423,7 @@ paths:
         schema:
           type: integer
           maximum: 200
-        description: Page size, 200 or less. The client sends `50`.
+        description: Page size, 200 or less.
         x-validation-status: 'replay-tested: 500 returns 40005'
       - name: with
         in: query
@@ -3398,6 +3495,76 @@ paths:
         style: form
         explode: false
         example: *id013
+      - name: include[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on chart songs.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: relate[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to relate on chart songs.
+        example:
+        - albums
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on chart albums.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on chart music videos.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included artists.
+        example:
+        - name
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -3467,8 +3634,7 @@ paths:
       description: 'The genre list for a storefront.
 
 
-        The client passes the language and platform inside `ids[...]` rather than as plain parameters,
-        which is unusual but is what the bundle does.'
+        Pass the language and platform inside `ids[...]` rather than as plain parameters.'
       x-callers:
       - yV
       parameters:
@@ -3479,8 +3645,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: ids[l]
         in: query
@@ -3494,7 +3659,7 @@ paths:
         required: false
         schema:
           type: string
-        description: Platform. The client sends `mac` here even on the web.
+        description: Platform identifier. Use `mac` for this resource.
         example: mac
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
@@ -3543,8 +3708,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: ids
         in: query
@@ -3617,8 +3781,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
@@ -3661,14 +3824,18 @@ paths:
         excerpt: 'const s = new it(`/v1/catalog/${n}/search`, e, i); s.queryString.addParameters({ term:
           t, limit: "21", ... }); s.queryString.with.add("lyricHighlights").add("lyrics").add("naturalLanguage").add("serverBubbles").add("subtitles")'
         discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: catalog search request builder
+        excerpt: '"include[music-videos]":"artists"'
+        discovery: static
       - asset: replay
         location: GET /v1/catalog/us/search
         excerpt: no term -> 40003 'Value must be present'; no types -> 40003 'One or more types must be
           specified'; limit=100 -> 40005 'less than or equal to 50'
         discovery: replay-tested
-      description: '`term` and `types` are both required. The web client''s search page also asks for
-        `with=lyricHighlights,lyrics,naturalLanguage,serverBubbles,subtitles`, which enable lyric-match
-        results, natural-language query parsing and the result ''bubble'' filters.'
+      description: '`term` and `types` are both required. Use
+        `with=lyricHighlights,lyrics,naturalLanguage,serverBubbles,subtitles` for lyric matches,
+        natural-language parsing and result ''bubble'' filters.'
       x-feature: Search results page
       x-callers:
       - SearchResultsIntent.perform
@@ -3680,8 +3847,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: term
         in: query
@@ -3738,7 +3904,7 @@ paths:
         schema:
           type: integer
           maximum: 50
-        description: Page size, 50 or less. The client sends `21`.
+        description: Page size, 50 or less.
         example: 21
         x-validation-status: 'replay-tested: 100 returns 40005'
       - name: offset
@@ -3969,6 +4135,20 @@ paths:
         explode: false
         x-confidence: low
         x-validation-status: unverified; not found in the bundles and not independently replay-tested
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on music videos.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -4042,8 +4222,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: term
         in: query
@@ -4058,8 +4237,7 @@ paths:
         schema:
           type: string
           pattern: ^(terms|topResults)(,(terms|topResults))*$
-        description: 'Comma-separated suggestion kinds: `terms`, `topResults`, or both. The client sends
-          both.'
+        description: 'Comma-separated suggestion kinds: `terms`, `topResults`, or both.'
         example: terms,topResults
         x-validation-status: replay-tested
       - name: types
@@ -4102,14 +4280,14 @@ paths:
         required: false
         schema:
           type: integer
-        description: Term suggestions to return. The client sends `5`.
+        description: Term suggestions to return.
         example: 5
       - name: limit[results:topResults]
         in: query
         required: false
         schema:
           type: integer
-        description: Top results to return. The client sends `10`.
+        description: Top results to return.
         example: 10
       - name: fields[albums]
         in: query
@@ -4227,7 +4405,7 @@ paths:
 
 
         This endpoint was **not** found as a literal in the bundles. It was inferred from the bag key
-        `ampMusicAPIDomains/searchHints`, which the client declares but never reads at any call site in
+        `ampMusicAPIDomains/searchHints`, which appears in configuration but is not used in any request in
         the archived assets, and then confirmed by replay.'
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -4237,8 +4415,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: term
         in: query
@@ -4300,7 +4477,7 @@ paths:
         location: GET /v1/storefronts
         excerpt: '200'
         discovery: replay-tested
-      description: Not referenced by the web client bundles; confirmed by replay. MusicKit declares a
+      description: Confirmed by replay. MusicKit declares a
         `storefronts` resource type of the same name.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -4401,8 +4578,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: name
         in: query
@@ -4625,7 +4801,7 @@ paths:
             - social-profile
             - tracks
             - tv-seasons
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - albums
@@ -4710,6 +4886,10 @@ paths:
           "include[groupings]": "curator", "include[songs]": "artists,albums", tabs: ho(e) ? "subscriber"
           : "nonsubscriber", ... })'
         discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: grouping request builder
+        excerpt: '"omit[resource:artists]":"autos","include[groupings]":"curator","include[songs]":"artists,albums","include[music-videos]":"artists","include[albums]":"artists","fields[artists]":"name,url,artwork,editorialArtwork,genreNames,plainEditorialNotes","fields[albums]":"name,url,artwork,editorialArtwork,genreNames,artistName,trackCount,contentRating,plainEditorialNotes"'
+        discovery: static
       - asset: replay
         location: signed-in replay, 2026-09-21
         excerpt: 200 with `platform`; 400 `40003 A single platform must be supplied` without it.
@@ -4726,8 +4906,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -4759,6 +4938,95 @@ paths:
           - subscriber
           - nonsubscriber
         description: Which tab set to return.
+      - name: include[songs]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on songs.
+        example:
+        - artists
+        - albums
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on music videos.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on albums.
+        example:
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included artists.
+        example:
+        - name
+        - url
+        - artwork
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included albums.
+        example:
+        - name
+        - url
+        - artwork
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: omit[resource:artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Omit sections from included artists.
+        example:
+        - autos
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -4801,7 +5069,7 @@ paths:
             - social-profile
             - tracks
             - tv-seasons
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - albums
@@ -4901,8 +5169,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -5088,7 +5355,7 @@ paths:
             - social-profile
             - tracks
             - tv-seasons
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - albums
@@ -5185,8 +5452,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -5255,9 +5521,7 @@ paths:
         location: GET /v1/editorial/us/multiplex/0
         excerpt: 404 40400 'No target was found for the requested id'
         discovery: replay-tested
-      description: The client adds no parameters of its own beyond the global set. A missing id returns
-        404 `40400 No target was found for the requested id`. Adding `art[url]` is unverified; not
-        found in the bundles and not independently replay-tested.
+      description: A missing id returns 404 `40400 No target was found for the requested id`.
       x-callers:
       - MultiplexPageIntent.perform
       parameters:
@@ -5268,8 +5532,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -5280,7 +5543,6 @@ paths:
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
-      - $ref: '#/components/parameters/qArtUrl'
       responses:
         '200':
           description: Success.
@@ -5323,15 +5585,14 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: name
         in: query
         required: true
         schema:
           type: string
-        description: Shelf set name. The client sends `search-landing`.
+        description: Shelf set name. Use `search-landing` for the search landing page.
         example: search-landing
       - name: types
         in: query
@@ -5412,8 +5673,7 @@ paths:
             - seoTitle
             - trackCount
             - uber
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - artistBio
@@ -5487,7 +5747,7 @@ paths:
         discovery: replay-tested
       description: '`geoHashLocation` must be exactly four characters. Replay without it returned 500,
         and with a three-character hash returned 400 `40005 Geo Hash ''9q5'' must be exactly 4 characters
-        long`, so the parameter is treated as required here even though the client has a branch that omits
+        long`, so the parameter is treated as required here although a request path omits
         it.'
       x-feature: Concerts hub
       x-callers:
@@ -5501,8 +5761,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: geoHashLocation
         in: query
@@ -5520,7 +5779,7 @@ paths:
         schema:
           type: string
           pattern: ^[a-z-]+(,[a-z-]+)*$
-        description: Comma-separated container names. The client sends all six of `concerts-this-week`,
+        description: Comma-separated container names. Supported values include `concerts-this-week`,
           `concerts-next-week`, `popular-concerts`, `favorite-artists-concerts`, `all-upcoming-concerts`
           and `more-upcoming-concerts`.
         example: concerts-this-week,concerts-next-week,popular-concerts
@@ -5529,14 +5788,14 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size for that container. The client sends `12`.
+        description: Page size for that container.
         example: 12
       - name: limit[popular-concerts]
         in: query
         required: false
         schema:
           type: integer
-        description: Page size for that container. The client sends `6`.
+        description: Page size for that container.
         example: 6
       - name: filter[date]
         in: query
@@ -5663,8 +5922,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -5779,8 +6037,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: serviceType
         in: query
@@ -5789,7 +6046,7 @@ paths:
           type: string
           enum:
           - music
-        description: Service. The client sends `music`.
+        description: Service. Use `music` for Apple Music.
         example: music
       - name: placement
         in: query
@@ -5810,7 +6067,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Items to return. The client sends `2`.
+        description: Items to return.
         example: 2
       - name: with
         in: query
@@ -5886,8 +6143,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: types
         in: query
@@ -6365,7 +6621,7 @@ paths:
       - $ref: '#/components/parameters/qPlatform'
       responses:
         '204':
-          description: Applied. The client reads only whether the response was ok.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -6464,8 +6720,7 @@ paths:
         location: signed-in replay, 2026-09-21
         excerpt: 200; paginated through `next`, with `stations` resources href-ed into the catalog.
         discovery: replay-tested
-      description: 'The client sends `cache: no-cache` on this request and skips it entirely when no account
-        is signed in.'
+      description: 'Use `Cache-Control: no-cache` to revalidate. Requires a signed-in account.'
       x-feature: Radio tab
       x-callers:
       - hH
@@ -6477,7 +6732,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size. The client sends `30`.
+        description: Page size.
         example: 30
       - name: include[stations]
         in: query
@@ -6624,6 +6879,10 @@ paths:
           e); s.queryString.addParameters({ action: "refresh", name: "listen-now", "include[personal-recommendation]":
           "contents", "limit[contents]": "100", ... }); s.queryString.with.add("friendsMix").add("library").add("social")'
         discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: recommendation request builder
+        excerpt: 'r.queryString.addParameters({geoHashLocation:o==null?void 0:o.geoHash,"include[concerts]":"venues,artists"})'
+        discovery: static
       - asset: replay
         location: signed-in replay, 2026-09-21
         excerpt: 200 for a recommendation id taken from `/v1/me/recommendations`.
@@ -6645,14 +6904,14 @@ paths:
         required: false
         schema:
           type: string
-        description: Shelf set name. The client sends `listen-now`.
+        description: Shelf set name. Use `listen-now` for the Listen Now shelf.
         example: listen-now
       - name: action
         in: query
         required: false
         schema:
           type: string
-        description: The client sends `refresh`.
+        description: Use `refresh` to request fresh content.
         example: refresh
       - name: include[personal-recommendation]
         in: query
@@ -6692,7 +6951,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Items to return. The client sends `100`.
+        description: Items to return.
         example: 100
       - name: with
         in: query
@@ -6720,6 +6979,21 @@ paths:
         schema:
           type: string
         description: Four-character geohash, for concert shelves.
+      - name: include[concerts]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on location-specific concerts.
+        example:
+        - venues
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -6764,8 +7038,7 @@ paths:
             - seoTitle
             - trackCount
             - uber
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - artistBio
@@ -6877,7 +7150,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Suggestions to return. The client sends `20`.
+        description: Suggestions to return.
         example: 20
       - name: action
         in: query
@@ -7004,8 +7277,7 @@ paths:
           `ids[...]`.
         discovery: replay-tested
       description: The 'in library' state of every lockup on a page is resolved through this one call.
-        The client disables the `l` and `platform` injections here and sends them explicitly, and passes
-        `relate=library` so the response links catalog ids to library ids.
+        Use explicit `l` and `platform` values with `relate=library` to link catalog ids to library ids.
       x-callers:
       - yD (requestLibraryRelationships)
       parameters:
@@ -7214,8 +7486,7 @@ paths:
           = false; i.queryString.shouldIncludePlatform = false; i.queryString.shouldIncludeFormatResourcesMap
           = false; At({ url: i.string, method: "DELETE" }, n)'
         discovery: static
-      description: The client disables all three global query injections for this call, so the request
-        carries no query string at all.
+      description: This request has no query parameters.
       x-callers:
       - W3e (requestDeleteFromLibrary)
       parameters:
@@ -7284,7 +7555,7 @@ paths:
         location: signed-in replay, 2026-09-21
         excerpt: 200; paginated through `next`, items typed `library-songs`.
         discovery: replay-tested
-      description: '`meta=sorts` asks the server to return the sort options the client should offer.'
+      description: '`meta=sorts` asks the server to return the available sort options.'
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -7328,7 +7599,7 @@ paths:
           type: string
           enum:
           - sorts
-        description: The client sends `sorts` to get the available sort options back.
+        description: Use `sorts` to return available sort options.
         example: sorts
       - name: include[library-songs]
         in: query
@@ -7429,7 +7700,7 @@ paths:
         required: false
         schema:
           type: string
-        description: The client sends `sorts`.
+        description: Use `sorts` to return available sort options.
         example: sorts
       - name: include[library-music-videos]
         in: query
@@ -7530,7 +7801,7 @@ paths:
         required: false
         schema:
           type: string
-        description: The client sends `sorts`.
+        description: Use `sorts` to return available sort options.
         example: sorts
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
@@ -7588,7 +7859,7 @@ paths:
         location: signed-in replay, 2026-09-21
         excerpt: 200 for an id taken from `/v1/me/library/artists`.
         discovery: replay-tested
-      description: The id is percent-encoded by the client, because library artist ids are not always
+      description: Percent-encode the id because library artist ids are not always
         numeric.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -7698,6 +7969,10 @@ paths:
           "include[library-albums]": "artists,tracks", "include[albums]": "artists,tracks", "fields[artists]":
           "name,url", "extend[albums]": i.join(",") })'
         discovery: static
+      - asset: assets/index~8bc3c631ba.js
+        location: library album request builder
+        excerpt: '"include[music-videos]":"catalog,artists,tracks","include[albums]":"artists,tracks","fields[artists]":"name,url"'
+        discovery: static
       - asset: replay
         location: signed-in replay, 2026-09-21
         excerpt: 200 for an id taken from `/v1/me/library/albums`; library album ids are prefixed `l.`.
@@ -7769,6 +8044,37 @@ paths:
         style: form
         explode: false
         example: *id019
+      - name: include[music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on music videos.
+        example:
+        - catalog
+        - artists
+        - tracks
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included artists.
+        example:
+        - name
+        - url
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -7850,7 +8156,7 @@ paths:
             - catalog
             - playlists
             - tracks
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - artists
@@ -7937,7 +8243,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size. The client sends `21`.
+        description: Page size.
         example: 21
       - name: include[library-artists]
         in: query
@@ -8241,7 +8547,7 @@ paths:
           - -releaseDate
           - type
           - -type
-        description: Sort order. Defaults to `type` in the client.
+        description: Sort order. `type` is a common value.
         x-confidence: medium
       - name: filter[featured]
         in: query
@@ -8803,6 +9109,21 @@ paths:
         - url
         style: form
         explode: false
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included artists.
+        example:
+        - name
+        - url
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -8921,8 +9242,7 @@ paths:
       description: 'Removes one track from a library playlist.
 
 
-        The client builds this URL with the query string written directly into the path string, then disables
-        all three global injections, so the request is sent exactly as `?ids[library-songs]=<id>&mode=all`.'
+        Use `?ids[library-songs]=<id>&mode=all` to remove every occurrence of the song.'
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -8950,7 +9270,7 @@ paths:
           type: string
           enum:
           - all
-        description: The client sends `all`, which removes every occurrence of the track.
+        description: Use `all` to remove every occurrence of the track.
         example: all
       responses:
         '204':
@@ -9033,8 +9353,7 @@ paths:
             - followState
             - hasCollaboration
             - isCollaborativeHost
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - followState
@@ -9055,7 +9374,7 @@ paths:
             - catalog
             - playlists
             - tracks
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - artists
@@ -9168,7 +9487,7 @@ paths:
         location: signed-in replay, 2026-09-21
         excerpt: 200; returns the containing folder.
         discovery: replay-tested
-      description: The read side of the same path the client uses to move a playlist between folders.
+      description: Read the folder containing a playlist.
         A playlist at the top level returns the root folder rather than an empty result.
       x-feature: Library playlist organisation
       parameters:
@@ -9434,8 +9753,7 @@ paths:
         excerpt: 200; pins come back as the pinned resources themselves, not as pin objects.
         discovery: replay-tested
       description: Pins are the tiles at the top of the library landing page. The mutating pin operations
-        return before the change is visible, so the client re-polls this endpoint on a timer until the
-        expected pin state appears.
+        return before the change is visible. Poll this endpoint until the expected pin state appears.
       x-callers:
       - GetLibraryPinsIntentController
       parameters:
@@ -9448,8 +9766,7 @@ paths:
           type: string
           enum:
           - libraryPin
-        description: The client sends `libraryPin` to get `meta.libraryPin.positionUUID` and `meta.libraryPin.action`
-          back.
+        description: Use `libraryPin` to return `meta.libraryPin.positionUUID` and `meta.libraryPin.action`.
         example: libraryPin
       - name: limit
         in: query
@@ -9514,6 +9831,22 @@ paths:
         - artwork
         style: form
         explode: false
+      - name: include[library-music-videos]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on pinned music videos.
+        example:
+        - albums
+        - playlists
+        - artists
+        style: form
+        explode: false
+        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -9558,7 +9891,7 @@ paths:
       description: 'One POST covers both actions, distinguished only by the `after` query parameter. Without
         `after` the item is pinned, with an empty string body. With `after` an existing pin is moved:
         `top` puts it first, any other value is the id of the pin to place it behind. Both forms return
-        before the change is readable. The client polls `GET /v1/me/library/pins` on a timer until the
+        before the change is readable. Poll `GET /v1/me/library/pins` until the
         expected state appears, rather than trusting the response.'
       x-callers:
       - AddLibraryPinIntentController
@@ -9592,7 +9925,7 @@ paths:
             example: ''
       responses:
         '200':
-          description: Accepted. The client confirms by polling `GET /v1/me/library/pins`.
+          description: Accepted. Poll `GET /v1/me/library/pins` to confirm the change.
           content:
             application/json:
               schema: {}
@@ -9861,7 +10194,7 @@ paths:
           }, e) ... v.meta.suggestedHandles[0]'
         discovery: static
       description: Handle collisions come back as a 4xx whose first error carries `meta.suggestedHandles`,
-        which the client surfaces as a suggestion. This call site disables `format[resources]=map`.
+        which can be shown as a suggestion. This request omits `format[resources]=map`.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9920,7 +10253,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: inferred from the client's error handling; not replayed
+          x-validation-status: inferred from response handling; not replayed
         '403':
           description: '`40300 Forbidden` — no valid `Media-User-Token`.'
           content:
@@ -9984,7 +10317,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10050,7 +10383,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10117,7 +10450,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10184,7 +10517,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10251,7 +10584,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10317,7 +10650,7 @@ paths:
                 type: social-profiles
       responses:
         '204':
-          description: Applied. The client reads only the status code.
+          description: Applied. No response body is defined.
           content:
             application/json:
               schema: {}
@@ -10368,8 +10701,7 @@ paths:
             - followState
             - hideListeningTo
             - pendingFollowersCount
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - followState
@@ -10530,7 +10862,7 @@ paths:
         discovery: replay-tested
       description: 'Reachable with only a developer token when looking a profile up by handle: replay
         returned 200 with `meta.filters.handle`. Fetching by `ids` with the follow state extended is what
-        the signed-in client does.'
+        a signed-in request does.'
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -10539,8 +10871,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: ids
         in: query
@@ -10576,7 +10907,7 @@ paths:
             - shareable-playlists
             - shared-playlists
             - social-profile
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - followees
@@ -10652,8 +10983,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: term
         in: query
@@ -10666,7 +10996,7 @@ paths:
         required: false
         schema:
           type: integer
-        description: Page size. The client sends `21`.
+        description: Page size.
         example: 21
       - name: art[social-profiles:url]
         in: query
@@ -10800,8 +11130,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
@@ -10841,7 +11170,7 @@ paths:
       description: |
         List recommended friends.
 
-        The tested session returned 404 `40401 Path Not Found` for GET. The client bundle builds this request, but availability may depend on storefront or account state.
+        The tested session returned 404 `40401 Path Not Found` for GET. The request is defined in the bundle, but availability may depend on storefront or account state.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11068,7 +11397,7 @@ paths:
       tags:
       - Playback
       x-confidence: high
-      x-validation-status: static only — recovered from the client bundles and not exercised
+      x-validation-status: static only — recovered from static code and not exercised
       x-evidence:
       - asset: includes/js-cdn/musickit/v3/amp/musickit.js
         location: line 23711
@@ -11120,7 +11449,7 @@ paths:
       tags:
       - Playback
       x-confidence: high
-      x-validation-status: static only — recovered from the client bundles and not exercised
+      x-validation-status: static only — recovered from static code and not exercised
       x-evidence:
       - asset: includes/js-cdn/musickit/v3/amp/musickit.js
         location: line 23780
@@ -11237,7 +11566,7 @@ paths:
 
 
         Present only in the **public** MusicKit bundle (`js-cdn.music.apple.com/musickit/v3/musickit.js`);
-        it does not appear in the AMP variant the web client loads. Parameters and body were not recovered,
+        it does not appear in the available AMP bundle. Parameters and body were not recovered,
         so none are documented.
 
 
@@ -11279,7 +11608,7 @@ paths:
       tags:
       - Playback
       x-confidence: high
-      x-validation-status: static only — recovered from the client bundles and not exercised
+      x-validation-status: static only — recovered from static code and not exercised
       x-evidence:
       - asset: includes/js-cdn/musickit/v3/amp/musickit.js
         location: line 26894
@@ -11312,6 +11641,13 @@ paths:
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
+      - name: X-Apple-Music-User-Token
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Identifies the signed-in account for playback on this host.
+        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11382,7 +11718,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-      - musicUserToken: []
   /WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense:
     post:
       summary: Web playback license
@@ -11411,7 +11746,7 @@ paths:
         excerpt: '"keyServerUrl": "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense"'
         discovery: replay-tested
       description: 'The key server named by `keyServerUrl` in a `/v1/play/assets` response. The browser''s
-        EME stack produces a key request; the client base64-encodes it as `challenge` and posts it here
+        EME stack produces a key request; base64-encode it as `challenge` and post it here
         with the item it belongs to.
 
 
@@ -11419,7 +11754,7 @@ paths:
 
 
         Two sibling key servers take a different body. `/v1/radio/streaming-key-delivery` and `/WebObjects/MZPlay.woa/web/radio/versions/1/license`
-        are handled by the same client code and accept this shape; `fpsRequest` and `/v1/hls/streaming-key-delivery`
+        accept this request shape; `fpsRequest` and `/v1/hls/streaming-key-delivery`
         do not.'
       x-feature: Encrypted playback
       x-callers:
@@ -11429,6 +11764,20 @@ paths:
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
+      - name: X-Apple-Music-User-Token
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Identifies the signed-in account for playback on this host.
+        x-validation-status: static only; not replayed
+      - name: X-Apple-Renewal
+        in: header
+        required: false
+        schema:
+          type: boolean
+        description: Set to `true` for Widevine license renewal.
+        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11479,7 +11828,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-      - musicUserToken: []
   /WebObjects/MZPlay.woa/wa/fpsRequest:
     post:
       summary: FairPlay keys
@@ -11496,13 +11844,11 @@ paths:
           [{ id: p, "adam-id": e.catalogId ?? e.id, challenge: h, uri: n.keyuri, "key-system": this.keySystemId
           }] } }'
         discovery: static
-      description: 'The older of the two key-request shapes. The client picks this handler when the key
-        server URL ends in `fpsRequest`, `/WebObjects/MZPlay.woa/hls/anonymous/fpsRequest`, `/v1/hls/streaming-key-delivery`
+      description: 'The older of the two key-request shapes. This request shape applies when the key server URL ends in `fpsRequest`, `/WebObjects/MZPlay.woa/hls/anonymous/fpsRequest`, `/v1/hls/streaming-key-delivery`
         or `/v1/hls/anonymous/streaming-key-delivery`.
 
 
-        It batches keys: the body is a `license-requests` array and `id` is a counter the client increments
-        per request so it can match responses back.
+        It batches keys: the body is a `license-requests` array and `id` is a per-request counter so it can match responses back.
 
 
         The `anonymous` variants skip the user token; every other variant requires it.'
@@ -11514,6 +11860,13 @@ paths:
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
+      - name: X-Apple-Music-User-Token
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Identifies the signed-in account for playback on this host.
+        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11573,7 +11926,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-      - musicUserToken: []
   /v1/hls/streaming-key-delivery:
     post:
       summary: Streaming key delivery
@@ -11596,12 +11948,11 @@ paths:
           [{ "lease-action": d["lease-action"], id: p, challenge: h, uri: n.keyuri, "key-system": this.keySystemId,
           stkn: d.stkn, ...e.keyServerQueryParameters }] } } }'
         discovery: static
-      description: 'The leasing key server. Unlike the other two, it tracks a lease: the client sends
-        `lease-action: start` to acquire a key and `stop` to release it when playback ends, so a key can
+      description: 'The leasing key server. Unlike the other two, it tracks a lease: use `lease-action: start` to acquire a key and `stop` to release it when playback ends, so a key can
         be revoked rather than only expiring.
 
 
-        The client reaches this shape for four URLs, all matched by suffix: `/v1/hls/streaming-key-delivery`,
+        This request shape applies to four URLs, all matched by suffix: `/v1/hls/streaming-key-delivery`,
         `/v1/hls/anonymous/streaming-key-delivery`, `/WebObjects/MZPlay.woa/wa/fpsRequest` and `/WebObjects/MZPlay.woa/hls/anonymous/fpsRequest`.
         Anything containing `/hls/anonymous` is treated as anonymous playback and sent without a user
         token.
@@ -11618,6 +11969,13 @@ paths:
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
+      - name: X-Apple-Music-User-Token
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Identifies the signed-in account for playback on this host.
+        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11702,7 +12060,6 @@ paths:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
-      - musicUserToken: []
   /WebObjects/MZPlay.woa/wa/widevineCert:
     get:
       summary: Widevine certificate
@@ -11771,14 +12128,14 @@ paths:
         discovery: static
       description: 'Backs the "remove app with access" control in account settings. The URL is configurable
         through the bag key `revokeMusicSDKAuthorizationSrv`; the value shown here is the fallback the
-        client uses when the bag does not carry one.
+        fallback when the bag does not carry one.
 
 
-        The client checks only whether the response was ok, so the body is not modelled.
+        No response body is defined.
 
 
         Its read counterpart is the bag key `getMusicSDKAuthorizationsSrv`, which lists the authorized
-        apps. The client reads that URL from the bag and never hardcodes it, so there is no path to document.'
+        apps. Its URL is supplied by the bag and is not documented as a fixed path.'
       x-feature: Account settings, connected apps
       x-callers:
       - RemoveAppWithAccessIntent.perform
@@ -11801,7 +12158,7 @@ paths:
                   description: The app's identifier, as listed by `getMusicSDKAuthorizationsSrv`.
       responses:
         '200':
-          description: The client treats any 2xx as success and ignores the body.
+          description: Any 2xx is treated as success. No response body is defined.
           content:
             application/json:
               schema:
@@ -11830,7 +12187,7 @@ paths:
       x-evidence:
       - asset: probe
         location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the client bundles were requested one at a time; 404
+        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
           40401 Path Not Found distinguishes a name the API does not route from one it does
         discovery: replay-tested
       description: 'The five regions Apple sorts storefronts into.
@@ -11840,9 +12197,8 @@ paths:
         `asia-pacific`, `africa-middle-east-india` and `europe`.
 
 
-        The web client never calls this. It was found by probing, and it is listed here because it is
+        This path was found by probing and is listed because it is
         the only endpoint that names the grouping a storefront belongs to.'
-      x-feature: Not used by the web client
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11899,11 +12255,10 @@ paths:
       x-evidence:
       - asset: probe
         location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the client bundles were requested one at a time; 404
+        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
           40401 Path Not Found distinguishes a name the API does not route from one it does
         discovery: replay-tested
       description: Returns a single-element `data` array, the same shape `/v1/regions` returns.
-      x-feature: Not used by the web client
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11967,7 +12322,7 @@ paths:
       x-evidence:
       - asset: probe
         location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the client bundles were requested one at a time; 404
+        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
           40401 Path Not Found distinguishes a name the API does not route from one it does
         discovery: replay-tested
       description: 'The public view of the signed-in account''s social profile. It returns type `social-profiles`
@@ -11980,7 +12335,6 @@ paths:
 
 
         It takes no relationships: `/v1/me/social-profile/followees` is not routed.'
-      x-feature: Not used by the web client
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -12001,8 +12355,7 @@ paths:
             - followState
             - hideListeningTo
             - pendingFollowersCount
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - followState
@@ -12060,8 +12413,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -12073,7 +12425,6 @@ paths:
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
-      - $ref: '#/components/parameters/qArtUrl'
       responses:
         '200':
           description: One `lyrics` resource.
@@ -12142,6 +12493,10 @@ paths:
         location: GET /v1/catalog/hk/songs/1866517055/{relationship}
         excerpt: 200 with the shape described here, on a subscribed account
         discovery: replay-tested
+      - asset: js-cdn.music.apple.com/musickit/v3/components/musickit-components/p-115f12df.entry.js
+        location: syllable-lyrics request builder
+        excerpt: 'n=l?{"l[lyrics]":o,"l[script]":`${t}-${a}`,extend:"ttmlLocalizations"}:{}'
+        discovery: static
       description: 'Word-timed lyrics as a TTML document.
 
 
@@ -12150,8 +12505,9 @@ paths:
         whitespace between them are syllables of one word, which is what drives the karaoke-style highlight.
 
 
-        Backs Apple Music Sing. Same subscription requirement, same storefront-match requirement and
-        same 404 as `lyrics`.'
+        Backs Apple Music Sing. Use `l[lyrics]`, `l[script]` and `extend=ttmlLocalizations`
+        together to request localized TTML. Same subscription requirement, same storefront-match
+        requirement and same 404 as `lyrics`.'
       x-feature: Lyrics panel, Apple Music Sing
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -12161,8 +12517,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -12174,7 +12529,34 @@ paths:
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
-      - $ref: '#/components/parameters/qArtUrl'
+      - name: l[lyrics]
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Preferred language for localized lyrics. Use with `extend=ttmlLocalizations`.
+        example: zh-CN
+        x-confidence: high
+        x-validation-status: static only; not replayed
+      - name: l[script]
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Language and script for localized lyrics, such as `zh-Hans`.
+        example: zh-Hans
+        x-confidence: high
+        x-validation-status: static only; not replayed
+      - name: extend
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - ttmlLocalizations
+        description: Requests `attributes.ttmlLocalizations`. Use with `l[lyrics]` and `l[script]`.
+        x-confidence: high
+        x-validation-status: static only; not replayed
       responses:
         '200':
           description: One `syllable-lyrics` resource.
@@ -12202,6 +12584,9 @@ paths:
                               type: string
                               description: A TTML document. The root `tt` element carries `itunes:timing="Word"`
                                 and `xml:lang`.
+                            ttmlLocalizations:
+                              type: string
+                              description: Localized TTML requested by `extend=ttmlLocalizations`.
                             playParams:
                               type: object
                               properties:
@@ -12261,8 +12646,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Two-letter storefront code. The client reads it from the `countryCode` bag key, default
-          `us`. An unknown code returns 400 `40009 Unknown Storefront`.
+        description: Two-letter storefront code. An unknown code returns 400 `40009 Unknown Storefront`.
         example: us
       - name: id
         in: path
@@ -12291,8 +12675,7 @@ paths:
             - extendedAssetUrls
             - lyricsExcerpt
             - offers
-        description: Extra attributes to add to the returned resources. The web client has no request
-          builder for this endpoint, so these are the values observed elsewhere for the same kind of resource.
+        description: Extra attributes to add to the returned resources. These values were observed on other endpoints for the same resource type.
           Unknown values are ignored rather than rejected.
         example:
         - artistUrl
@@ -12316,7 +12699,7 @@ paths:
             - credits
             - lyrics
             - music-videos
-        description: Relationships to resolve in the same response. The web client has no request builder
+        description: Relationships to resolve in the same response. No request builder was found
           for this endpoint, so these are the values observed elsewhere for the same kind of resource.
         example:
         - albums
@@ -12387,7 +12770,7 @@ components:
       type: apiKey
       in: header
       name: Media-User-Token
-      description: Identifies the signed-in account. Required for `/v1/me/*` and `/v1/play/assets`.
+      description: Identifies the signed-in account.
   parameters:
     hOrigin:
       name: Origin
@@ -12406,7 +12789,7 @@ components:
       required: true
       schema:
         type: string
-      description: Sent by the web client alongside `Origin`. Not checked on its own.
+      description: Include alongside `Origin`. Not checked on its own.
       example: https://music.apple.com/
       x-confidence: high
       x-validation-status: replay-tested
@@ -12416,8 +12799,7 @@ components:
       required: false
       schema:
         type: string
-      description: BCP 47 language tag. Injected on every request by the web client unless the call site
-        sets `shouldIncludeLanguage = false`. An unknown tag is rejected with error 40005.
+      description: BCP 47 language tag. An unknown tag is rejected with error 40005.
       example: en-US
     qPlatform:
       name: platform
@@ -12432,8 +12814,7 @@ components:
         - desktop
         - appletv
         - watch
-      description: Client platform. Injected on every request unless the call site sets `shouldIncludePlatform
-        = false`. An unknown value is rejected with error 40005.
+      description: Platform identifier. An unknown value is rejected with error 40005.
     qFormatResources:
       name: format[resources]
       in: query
@@ -12442,9 +12823,7 @@ components:
         type: string
         enum:
         - map
-      description: Return related resources as a keyed `resources` map instead of an inline `included`
-        array. Injected on every request unless the call site sets `shouldIncludeFormatResourcesMap =
-        false`.
+      description: Return related resources as a keyed `resources` map instead of an inline `included` array.
     qTimezone:
       name: timezone
       in: query
@@ -12488,8 +12867,7 @@ components:
           enum:
           - c
           - f
-      description: Artwork URL flags. `c` omits the crop code, `f` omits the file extension. The client
-        builds this from a sorted set.
+      description: Artwork URL flags. `c` omits the crop code; `f` omits the file extension.
       example:
       - c
       - f
@@ -12506,8 +12884,7 @@ components:
           type: string
           enum:
           - autos
-      description: Comma-separated resource sections to omit from the response. The web client almost
-        always sends `autos`.
+      description: Comma-separated resource sections to omit from the response.
       example:
       - autos
       style: form
@@ -12776,7 +13153,7 @@ x-research:
     amp-api.music.apple.com: bag key ampMusicAPIDomains/default; used for every operation in this document
       unless an operation overrides it
     amp-api-edge.music.apple.com: bag keys ampMusicAPIDomains/editorialContent, /search, /searchHints,
-      /searchLanding. The client routes search and editorial reads here. Every such operation was verified
+      /searchLanding. Search and editorial reads can use this host. Every such operation was verified
       against amp-api.music.apple.com instead, and all of them work there, so this document uses the default
       host throughout.
     amp-api-edge.media.apple.com: MarketingKit base URL; the only host where POST /v1/engagement/{storefront}/upsell
@@ -12797,15 +13174,14 @@ x-research:
     active subscription, which covered the personalized surfaces.
   - Enumerated catalog resource types, relationships and views by probing the path segments, which the
     API validates before it looks a resource up.
-  - Swept candidate path names harvested from the bundles against the API to find routes the client does
-    not call.
+  - Swept candidate path names from the bundles against the API to find routes absent from the call graph.
   limits:
   - No write operation was replayed. Every POST, PUT, PATCH and DELETE in this document comes from the
     bundles alone.
   - 'The social graph could not be read: followers and followees answer 40013 Invalid Request Signature
     with a user token minted outside a full web session.'
   - Response schemas are described at the envelope level. Per-type attribute schemas are not modelled.
-  - DRM key exchange is documented from the client code only; issuing a licence is a state-changing operation
+  - DRM key exchange is documented from static code only; issuing a licence is a state-changing operation
     and was not replayed.
   - 'The enumerations of types, relationships and views are floors, not ceilings: they cover the names
     the probe wordlist contained.'

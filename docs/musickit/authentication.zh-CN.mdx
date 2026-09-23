@@ -15,6 +15,10 @@ description: API 请求所需的令牌和请求头
 | `Media-User-Token` | `<music user token>` | 个人内容请求和 `/v1/play/assets`。 |
 | `X-Apple-Music-User-Token` | `<music user token>` | 向 `play.itunes.apple.com` 发送需要身份验证的播放请求。 |
 
+## 可选请求头
+
+`X-Apple-Client-Version` 标识应用版本。此请求头不是身份验证凭据，也非必填。
+
 ## 令牌的适用范围
 
 开发者令牌必须是为 `amp-api.music.apple.com` 签发的有效 JWT，且不能过期。公开 API `api.music.apple.com` 的开发者令牌不能用于这里。营销接口 `amp-api-edge.media.apple.com` 所需令牌的授权范围也不同。

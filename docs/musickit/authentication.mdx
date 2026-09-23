@@ -15,6 +15,10 @@ Catalog requests require a developer token issued for the web player. Personaliz
 | `Media-User-Token` | `<music user token>` | Personalized requests and `/v1/play/assets`. |
 | `X-Apple-Music-User-Token` | `<music user token>` | Authenticated playback requests to `play.itunes.apple.com`. |
 
+## Optional headers
+
+`X-Apple-Client-Version` identifies the app build. It is optional and is not an authentication credential.
+
 ## Token scope
 
 Send a valid, unexpired JWT issued for `amp-api.music.apple.com`. Developer tokens issued for the public API at `api.music.apple.com` are not interchangeable with this host's credentials. Marketing requests to `amp-api-edge.media.apple.com` use a separate token scope.
