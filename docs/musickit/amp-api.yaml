@@ -374,10 +374,7 @@ paths:
         location: music.apple.com album page, 2026-09-20
         excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
         discovery: observed-in-browser
-      description: |
-        The generic single-resource read. Every catalog detail page in the web client goes through this shape; the album, artist and playlist pages differ only in which `include`, `extend`, `fields` and `views` they ask for.
-
-        `genres` returns 500 `Error extracting the attribute 'parentId' for genres` for a nonexistent ID rather than 404. Prefer [Genres](/musickit/reference/catalog/getCatalogGenres) for genre reads. Unknown values in `views` are silently dropped; `genres` and `station-genres` do not reliably reject unknown view names, so a 200 response alone does not establish support.
+      description: Get one catalog resource by type and ID. Use `include`, `extend`, `fields`, and `views` to request related data. For genre reads, use [Genres](/musickit/reference/catalog/getCatalogGenres); a missing genre can return 500 instead of 404.
       x-feature: Album / artist / playlist / station detail pages
       x-callers:
       - SongDetailPageIntent.perform
@@ -2059,12 +2056,7 @@ paths:
         location: music.apple.com artist page, 2026-09-20
         excerpt: GET /v1/catalog/us/artists/390647681?...&include=canvas,default-playable-content&include[canvas-shelves-collection]=contents&include[canvas-shelves-group]=children&limit[canvas-shelves-collection:contents]=12&limit[canvas-shelves-collection:contents{displayStyle}]=artist-featured-track-lockup:24&relate[canvas-shelves-collection]=see-all
         discovery: observed-in-browser
-      description: |
-        Retrieve an artist and optional artwork, biography, and catalog shelves. Include `canvas` to load the shelf tree.
-
-        With `format[resources]=map`, resolve `data[0]` through `resources[type][id]`, then follow the artist's ordered `relationships.canvas.data`. Resolve shelf identifiers through the same map: groups contain `relationships.children.data`, and collections contain `relationships.contents.data`. Text shelves carry `attributes.title` and `attributes.text`; client markers identify sections to build from artist details through `attributes.display.style`. Skip unknown styles or render their contents with a fallback layout.
-
-        Follow `relationships.contents.next` for another page of a collection. For an expanded collection, follow `relationships["see-all"].data[0].href`; do not construct shelf URLs from IDs. Request `include=contents` and `extend=plainEditorialNotes,seeAllDisplay` on the expanded collection, and prefer `attributes.seeAllDisplay` over `attributes.display` when present.
+      description: Get a catalog artist. Use `include=canvas` to return its shelves, or request optional biography and artwork with `include` and `extend`.
       x-feature: Artist page
       x-callers:
       - ArtistDetailPage2IntentController
@@ -2096,7 +2088,7 @@ paths:
             type: string
             enum:
             - contents
-        description: Include shelf contents.
+        description: Include shelf contents. Follow `relationships.contents.next` for more items in a collection.
         example:
         - contents
         style: form
@@ -2141,7 +2133,7 @@ paths:
             type: string
             enum:
             - see-all
-        description: Relate each shelf to its see-all target.
+        description: Return each shelf's expanded collection link. Follow its `href` instead of building a URL from the shelf ID.
         example:
         - see-all
         style: form
@@ -2253,7 +2245,7 @@ paths:
             - default-playable-content
             - persons
             - record-labels
-        description: Relationships to resolve in the same response.
+        description: Relationships to resolve in the same response. `canvas` returns ordered shelves; groups contain `children` and collections contain `contents`.
         example:
         - artist-biography-canvas
         - artists
@@ -2368,12 +2360,7 @@ paths:
         location: music.apple.com album page, 2026-09-20
         excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
         discovery: observed-in-browser
-      description: |
-        Retrieve an album with its tracks, label, artists and related-content shelves. Extend the album for editorial still and motion artwork.
-
-        With `format[resources]=map`, resolve the album and its ordered `relationships.tracks.data` through `resources[type][id]`. Tracks can include both `songs` and `music-videos`.
-
-        Motion artwork is optional. The `editorialVideo.motionDetailSquare` and `motionDetailTall` variants carry a `video` URL string and a `previewFrame` artwork object. Use the preview frame when animation is disabled. When motion artwork is absent, fall back to `editorialArtwork.staticDetailSquare` or `staticDetailTall`, then to `attributes.artwork`.
+      description: Get a catalog album with its tracks, artists, and label. Tracks may be songs or music videos. Use `views` for related shelves and `extend` for optional editorial artwork.
       x-feature: Album page
       x-callers:
       - ContainerDetailPageIntent
@@ -2415,8 +2402,7 @@ paths:
             - offers
             - seoDescription
             - seoTitle
-        description: Extra attributes to add to the returned resources. Unknown values are ignored rather
-          than rejected.
+        description: Add optional attributes. `editorialVideo` contains motion artwork and a preview frame; use `editorialArtwork` or standard artwork when motion is unavailable.
         example:
         - editorialArtwork
         - editorialVideo
