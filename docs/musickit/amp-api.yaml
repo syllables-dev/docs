@@ -7263,6 +7263,66 @@ paths:
         - url
         style: form
         explode: false
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Sort order. Use `meta=sorts` to list the options.
+      - name: meta
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Use `sorts` to return available sort options.
+        example: sorts
+      - name: includeOnly
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Restrict the response to these relationships.
+        example: catalog,artists
+      - name: include[library-albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on library albums.
+        example:
+        - artists
+        style: form
+        explode: false
+      - name: include[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Relationships to include on catalog albums.
+        example:
+        - artists
+        style: form
+        explode: false
+      - name: fields[artists]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on included artists.
+        example:
+        - name
+        - url
+        style: form
+        explode: false
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -10825,9 +10885,6 @@ paths:
         token.
 
 
-        Live radio uses `/v1/radio/streaming-key-delivery` instead.
-
-
         The host is not fixed. It comes from `hls-key-server-url` in the asset response, so treat the
         path as the stable part.'
       servers:
@@ -11009,6 +11066,334 @@ paths:
       security:
       - developerToken: []
       - musicUserToken: []
+  /commerce/account/authenticateMusicKitRequest:
+    post:
+      summary: Sign in
+      operationId: authenticateMusicKitRequest
+      tags:
+      - Account
+      description: 'Starts MusicKit sign-in. MusicKit submits a hidden form into a 650 by 650 popup, so the response is an HTML sign-in page, not JSON.
+
+
+        The popup reports back through `postMessage`. `authorize` carries the music user token, the restricted flag (`"1"` when parental restrictions apply) and the client id. `decline` means the person refused, and `unavailable` means the service is not offered to them.'
+      servers:
+      - url: https://buy.music.apple.com
+      - url: https://buy.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - jwtToken
+              properties:
+                jwtToken:
+                  type: string
+                  description: The developer token.
+                isWebPlayer:
+                  type: string
+                  enum:
+                  - 'true'
+                LogoURL:
+                  type: string
+                  description: Sent empty by the web player.
+      responses:
+        '200':
+          description: The sign-in page.
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /account/web/info:
+    get:
+      summary: Account info
+      operationId: getWebAccountInfo
+      tags:
+      - Account
+      description: 'Account flags MusicKit reads after `/v1/me/account`. Sends cookies as well as tokens.
+
+
+        If `privacyAcknowledgement` shows an outstanding acknowledgement, MusicKit calls [Refresh account info](/musickit/reference/account/refreshWebAccountInfo) and fetches this again.'
+      servers:
+      - url: https://buy.music.apple.com
+      - url: https://buy.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isU13:
+                    type: boolean
+                    description: Whether the account belongs to a child under 13.
+                  parentalControlsData:
+                    type: object
+                    description: Parental controls. MusicKit reads `musicParentalControlsEnabled` for music and `videoContentRestrictions` for TV.
+                    properties:
+                      musicParentalControlsEnabled:
+                        type: boolean
+                      videoContentRestrictions: {}
+                    additionalProperties: true
+                  privacyAcknowledgement:
+                    type: object
+                    description: Privacy notices and the versions the person has acknowledged.
+                    additionalProperties: true
+                  storeFrontISO3A:
+                    type: string
+                    description: Three-letter country code of the account's storefront.
+                    example: USA
+                additionalProperties: true
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+  /account/web/infoRefresh:
+    get:
+      summary: Refresh account info
+      operationId: refreshWebAccountInfo
+      tags:
+      - Account
+      description: Refreshes the account's client ids. MusicKit stores every key in the response, so `pldfltcid` and `pltvcid` come from here. Sends cookies as well as tokens.
+      servers:
+      - url: https://buy.music.apple.com
+      - url: https://buy.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      responses:
+        '200':
+          description: A map of client ids.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pldfltcid:
+                    type: string
+                    description: Default client id.
+                  pltvcid:
+                    type: string
+                    description: TV client id.
+                additionalProperties:
+                  type: string
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+  /account/web/logout:
+    post:
+      summary: Sign out
+      operationId: logoutWebAccount
+      tags:
+      - Account
+      description: Ends the web session. MusicKit calls this before it clears its stored tokens, and ignores a failure. Sends cookies as well as tokens.
+      servers:
+      - url: https://buy.music.apple.com
+      - url: https://buy.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      responses:
+        '200':
+          description: Signed out. Any 2xx counts as success.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+  /commerce/web/subscription/offers/music:
+    get:
+      summary: Subscription offers
+      operationId: getMusicSubscriptionOffers
+      tags:
+      - Engagement
+      description: 'Apple Music subscription offers for a storefront. Works signed out; when signed in, MusicKit also sends the developer token and `Music-User-Token`.
+
+
+        MusicKit picks the storefront from the account when signed in, and from the browser languages otherwise. It returns an empty list without calling this when it cannot map the storefront or language to an id.'
+      servers:
+      - url: https://buy.music.apple.com
+      - url: https://buy.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      parameters:
+      - name: X-Apple-Store-Front
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Numeric storefront id and language id, followed by `,8`.
+        example: 143441-1,8
+      - name: Music-User-Token
+        in: header
+        required: false
+        schema:
+          type: string
+        description: Sent when signed in.
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        subscriptionType:
+                          type: string
+                          description: The upsell banner uses the `Individual` offer.
+                          example: Individual
+                        price:
+                          type: string
+                        isIntroOffer:
+                          type: boolean
+                        introOfferPrice:
+                          type: string
+                          description: A price of zero means a free trial.
+                        introPeriod:
+                          type: string
+                          description: ISO 8601 duration in months.
+                          example: P1M
+                      additionalProperties: true
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - {}
+      - developerToken: []
+  /account/v1/affiliation/association:
+    post:
+      summary: Affiliate attribution
+      operationId: associateAffiliation
+      tags:
+      - Engagement
+      description: 'Records campaign and affiliate attribution for a landing URL. The web player only calls this when the page URL carries one of `affC`, `adId`, `advp`, `at`, `ct`, `itsct`, `itscg`, `itscc`, `itcCt`, `its_qt`, `ls`, `partnerId`, `pt`, `qtkid` or `uo`. Sends cookies.
+
+
+        Without an explicit endpoint the same request goes to `https://itunes.apple.com/WebObjects/MZStoreServices.woa/wa/processRedirectUrl`.'
+      servers:
+      - url: https://buy.music.apple.com
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  description: The landing URL, including its query string.
+                ignoreMarketing:
+                  type: string
+                  enum:
+                  - 'true'
+      responses:
+        '200':
+          description: The client writes each entry of `setCookies` to `document.cookie` and navigates to `redirectUrl`. An empty body means no change.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  setCookies:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - name
+                      - value
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      additionalProperties:
+                        type: string
+                      description: Any other key becomes a cookie attribute.
+                  redirectUrl:
+                    type: string
+      security: []
+  /WebObjects/MZPlay.woa/wa/renewMusicToken:
+    post:
+      summary: Renew user token
+      operationId: renewMusicToken
+      tags:
+      - Account
+      description: Exchanges the current music user token for a fresh one. On 401 MusicKit signs the person out. A response without `music-token` keeps the old token.
+      servers:
+      - url: https://play.music.apple.com
+      - url: https://play.itunes.apple.com
+        description: Used when the page is not served from an `apple.com` music host.
+      parameters:
+      - name: X-Apple-Music-User-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: The token to renew.
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  music-token:
+                    type: string
+                    description: The new music user token.
+                additionalProperties: true
+        '401':
+          description: The token cannot be renewed.
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+  /v1/web/status:
+    get:
+      summary: Subscription status
+      operationId: getWebSubscriptionStatus
+      tags:
+      - Account
+      description: The account and its Apple Music subscription status, as used by the web player's upsell logic. Authenticated by cookies plus the developer token; no user token is sent.
+      servers:
+      - url: https://musicstatus.music.apple.com
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account:
+                    type: object
+                    additionalProperties: true
+                  music:
+                    type: object
+                    description: Subscription status.
+                    properties:
+                      isNotEligibleForFreeTrial:
+                        type: boolean
+                    additionalProperties: true
+                additionalProperties: true
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
   /v1/regions:
     get:
       summary: Regions
