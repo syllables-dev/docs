@@ -1,6 +1,6 @@
 ---
 title: 标点
-description: 行尾、逗号、问句、引语，以及唱断时该用哪种符号收尾
+description: 行尾、逗号、问句、引语，以及唱断时怎么收尾
 ---
 
 标点用来让意思更清楚，但不改变演唱本身。本页讲标点符号本身，符号周围的空格参见[空格](./spacing.mdx)。
@@ -134,46 +134,42 @@ Who will dance on the floor in the round?"`}
 
 逐字母拼读的各个单词之间要保留空格。保留歌手实际唱出的字母，即使拼写不符合常规也原样记录。
 
-句子中断时用哪个符号，取决于断在哪里：断的是这个词，还是整句话。词只唱了一半不用破折号，整词唱完了句子才断也不用连字符。
+`c-coming` 这类口吃式的连字符不算中断。词最终唱完了，连字符留在词内部。
 
-这两个符号只用在戛然而止的行尾。歌手把这一行自然唱完了，就什么都不加，句子接到下一行或者始终没说完也一样。
+一句话被打断，行尾只用破折号。最后一个词唱没唱完，都是这个写法；连字符永远不放在中断处的末尾。
 
-### 连字符
-
-单词唱到一半戛然而止，在末尾加一个连字符。只写唱出来的部分，不要替歌手补全没唱完的字母。
-
-<AppleMusicQuote
-  region="us"
-  songId="1411629089"
-  quote={"Thunder, thunder, thun-"}
-/>
-
-歌手把词唱断又重起一遍时，连字符会紧挨着逗号。两个符号都要留：连字符属于没唱完的那个词，逗号隔开的是重起的部分。
-
-<AppleMusicQuote
-  region="us"
-  songId="1556175647"
-  quote={"I don't de-, I don't de-, I don't deserve you tonight"}
-/>
-
-主唱先唱了两次 `de-`，第三次才唱完整的 `deserve`，所以前两次各带一个连字符。
+破折号只用在演唱把句子切断的地方。歌手把这一行自然唱完了，就什么都不加，句子接到下一行或者始终没说完也一样。
 
 ### 破折号
 
-整个词唱完了，断的是这句话，这时用破折号。歌曲淡出或者收尾处戛然而止，多是这种情况。
+声音突然停住时用破折号，紧贴最后一个唱出的字母，中间不加空格。词只唱了一半，就只写唱出来的部分，不要替歌手补全。
+
+<AppleMusicQuote region="us" songId="1736636955" quote={"I think we got p—"} />
 
 <AppleMusicQuote region="us" songId="269573364" quote={"Billie Jean is—"} />
 
-<AppleMusicQuote
-  region="us"
-  songId="974485805"
-  quote={"I'm fallin', so I'm takin' my time on my—"}
+词唱到一半断掉，结尾也用破折号，不用连字符：
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"Thunder, thunder, thun—"}
+  incorrect={"Thunder, thunder, thun-"}
+  source={{ region: "us", songId: "1411629089" }}
 />
 
-这两行结尾的词都是完整的，所以都不加连字符。
+歌手唱断后又从头重起，每个断点都写破折号，后面空一格再接重起的部分。破折号后面不加逗号。
+
+<CodeComparison
+  incorrectLabel="避免"
+  correctLabel="推荐"
+  correct={"I don't de— I don't de— I don't deserve you tonight"}
+  incorrect={"I don't de-, I don't de-, I don't deserve you tonight"}
+  source={{ region: "us", songId: "1556175647" }}
+/>
 
 ### 不加符号
 
-一行唱到自然收尾，行尾就不加符号。句子没说完不等于中断，得是演唱本身把它切断了才算。
+一行唱到自然收尾，行尾就不加符号。句子没说完不等于中断，得是演唱本身把它切断了才算。声音慢慢弱下去、淡出的行也不加符号，渐弱在时间轴上已经看得出来。
 
-不要使用省略号表示换气、间奏或者句子跨行延续。单纯拖长音不需要额外添加字母或连字符。
+歌词正文不用省略号。拖尾、迟疑、换气、间奏，还有句子接到下一行继续，都不加。单纯拖长音不需要额外添加字母或连字符。
