@@ -51,18 +51,6 @@ paths:
       operationId: getCatalogResourcesByIds
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 33276
-        excerpt: 'const i = new it(`/v1/catalog/${n}`, e); i.queryString.addParameters({ "ids[curators]":
-          t.id, "ids[apple-curators]": t.id, ... })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 43687
-        excerpt: const s = new it(`/v1/catalog/${r}`, e)
-        discovery: static
       description: 'Multi-fetch entry point. One `ids[<type>]` parameter per resource type; several may
         be combined in one request. Used by the curator page to fetch `curators` and `apple-curators`
         together, and by the generic content-descriptor loader.
@@ -70,10 +58,6 @@ paths:
 
         Requires at least one `ids[...]` parameter: an empty request returns 400 `40003 No ids specified
         on the request`.'
-      x-feature: Curator page, generic resource loading
-      x-callers:
-      - AnyCuratorPageDetailIntent.perform
-      - requestLibraryRelationships
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -93,7 +77,6 @@ paths:
           items:
             type: string
         description: Comma-separated album ids.
-        x-confidence: high
         style: form
         explode: false
       - name: ids[songs]
@@ -105,7 +88,6 @@ paths:
           items:
             type: string
         description: Comma-separated song ids.
-        x-confidence: high
         style: form
         explode: false
       - name: ids[artists]
@@ -117,7 +99,6 @@ paths:
           items:
             type: string
         description: Comma-separated artist ids.
-        x-confidence: high
         style: form
         explode: false
       - name: ids[curators]
@@ -129,7 +110,6 @@ paths:
           items:
             type: string
         description: Comma-separated curator ids.
-        x-confidence: high
         style: form
         explode: false
       - name: ids[apple-curators]
@@ -141,7 +121,6 @@ paths:
           items:
             type: string
         description: Comma-separated Apple curator ids.
-        x-confidence: high
         style: form
         explode: false
       - name: ids[playlists]
@@ -153,8 +132,6 @@ paths:
           items:
             type: string
         description: Comma-separated playlist ids.
-        x-confidence: medium
-        x-validation-status: inferred from the `ids[<type>]` pattern; not replayed
         style: form
         explode: false
       - name: fields[albums]
@@ -181,7 +158,6 @@ paths:
             - trackCount
             - url
         description: Sparse fieldset for albums.
-        x-confidence: high
         style: form
         explode: false
         example: *id001
@@ -197,7 +173,6 @@ paths:
             - plainEditorialNotes
             - playlistCount
         description: Extra curator attributes, for example `playlistCount`.
-        x-confidence: high
         style: form
         explode: false
         example: *id002
@@ -213,7 +188,6 @@ paths:
             - plainEditorialNotes
             - playlistCount
         description: Extra Apple-curator attributes.
-        x-confidence: high
         style: form
         explode: false
         example: *id003
@@ -346,7 +320,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/{type}/{id}:
@@ -355,29 +328,7 @@ paths:
       operationId: getCatalogResource
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 66183
-        excerpt: 'const o = new it(`/v1/catalog/${e}/${r}/${s}`, n); o.queryString.addParameters({ platform:
-          "web", "omit[resource]": "autos" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 30853
-        excerpt: function YV(t, e) { const n = new it(t, e); n.queryString.extend.add("offers").add("editorialArtwork").add("editorialVideo").add("extendedAssetUrls")
-          ... }
-        discovery: static
-      - asset: runtime
-        location: music.apple.com album page, 2026-09-20
-        excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
-        discovery: observed-in-browser
       description: Get one catalog resource by type and ID. Use `include`, `extend`, `fields`, and `views` to request related data. For genre reads, use [Genres](/musickit/reference/catalog/getCatalogGenres); a missing genre can return 500 instead of 404.
-      x-feature: Album / artist / playlist / station detail pages
-      x-callers:
-      - SongDetailPageIntent.perform
-      - ContainerDetailPageIntent
-      - requestResource
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -417,10 +368,6 @@ paths:
           - venues
         description: Resource type.
         example: albums
-        x-confidence: high
-        x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
-          before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it.
       - name: id
         in: path
         required: true
@@ -591,8 +538,6 @@ paths:
         description: Relationships to include on groupings.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[concerts]
         in: query
         required: false
@@ -608,8 +553,6 @@ paths:
         description: Relationships to include on concerts.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend[concerts]
         in: query
         required: false
@@ -626,8 +569,6 @@ paths:
         description: Extra concert attributes.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: omit[resource:artists]
         in: query
         required: false
@@ -641,8 +582,6 @@ paths:
         description: Omit sections from included artists.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: relate[songs]
         in: query
         required: false
@@ -680,14 +619,12 @@ paths:
           type: integer
           maximum: 300
         description: Page size for the `tracks` relationship. Must be 300 or less.
-        x-validation-status: 'replay-tested: 301 returns 40005'
       - name: filter[personal-mix]
         in: query
         required: false
         schema:
           type: string
         description: Personal-mix filter used on editorial playlists.
-        x-confidence: medium
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -1066,7 +1003,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '400':
           description: '`40003` missing parameter, `40004` parameter not allowed, `40005` invalid parameter
             value, or `40009` unknown storefront.'
@@ -1074,7 +1010,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/{type}:
@@ -1083,37 +1018,9 @@ paths:
       operationId: getCatalogResourceCollection
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 36280
-        excerpt: 'const i = new it(`/v1/catalog/${n}/${j.TVSeasons}`, e); i.queryString.addParameters({
-          include: "episodes", ids: t.join(","), extend: "credits" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: TV season collection request builder
-        excerpt: '"fields[tv-episodes]":"name,artwork,previews,url,description,episodeNumber,episodeSubNumber,episodeSeasonNumber,kind,offers,releaseDate"'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: station collection request builder
-        excerpt: 'fields:"inflectionPoints,airTime,supportsAirTimeUpdates"'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 41908
-        excerpt: 'const l = new it(`/v1/catalog/${a}/${j.Stations}`, e); l.queryString.addParameters({
-          ids: o.join(","), "meta[stations]": "inflectionPoints", ... })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/catalog/us/songs?filter[isrc]=USUG12400910
-        excerpt: 200; filter[isrc] and filter[upc] both resolve
-        discovery: replay-tested
       description: Collection form of the resource read. Used for stations and TV seasons.
         `filter[upc]` on albums and `filter[isrc]` on songs were confirmed by replay but were not seen
         in the bundles.
-      x-callers:
-      - cde (TV seasons)
-      - requestStations
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -1153,10 +1060,6 @@ paths:
           - venues
         description: Resource type.
         example: stations
-        x-confidence: high
-        x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
-          before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it.
       - name: ids
         in: query
         required: false
@@ -1170,8 +1073,6 @@ paths:
         schema:
           type: string
         description: Look albums up by UPC.
-        x-confidence: high
-        x-validation-status: replay-tested; not present in the bundles
       - name: filter[isrc]
         in: query
         required: false
@@ -1180,11 +1081,6 @@ paths:
         description: Look songs up by ISRC. Accepts a comma-separated batch of
           ISRCs, not just a single value.
         example: USUG12400910,USUM71703861
-        x-confidence: high
-        x-validation-status: replay-tested; not present in the bundles; batching
-          behavior independently confirmed — a comma-separated batch of up to
-          25 ISRCs against `/v1/catalog/{storefront}/songs` returns matches
-          for all of them
       - name: filter[equivalents]
         in: query
         required: false
@@ -1195,11 +1091,6 @@ paths:
           catalog song to its US-storefront counterpart before looking up
           lyrics or other US-only data.
         example: '1440857781'
-        x-confidence: high
-        x-validation-status: replay-tested; not present in the bundles; independently
-          confirmed — sending `filter[equivalents]=<id>` against
-          `/v1/catalog/us/songs` resolves a non-US song id to its US-storefront
-          equivalent
       - name: filter[identity]
         in: query
         required: false
@@ -1207,7 +1098,6 @@ paths:
           type: string
         description: 'Station identity filter. Requires a `Media-User-Token`: without one the request
           returns 403 `40300 Authentication required for the ''identity'' filter`.'
-        x-validation-status: replay-tested
       - name: meta[stations]
         in: query
         required: false
@@ -1238,7 +1128,6 @@ paths:
         - supportsAirTimeUpdates
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[tv-episodes]
         in: query
         required: false
@@ -1254,7 +1143,6 @@ paths:
         - previews
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -1286,8 +1174,6 @@ paths:
         description: Relationships to include on groupings.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[albums]
         in: query
         required: false
@@ -1299,8 +1185,6 @@ paths:
         description: Relationships to include on albums.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -1312,8 +1196,6 @@ paths:
         description: Relationships to include on songs.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[music-videos]
         in: query
         required: false
@@ -1325,8 +1207,6 @@ paths:
         description: Relationships to include on music videos.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: omit[resource:artists]
         in: query
         required: false
@@ -1340,8 +1220,6 @@ paths:
         description: Omit sections from included artists.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend
         in: query
         required: false
@@ -1374,7 +1252,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/songs/{id}/albums:
@@ -1383,19 +1260,8 @@ paths:
       operationId: getCatalogSongAlbums
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 35717
-        excerpt: 'const o = new it(`/v1/catalog/${s}/songs/${r}/albums`, e); o.queryString.addParameters({
-          limit: "1" })'
-        discovery: static
       description: The song page resolves its parent album through this relationship, then renders the
         album page scrolled to the track.
-      x-feature: Song detail page
-      x-callers:
-      - SongDetailPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -1436,7 +1302,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/{type}/{id}/{relationship}:
@@ -1445,21 +1310,6 @@ paths:
       operationId: getCatalogResourceRelationship
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 34347
-        excerpt: const o = new it(`/v1/catalog/${s}/${j.Playlists}/${r.id}/tracks`, e)
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63830
-        excerpt: 'const o = r ? `/v1/me/library/${s}/${t}/tracks` : `/v1/catalog/${e}/${s}/${t}/tracks`'
-        discovery: static
-      - asset: replay
-        location: GET /v1/catalog/us/songs/1752214923/credits
-        excerpt: 200; data[].attributes.kind / .title, relationships.credit-artists
-        discovery: replay-tested
       description: |
         Generic relationship read. `tracks` and `credits` were replay-confirmed. `lyrics` and `syllable-lyrics` resolve as relationship names but return 404 `40403 No related resources` without a subscribed `Media-User-Token`, so their response shape is not documented here.
 
@@ -1488,9 +1338,6 @@ paths:
         | `uploaded-audios` | `artists`, `curator` |
         | `uploaded-videos` | `artists`, `curator` |
         | `venues` | Not listed. |
-      x-callers:
-      - requestContainerTracks
-      - iz (playlist tracks)
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -1530,10 +1377,6 @@ paths:
           - venues
         description: Resource type.
         example: playlists
-        x-confidence: high
-        x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
-          before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it.
       - name: id
         in: path
         required: true
@@ -1571,10 +1414,6 @@ paths:
           - works
         description: Relationship name.
         example: tracks
-        x-confidence: high
-        x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
-          before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it. See the relationship table above for the names supported by each type.
       - name: limit
         in: query
         required: false
@@ -1582,14 +1421,12 @@ paths:
           type: integer
           maximum: 300
         description: Page size. For playlist tracks the maximum is 300.
-        x-validation-status: 'replay-tested: 301 returns 40005'
       - name: offset
         in: query
         required: false
         schema:
           type: integer
         description: Zero-based offset. Responses carry a `next` string when more data exists.
-        x-validation-status: replay-tested
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -1748,8 +1585,6 @@ paths:
           items:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
@@ -1765,7 +1600,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '400':
           description: '`40003` missing parameter, `40004` parameter not allowed, `40005` invalid parameter
             value, or `40009` unknown storefront.'
@@ -1773,7 +1607,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/artists/{id}/view/{view}:
@@ -1782,20 +1615,8 @@ paths:
       operationId: getCatalogArtistView
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 31884
-        excerpt: 'const i = new it(`/v1/catalog/${n}/artists/${t.artistId}/view/${t.sectionId}`, e); i.queryString.addParameters({
-          "include[songs]": "artists,composers", limit: "20", with: "attributes" })'
-        discovery: static
       description: Backs the artist page 'see all' routes. An unknown view name returns 400 `40008 Invalid
         Path Value`.
-      x-feature: Artist page see-all
-      x-callers:
-      - uce
-      - ArtistDetailPage2IntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -1836,10 +1657,6 @@ paths:
           - top-songs
         description: View name.
         example: top-songs
-        x-confidence: high
-        x-validation-status: Enumerated against the live API on 2026-09-21. The API validates this segment
-          before it looks the resource up, so an unknown name answers 400 `40008` whatever id follows
-          it.
       - name: limit
         in: query
         required: false
@@ -1930,14 +1747,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/{type}/{id}/view/{viewId}:
@@ -1946,8 +1761,6 @@ paths:
       operationId: getCatalogResourceView
       tags:
       - Catalog
-      x-confidence: low
-      x-validation-status: unverified; not found in the bundles and not independently replay-tested
       description: The same 'see all' shelf mechanism documented above for artists, but requested against
         an arbitrary resource type rather than only `artists`. Whether the live API actually serves views
         for types other than `artists` (and, if so, which view names are valid per type) has not been
@@ -2074,23 +1887,7 @@ paths:
       operationId: getCatalogArtist
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: observed-in-browser
-      x-evidence:
-      - asset: assets/ArtistDetailPage2IntentController~f621e71554.js
-        location: line 147
-        excerpt: 'const s = new it(`/v1/catalog/${e}/artists/${s}`, n); ... "include": "canvas,default-playable-content",
-          "include[canvas-shelves-collection]": "contents", "limit[canvas-shelves-collection:contents]":
-          "12"'
-        discovery: static
-      - asset: runtime
-        location: music.apple.com artist page, 2026-09-20
-        excerpt: GET /v1/catalog/us/artists/390647681?...&include=canvas,default-playable-content&include[canvas-shelves-collection]=contents&include[canvas-shelves-group]=children&limit[canvas-shelves-collection:contents]=12&limit[canvas-shelves-collection:contents{displayStyle}]=artist-featured-track-lockup:24&relate[canvas-shelves-collection]=see-all
-        discovery: observed-in-browser
       description: Get a catalog artist. Use `include=canvas` to return its shelves, or request optional biography and artwork with `include` and `extend`.
-      x-feature: Artist page
-      x-callers:
-      - ArtistDetailPage2IntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -2237,16 +2034,12 @@ paths:
         description: Extra playlist attributes.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
         schema:
           type: integer
         description: Top songs returned per artist.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: geoHashLocation
         in: query
         required: false
@@ -2353,8 +2146,6 @@ paths:
           items:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       responses:
         '200':
           description: Success.
@@ -2368,7 +2159,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/albums/{id}:
@@ -2377,23 +2167,7 @@ paths:
       operationId: getCatalogAlbum
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: observed-in-browser
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 30853
-        excerpt: 'function YV(t, e) { n.queryString.extend.add("offers").add("editorialArtwork").add("editorialVideo").add("extendedAssetUrls");
-          n.queryString.addParameters({ include: "record-labels,artists", "meta[albums:tracks]": "popularity"
-          }); n.queryString.views.add(Ie.AppearsOn).add(Ie.MoreByArtist)... }'
-        discovery: static
-      - asset: runtime
-        location: music.apple.com album page, 2026-09-20
-        excerpt: GET https://amp-api.music.apple.com/v1/catalog/us/albums/1752214909?art[url]=f&extend=editorialArtwork,editorialVideo,extendedAssetUrls,offers,seoDescription,seoTitle&format[resources]=map&include=record-labels,artists&include[songs]=artists,composers,albums&l=en-US&meta[albums:tracks]=popularity&platform=web&views=appears-on,audio-extras,more-by-artist,other-versions,related-videos,video-extras,you-might-also-like
-        discovery: observed-in-browser
       description: Get a catalog album with its tracks, artists, and label. Tracks may be songs or music videos. Use `views` for related shelves and `extend` for optional editorial artwork.
-      x-feature: Album page
-      x-callers:
-      - ContainerDetailPageIntent
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -2618,8 +2392,6 @@ paths:
         description: Restrict catalog resources to these attributes.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[catalog]
         in: query
         required: false
@@ -2631,16 +2403,12 @@ paths:
         description: Relationships to include for the catalog relationship.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
         schema:
           type: integer
         description: Top songs returned per artist.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields
         in: query
         required: false
@@ -2652,8 +2420,6 @@ paths:
           items:
             type: string
         description: Sparse fieldset shorthand, unscoped to a resource type.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - $ref: '#/components/parameters/qArtUrl'
       - $ref: '#/components/parameters/qOmitResource'
       responses:
@@ -2677,31 +2443,7 @@ paths:
       operationId: getCatalogPlaylist
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: static
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 35207
-        excerpt: 'function Nue(t, e, n) { i.queryString.extend.add("offers").add("editorialArtwork").add("editorialVideo").add("trackCount");
-          i.queryString.addParameters({ include: "tracks,curator", "limit[tracks]": "300" }); i.queryString.views.add(Ie.MoreByCurator).add(Ie.FeaturedArtists)
-          }'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: collaborative playlist request builder
-        excerpt: '"fields[playlists]":"tracks","limit[collaborators]":"100","fields[collaborators]":"name,handle,artwork,socialProfileUrl,role",with:"lightProfiles"'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: collaborative playlist request builder
-        excerpt: '"include[playlists]":"tracks","include[reactions]":"social-profile"'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 53303
-        excerpt: h = new it(`/v1/catalog/${g}/playlists/${f?.id}`, n)
-        discovery: static
       description: Retrieve a catalog playlist with its tracks and curator. Social metadata can be requested from the same path when the account has a social profile.
-      x-feature: Playlist page
-      x-callers:
-      - ContainerDetailPageIntent
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -2732,7 +2474,6 @@ paths:
         - tracks
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[collaborators]
         in: query
         required: false
@@ -2750,7 +2491,6 @@ paths:
         - role
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: include[reactions]
         in: query
         required: false
@@ -2764,7 +2504,6 @@ paths:
         - social-profile
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: with
         in: query
         required: false
@@ -2778,7 +2517,6 @@ paths:
         - lightProfiles
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -3053,8 +2791,6 @@ paths:
         description: Restrict record-label resources to these attributes.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[catalog]
         in: query
         required: false
@@ -3066,8 +2802,6 @@ paths:
         description: Restrict catalog resources to these attributes.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[catalog]
         in: query
         required: false
@@ -3079,8 +2813,6 @@ paths:
         description: Relationships to include for the catalog relationship.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[playlists]
         in: query
         required: false
@@ -3092,24 +2824,18 @@ paths:
         description: Relationships to include for the playlists relationship.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: meta[albums:tracks]
         in: query
         required: false
         schema:
           type: string
         description: Extra metadata on the tracks relationship of albums referenced by this playlist.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: limit[artists:top-songs]
         in: query
         required: false
         schema:
           type: integer
         description: Top songs returned per artist.
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: meta[playlists:tracks]
         in: query
         required: false
@@ -3199,20 +2925,8 @@ paths:
       operationId: getCatalogSong
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: static
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64367
-        excerpt: 'const i = new it(`/v1/catalog/${n}/songs/${t}`, e); i.queryString.addParameters({ include:
-          "albums,artists,credits,lyrics,music-videos", extend: "lyricsExcerpt,offers", "fields[artists]":
-          "name,url", "fields[albums]": "artistName,artistUrl,artwork,name,url" })'
-        discovery: static
       description: Retrieve a song with its album, artists, credits and lyrics. Extend with `lyricsExcerpt`
         for the short lyric snippet shown on the song page.
-      x-feature: Song page
-      x-callers:
-      - SongDetailPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -3353,24 +3067,7 @@ paths:
       operationId: getCatalogCharts
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 26528
-        excerpt: 'const i = new it(`/v1/catalog/${n}/charts`, e); i.queryString.addParameters({ types:
-          "albums,songs,music-videos,playlists", limit: "50", genre: t, include: "tracks", with: "cityCharts,dailyGlobalTopCharts",
-          extend: "artistUrl", ... })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: chart request builders
-        excerpt: '"include[songs]":"artists","relate[songs]":"albums","include[albums]":"artists","include[music-videos]":"artists","fields[artists]":"name"'
-        discovery: static
       description: Fetch catalog charts.
-      x-feature: Charts page
-      x-callers:
-      - vV
-      - TopChartsPageIntent
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -3409,7 +3106,6 @@ paths:
           type: string
         description: Chart id, as an alternative to `types`.
         example: most-played
-        x-validation-status: replay-tested
       - name: genre
         in: query
         required: false
@@ -3424,7 +3120,6 @@ paths:
           type: integer
           maximum: 200
         description: Page size, 200 or less.
-        x-validation-status: 'replay-tested: 500 returns 40005'
       - name: with
         in: query
         required: false
@@ -3508,7 +3203,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: relate[songs]
         in: query
         required: false
@@ -3522,7 +3216,6 @@ paths:
         - albums
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: include[albums]
         in: query
         required: false
@@ -3536,7 +3229,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: include[music-videos]
         in: query
         required: false
@@ -3550,7 +3242,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[artists]
         in: query
         required: false
@@ -3564,7 +3255,6 @@ paths:
         - name
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -3614,7 +3304,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/genres:
@@ -3623,20 +3312,10 @@ paths:
       operationId: getCatalogGenres
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 26994
-        excerpt: 'const s = new it(`/v1/catalog/${i}/genres`, t); s.queryString.addParameters({ "ids[l]":
-          r, "ids[platform]": "mac" })'
-        discovery: static
       description: 'The genre list for a storefront.
 
 
         Pass the language and platform inside `ids[...]` rather than as plain parameters.'
-      x-callers:
-      - yV
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -3677,7 +3356,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/contents:
@@ -3686,20 +3364,8 @@ paths:
       operationId: getCatalogContents
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 36646
-        excerpt: 'const o = new it(`/v1/catalog/${s}/contents`, e); o.queryString.addParameters({ include:
-          "artists,curator" }); r.match(/[A-z]/) ? o.queryString.addParameters({ "filter[post]": r })
-          : o.queryString.addParameters({ ids: r })'
-        discovery: static
       description: Backs the `/post/{id}` route. Numeric ids go in `ids`; alphanumeric post ids go in
         `filter[post]`.
-      x-feature: Artist post page
-      x-callers:
-      - ArtistUploadedVideoDetailPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -3755,7 +3421,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/concerns:
@@ -3764,14 +3429,6 @@ paths:
       operationId: reportCatalogConcern
       tags:
       - Catalog
-      x-confidence: medium
-      x-validation-status: static only — not replayed, because it writes
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 66292
-        excerpt: 'const s = new it(`/v1/catalog/${r}/concerns`, e); ... At({ url: s.string, body: o, method:
-          "POST" }, e)'
-        discovery: static
       description: Report a concern about catalog content.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -3807,7 +3464,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/search:
@@ -3816,29 +3472,9 @@ paths:
       operationId: searchCatalog
       tags:
       - Search
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 42713
-        excerpt: 'const s = new it(`/v1/catalog/${n}/search`, e, i); s.queryString.addParameters({ term:
-          t, limit: "21", ... }); s.queryString.with.add("lyricHighlights").add("lyrics").add("naturalLanguage").add("serverBubbles").add("subtitles")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: catalog search request builder
-        excerpt: '"include[music-videos]":"artists"'
-        discovery: static
-      - asset: replay
-        location: GET /v1/catalog/us/search
-        excerpt: no term -> 40003 'Value must be present'; no types -> 40003 'One or more types must be
-          specified'; limit=100 -> 40005 'less than or equal to 50'
-        discovery: replay-tested
       description: '`term` and `types` are both required. Use
         `with=lyricHighlights,lyrics,naturalLanguage,serverBubbles,subtitles` for lyric matches,
         natural-language parsing and result ''bubble'' filters.'
-      x-feature: Search results page
-      x-callers:
-      - SearchResultsIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -3856,7 +3492,6 @@ paths:
           type: string
         description: Search term.
         example: espresso
-        x-validation-status: replay-tested
       - name: types
         in: query
         required: false
@@ -3906,14 +3541,12 @@ paths:
           maximum: 50
         description: Page size, 50 or less.
         example: 21
-        x-validation-status: 'replay-tested: 100 returns 40005'
       - name: offset
         in: query
         required: false
         schema:
           type: integer
         description: Zero-based offset.
-        x-validation-status: replay-tested
       - name: with
         in: query
         required: false
@@ -3948,9 +3581,6 @@ paths:
           the same request returns when `groups` is omitted. The intended selector
           behaviour could not be reproduced, so do not rely on this parameter.
         example: albums
-        x-confidence: low
-        x-validation-status: replay-tested; accepted rather than rejected with 40004, unlike on
-          other endpoints, but no value produced a non-empty response
       - name: art[music-videos:url]
         in: query
         required: false
@@ -4008,8 +3638,6 @@ paths:
         description: Relate editorial items to another type.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[artists]
         in: query
         required: false
@@ -4120,8 +3748,6 @@ paths:
         description: Relationships to include on editorial items.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[artists]
         in: query
         required: false
@@ -4133,8 +3759,6 @@ paths:
         description: Relationships to include on artists.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[music-videos]
         in: query
         required: false
@@ -4148,7 +3772,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -4184,7 +3807,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/search/suggestions:
@@ -4193,27 +3815,10 @@ paths:
       operationId: getSearchSuggestions
       tags:
       - Search
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 54674
-        excerpt: 'const s = new it(`/v1/catalog/${e}/search/suggestions`, i, r); s.queryString.addParameters({
-          term: t, l: n, platform: "web", kinds: "terms,topResults", "limit[results:terms]": "5", "limit[results:topResults]":
-          "10", "art[url]": "c,f", ... })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/catalog/us/search/suggestions
-        excerpt: kinds only -> 40003 'One or more types must be specified'; term only -> 40003 'One or
-          more kinds must be specified'
-        discovery: replay-tested
       description: 'Both `kinds` and `types` are required; omitting either returns 400 `40003`. This has
         been contradicted by an independent observation: a request with `kinds=terms` and no `types` at
         all, using the scoped `limit[results:terms]` parameter, returned 200 — so the `types`-required
         claim above may not hold in every case. Not independently replay-tested; needs re-verification.'
-      x-feature: Search box
-      x-callers:
-      - SearchSuggestionsIntent
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -4239,7 +3844,6 @@ paths:
           pattern: ^(terms|topResults)(,(terms|topResults))*$
         description: 'Comma-separated suggestion kinds: `terms`, `topResults`, or both.'
         example: terms,topResults
-        x-validation-status: replay-tested
       - name: types
         in: query
         required: false
@@ -4380,7 +3984,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/catalog/{storefront}/search/hints:
@@ -4389,18 +3992,6 @@ paths:
       operationId: getSearchHints
       tags:
       - Search
-      x-confidence: medium
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 11565
-        excerpt: '"ampMusicAPIDomains/searchHints": "string" — declared bag key with no reachable call
-          site in the archived bundles'
-        discovery: static
-      - asset: replay
-        location: GET /v1/catalog/us/search/hints?term=espre&limit=5
-        excerpt: 200 {"results":{"terms":["espresso", ...]},"meta":{"metrics":{"dataSetId":"..."}}}
-        discovery: replay-tested
       description: 'Returns `{ results: { terms: string[] }, meta: { metrics: { dataSetId } } }`.
 
 
@@ -4457,7 +4048,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/storefronts:
@@ -4466,17 +4056,6 @@ paths:
       operationId: listStorefronts
       tags:
       - Storefronts
-      x-confidence: medium
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 4918
-        excerpt: (this.type = "storefronts")
-        discovery: static
-      - asset: replay
-        location: GET /v1/storefronts
-        excerpt: '200'
-        discovery: replay-tested
       description: Confirmed by replay. MusicKit declares a
         `storefronts` resource type of the same name.
       parameters:
@@ -4496,7 +4075,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/storefronts/{id}:
@@ -4505,13 +4083,6 @@ paths:
       operationId: getStorefront
       tags:
       - Storefronts
-      x-confidence: medium
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: replay
-        location: GET /v1/storefronts/us
-        excerpt: '200'
-        discovery: replay-tested
       description: Fetch one storefront.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -4537,7 +4108,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/editorial/{storefront}/groupings:
@@ -4546,30 +4116,12 @@ paths:
       operationId: getEditorialGroupings
       tags:
       - Editorial
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 26144
-        excerpt: 'const r = new it(`/v1/editorial/${n}/groupings`, e, i); r.queryString.addParameters({
-          name: t, "omit[resource:artists]": "autos", "relate[songs]": "albums", tabs: ho(e) ? "subscriber"
-          : "nonsubscriber", ... })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `platform` and `name`; 400 `40000 ids or name or genre should be present on
-          this request` without one of the three.
-        discovery: replay-tested
       description: 'Backs the Browse (''New'') and Home tabs. Requires one of `ids`, `name` or `genre`:
         with none of them the request returns 400 `40000 ids or name or genre should be present on this
         request`.
 
 
         `tabs` selects the subscriber-facing or non-subscriber-facing variant of the page.'
-      x-feature: Browse / Home
-      x-callers:
-      - pV
-      - BrowsePageIntent
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -4669,8 +4221,6 @@ paths:
         description: Relationships to include on albums.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[music-videos]
         in: query
         required: false
@@ -4682,8 +4232,6 @@ paths:
         description: Relationships to include on music videos.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -4695,8 +4243,6 @@ paths:
         description: Relationships to include on songs.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: extend[station-events]
         in: query
         required: false
@@ -4868,7 +4414,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/editorial/{storefront}/groupings/{id}:
@@ -4877,27 +4422,7 @@ paths:
       operationId: getEditorialGrouping
       tags:
       - Editorial
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 36937
-        excerpt: 'const s = new it(`/v1/editorial/${i}/groupings/${n}`, e, r); s.queryString.addParameters({
-          "include[groupings]": "curator", "include[songs]": "artists,albums", tabs: ho(e) ? "subscriber"
-          : "nonsubscriber", ... })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: grouping request builder
-        excerpt: '"omit[resource:artists]":"autos","include[groupings]":"curator","include[songs]":"artists,albums","include[music-videos]":"artists","include[albums]":"artists","fields[artists]":"name,url,artwork,editorialArtwork,genreNames,plainEditorialNotes","fields[albums]":"name,url,artwork,editorialArtwork,genreNames,artistName,trackCount,contentRating,plainEditorialNotes"'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `platform`; 400 `40003 A single platform must be supplied` without it.
-        discovery: replay-tested
       description: Fetch one editorial grouping.
-      x-feature: Grouping page
-      x-callers:
-      - GroupingPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -4952,7 +4477,6 @@ paths:
         - albums
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: include[music-videos]
         in: query
         required: false
@@ -4966,7 +4490,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: include[albums]
         in: query
         required: false
@@ -4980,7 +4503,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[artists]
         in: query
         required: false
@@ -4996,7 +4518,6 @@ paths:
         - artwork
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[albums]
         in: query
         required: false
@@ -5012,7 +4533,6 @@ paths:
         - artwork
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: omit[resource:artists]
         in: query
         required: false
@@ -5026,7 +4546,6 @@ paths:
         - autos
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -5135,7 +4654,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/editorial/{storefront}/rooms/{id}:
@@ -5144,23 +4662,7 @@ paths:
       operationId: getEditorialRoom
       tags:
       - Editorial
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 19011
-        excerpt: 'const r = new it(`/v1/editorial/${n}/rooms/${t.id}`, e, i); r.queryString.addParameters({
-          "omit[resource:artists]": "autos", "relate[songs]": "albums", "include[albums]": "artists,composers",
-          "extend[albums]": "artistUrl", ... })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/editorial/us/rooms/0
-        excerpt: 404 40400 Resource Not Found
-        discovery: replay-tested
       description: Fetch an editorial room.
-      x-feature: Room page
-      x-callers:
-      - RoomPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5235,8 +4737,6 @@ paths:
         description: Relationships to include on groupings.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[albums]
         in: query
         required: false
@@ -5248,8 +4748,6 @@ paths:
         description: Relationships to include on albums.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: include[songs]
         in: query
         required: false
@@ -5261,8 +4759,6 @@ paths:
         description: Relationships to include on songs.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[artists]
         in: query
         required: false
@@ -5284,8 +4780,6 @@ paths:
           bundles and not independently replay-tested.
         style: form
         explode: false
-        x-confidence: low
-        x-validation-status: unverified; not found in the bundles and not independently replay-tested
       - name: fields[albums]
         in: query
         required: false
@@ -5421,7 +4915,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/editorial/{storefront}/multirooms/{id}:
@@ -5430,20 +4923,7 @@ paths:
       operationId: getEditorialMultiroom
       tags:
       - Editorial
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 37274
-        excerpt: const s = new it(`/v1/editorial/${i}/multirooms/${n}`, e, r); s.queryString.extend.add("editorialArtwork").add("lockupStyle").add("seoDescription").add("seoTitle").add("uber")
-        discovery: static
-      - asset: replay
-        location: GET /v1/editorial/us/multirooms/0
-        excerpt: 404 40400
-        discovery: replay-tested
       description: Fetch an editorial multiroom.
-      x-callers:
-      - MultiRoomPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5501,7 +4981,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/editorial/{storefront}/multiplex/{id}:
@@ -5510,20 +4989,7 @@ paths:
       operationId: getEditorialMultiplex
       tags:
       - Editorial
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 37429
-        excerpt: const s = new it(`/v1/editorial/${i}/multiplex/${n}`, e, r)
-        discovery: static
-      - asset: replay
-        location: GET /v1/editorial/us/multiplex/0
-        excerpt: 404 40400 'No target was found for the requested id'
-        discovery: replay-tested
       description: A missing id returns 404 `40400 No target was found for the requested id`.
-      x-callers:
-      - MultiplexPageIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5556,7 +5022,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/recommendations/{storefront}:
@@ -5565,18 +5030,7 @@ paths:
       operationId: getRecommendations
       tags:
       - Recommendations
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44198
-        excerpt: 'const s = new it(`/v1/recommendations/${n}`, e, i); s.queryString.addParameters({ name:
-          "search-landing", "omit[resource]": "autos" }); s.queryString.with.add("concerts"); s.queryString.types.add(j.Activities).add(j.AppleCurators).add(j.EditorialItems)'
-        discovery: static
       description: Backs the search landing page. `name` selects which shelf set to return.
-      x-feature: Search landing
-      x-callers:
-      - SearchLandingIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5722,7 +5176,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/concerts/{storefront}/hub:
@@ -5731,28 +5184,10 @@ paths:
       operationId: getConcertsHub
       tags:
       - Concerts
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 28661
-        excerpt: 'const o = new it(`/v1/concerts/${i}/hub`, e); o.queryString.addParameters({ containers:
-          a, "include[concerts]": "venues,artists", "art[artists:url]": "c", [`limit[${Gn.ConcertsThisWeek}]`]:
-          l, ... })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/concerts/us/hub
-        excerpt: no geoHashLocation -> 500 50000; geoHashLocation=9q5 -> 40005 'must be exactly 4 characters
-          long'; geoHashLocation=9q5c -> 200
-        discovery: replay-tested
       description: '`geoHashLocation` must be exactly four characters. Replay without it returned 500,
         and with a three-character hash returned 400 `40005 Geo Hash ''9q5'' must be exactly 4 characters
         long`, so the parameter is treated as required here although a request path omits
         it.'
-      x-feature: Concerts hub
-      x-callers:
-      - ConcertsHubPageIntent.perform
-      - xae
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5772,7 +5207,6 @@ paths:
           maxLength: 4
         description: Four-character geohash of the viewer's location.
         example: 9q5c
-        x-validation-status: replay-tested
       - name: containers
         in: query
         required: true
@@ -5880,7 +5314,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/lyrics/{storefront}/snippet/songs/{id}:
@@ -5889,21 +5322,6 @@ paths:
       operationId: getLyricSnippet
       tags:
       - Lyrics
-      x-confidence: high
-      x-validation-status: static only — requires `tk`, an opaque token that only a search response supplies;
-        an invented value answers 400 `40005 Token mismatch`. `ts` is required too
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64893
-        excerpt: 'function sye(t, e) { const { id: n, ts: i, te: r, tk: s, l: o } = t; const l = new it(`/v1/lyrics/${a}/snippet/songs/${n}`,
-          e); l.queryString.addParameters({ ts: i, te: r, tk: s, l: o, platform: "web", "omit[resource]":
-          "autos" }); l.queryString.with.add("album"); l.queryString.shouldIncludeFormatResourcesMap =
-          false; l.queryString.shouldIncludeLanguage = false; }'
-        discovery: static
-      - asset: replay
-        location: GET /v1/lyrics/us/snippet/songs/1752214923
-        excerpt: without ts/te/tk -> 400 40003 'Parameter required.'
-        discovery: replay-tested
       description: 'Backs the lyric-match cards in search results. The `ts`, `te` and `tk` values come
         from a `lyricHighlights` entry in a prior search response, so the endpoint cannot be called meaningfully
         without one.
@@ -5911,9 +5329,6 @@ paths:
 
         The call site disables both `format[resources]=map` and the `l` injection, then sets `l` explicitly
         from the highlight.'
-      x-feature: Search lyric highlights
-      x-callers:
-      - sye
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -5937,28 +5352,24 @@ paths:
         schema:
           type: string
         description: Snippet start time, from the search highlight.
-        x-confidence: high
       - name: te
         in: query
         required: true
         schema:
           type: string
         description: Snippet end time, from the search highlight.
-        x-confidence: high
       - name: tk
         in: query
         required: true
         schema:
           type: string
         description: Opaque token from the search highlight.
-        x-confidence: high
       - name: l
         in: query
         required: true
         schema:
           type: string
         description: Language tag, taken from the highlight rather than the global injection.
-        x-confidence: high
       - name: with
         in: query
         required: false
@@ -5991,7 +5402,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/engagement/{storefront}/upsell/marketing-items:
@@ -6000,35 +5410,7 @@ paths:
       operationId: getUpsellMarketingItems
       tags:
       - Engagement
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 17200
-        excerpt: 'const r = new it(`/v1/engagement/${i}/upsell/marketing-items`, n); r.queryString.addParameters({
-          serviceType: "music", placement: t, limit: e.toString() }); yb(n) && r.queryString.with.add("voice")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 16544
-        excerpt: 'lr.DynamicAMSUIUrlPlacements = { LaunchUpsell: "musicAppLaunch", ListenNow: "musicListenNowUpsell",
-          PlaybackUpsell: "musicPlaybackUpsell", MusicPreBuy: "musicPreBuyFlow", MusicSharedListenUpsell:
-          "musicSharedListenUpsell" }'
-        discovery: static
-      - asset: replay
-        location: GET /v1/engagement/us/upsell/marketing-items
-        excerpt: placement=listenNow -> 400 40005 "'listenNow' is not a valid placement"; placement=musicListenNowUpsell
-          -> 200
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `serviceType=music`, `placement` and `platform`; each is required and is reported
-          by name when missing.
-        discovery: replay-tested
       description: Fetch subscription upsell marketing items.
-      x-feature: Listen Now upsell banner
-      x-callers:
-      - aH
-      - lre
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6061,7 +5443,6 @@ paths:
           - musicSharedListenUpsell
         description: Upsell placement. An unrecognised value returns 400 `40005`.
         example: musicListenNowUpsell
-        x-validation-status: replay-tested
       - name: limit
         in: query
         required: false
@@ -6102,7 +5483,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
   /v1/engagement/{storefront}/upsell:
@@ -6111,19 +5491,6 @@ paths:
       operationId: postEngagementUpsell
       tags:
       - Engagement
-      x-confidence: high
-      x-validation-status: observed-in-browser
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 17155
-        excerpt: 'const o = { baseUrl: "https://amp-api-edge.media.apple.com", storefront: t, language:
-          e, token: n, fetch: fetch.bind(window) }; const { MarketingKit: s } = await import("./index~3af5525fbd.js")'
-        discovery: static
-      - asset: runtime
-        location: music.apple.com, every page load, 2026-09-20
-        excerpt: POST https://amp-api-edge.media.apple.com/v1/engagement/us/upsell?l=en-US&platform=web&include=contents&meta[marketing-items]=metrics&types=marketing-items,message-items  body
-          {"messagePlatform":"Web","items":[{"framework":"marketingKit","frameworkVersion":"1.0","contextVersion":"V2","customerEngagementId":"appleMusic","placement":{"kind":"offerSnippet"},"messageContext":{"intent":"purchase"}}]}
-        discovery: observed-in-browser
       description: 'MarketingKit''s message resolution call. Unlike every other operation here it is a
         POST with a JSON body, and it is served from `amp-api-edge.media.apple.com` rather than `amp-api.music.apple.com`.
         Replaying the same request against `amp-api.music.apple.com` returned 500, so the host is not
@@ -6132,7 +5499,6 @@ paths:
 
         The response is a MarketingKit model tree (`kind: offer-button`, nested `text`, `color`, `buy`
         and `metrics` models) rather than a catalog resource, so it is typed loosely here.'
-      x-feature: Subscription offer snippet
       servers:
       - url: https://amp-api-edge.media.apple.com
       parameters:
@@ -6276,7 +5642,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/me/account:
@@ -6285,31 +5650,6 @@ paths:
       operationId: getAccount
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 28965
-        excerpt: 'const o = new it("/v1/me/account", t); o.queryString.extend.add("hasTastePreferences");
-          ... (await At({ url: o.string, cache: "no-cache" }, t)).body.resources.accounts.me.attributes.hasTastePreferences'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 50491
-        excerpt: 'n.queryString.addParameters({ meta: "subscription", "challenge[subscriptionCapabilities]":
-          "voice,premium" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 45898
-        excerpt: o.queryString.extend.add("notificationSettings")
-        discovery: static
-      - asset: replay
-        location: GET /v1/me/account without Media-User-Token
-        excerpt: 403 40300 'Authentication required for request'
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `meta=subscription`; `data[0]` is type `accounts` with `attributes.restrictions`.
-        discovery: replay-tested
       description: 'The signed-in account, its restrictions and its subscription state.
 
 
@@ -6319,10 +5659,6 @@ paths:
 
 
         The response nests the account under `resources.accounts.me`.'
-      x-callers:
-      - cle
-      - GetNotificationSettingsIntent
-      - subscriptionStatusCoordinator
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6376,7 +5712,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6387,18 +5722,7 @@ paths:
       operationId: updateAccountNotificationSettings
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes account state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 41790
-        excerpt: 'const r = { attributes: { notificationSettings: { push: { "notifications.music.account.artistsAndShows":
-          t.artistsAndShowsNotifications, "notifications.music.account.friends": t.friendsNotifications
-          } } } }; At({ url: n.string, body: JSON.stringify(r), method: "PATCH" }, e)'
-        discovery: static
       description: Update account notification settings.
-      x-callers:
-      - UpdateNotificationSettingsIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6443,7 +5767,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6455,21 +5778,6 @@ paths:
       operationId: getMeStorefront
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 5451
-        excerpt: 'd = yield e.fetch(e.apiBase + "/me/storefront", { headers: n })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/me/storefront without Media-User-Token
-        excerpt: 403 40300
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; returns one `storefronts` resource whose `href` points at `/v1/storefronts/{id}`.
-        discovery: replay-tested
       description: Used by MusicKit to resolve the storefront before any catalog call.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -6488,7 +5796,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6500,17 +5807,6 @@ paths:
       operationId: getTastePreferences
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 41459
-        excerpt: const n = new it("/v1/me/taste/taste-preferences", e)
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `data` holds `taste-preferences` resources with `name` and a numeric `preference`.
-        discovery: replay-tested
       description: Fetch onboarding taste preferences.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -6531,7 +5827,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+    post:
+      summary: Save taste preferences
+      operationId: saveTastePreferences
+      tags:
+      - Account
+      description: Save onboarding taste preferences.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '204':
+          description: Applied. No response body is defined.
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6543,16 +5874,6 @@ paths:
       operationId: addFavorite
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes account state. The absence of
-        a GET was confirmed by probing.
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 37623
-        excerpt: 'const n = new it("/v1/me/favorites", e); n.queryString.shouldIncludeFormatResourcesMap
-          = false; n.queryString.addParameters({ [`ids[${t.type}]`]: t.id }); const i = t.isFavorited
-          ? "POST" : "DELETE"'
-        discovery: static
       description: 'Favoriting and unfavoriting are the same request with a different method: POST adds,
         DELETE removes. The resource is named by an `ids[<type>]` parameter rather than a body, and this
         call site turns `format[resources]=map` off.
@@ -6560,9 +5881,6 @@ paths:
 
         There is no GET here. `/v1/me/favorites` answers 404 `40401 Path Not Found` when read, so favorites
         are visible only through the resources that carry them.'
-      x-feature: Favorite button on artists and playlists
-      x-callers:
-      - UpdateFavoritesIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6599,9 +5917,6 @@ paths:
           items:
             type: string
         description: Album id to favorite.
-        x-confidence: medium
-        x-validation-status: inferred from the `ids[<type>]` pattern; the reachable call sites send artists
-          and playlists
         style: form
         explode: false
       - name: ids[stations]
@@ -6613,8 +5928,6 @@ paths:
           items:
             type: string
         description: Station id to favorite.
-        x-confidence: medium
-        x-validation-status: inferred from the `ids[<type>]` pattern
         style: form
         explode: false
       - $ref: '#/components/parameters/qL'
@@ -6631,7 +5944,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6642,18 +5954,7 @@ paths:
       operationId: removeFavorite
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes account state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 37623
-        excerpt: 'const i = t.isFavorited ? "POST" : "DELETE"; return { success: (yield h3({ url: n.string,
-          method: i }, e)).ok }'
-        discovery: static
       description: The same request as `addFavorite` with the method changed.
-      x-feature: Favorite button on artists and playlists
-      x-callers:
-      - UpdateFavoritesIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6695,7 +5996,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6707,23 +6007,7 @@ paths:
       operationId: getRecentRadioStations
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 17775
-        excerpt: 'const e = new it("/v1/me/recent/radio-stations", t); e.queryString.addParameters({ limit:
-          "30", "include[stations]": "radio-show", "omit[resource]": "autos" }); At({ url: e.string, cache:
-          "no-cache" }, t)'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; paginated through `next`, with `stations` resources href-ed into the catalog.
-        discovery: replay-tested
       description: 'Use `Cache-Control: no-cache` to revalidate. Requires a signed-in account.'
-      x-feature: Radio tab
-      x-callers:
-      - hH
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6767,7 +6051,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6779,18 +6062,6 @@ paths:
       operationId: getPersonalRecommendations
       tags:
       - Recommendations
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 11600
-        excerpt: '"/v1/me/recommendations" appears as a path literal in the bundle; the reachable call
-          site in the archived assets is the see-all variant'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `data` holds `personal-recommendation` resources carrying `attributes.display.kind`.
-        discovery: replay-tested
       description: Fetch the Home / Listen Now shelves.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -6858,7 +6129,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -6870,26 +6140,7 @@ paths:
       operationId: getPersonalRecommendationSeeAll
       tags:
       - Recommendations
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 41259
-        excerpt: 'const s = new it(`/v1/me/recommendations/${t.personalRecommendationID}/view/see-all`,
-          e); s.queryString.addParameters({ action: "refresh", name: "listen-now", "include[personal-recommendation]":
-          "contents", "limit[contents]": "100", ... }); s.queryString.with.add("friendsMix").add("library").add("social")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: recommendation request builder
-        excerpt: 'r.queryString.addParameters({geoHashLocation:o==null?void 0:o.geoHash,"include[concerts]":"venues,artists"})'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for a recommendation id taken from `/v1/me/recommendations`.
-        discovery: replay-tested
       description: Fetch all items behind one Listen Now shelf.
-      x-callers:
-      - ListenNowSeeAllIntent.perform
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -6993,7 +6244,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -7085,7 +6335,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7097,20 +6346,8 @@ paths:
       operationId: createSuggestedTracks
       tags:
       - Recommendations
-      x-confidence: high
-      x-validation-status: static only — not replayed, because `action=save` writes
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 53173
-        excerpt: 'const r = new it("/v1/me/recommendations/suggested", e); r.queryString.addParameters({
-          contexts: "playlist-suggested-songs", types: "songs", meta: "source", limit: "20", ... }); let
-          s = { targetContent: { id: t, type: j.LibraryPlaylists } }; At({ url: r.string, body: JSON.stringify(s),
-          method: "POST" }, e)'
-        discovery: static
       description: Backs the 'suggested songs' shelf at the bottom of a library playlist. `action=save`
         is added when the suggestions should be persisted.
-      x-callers:
-      - U3
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -7246,7 +6483,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7258,28 +6494,8 @@ paths:
       operationId: getLibraryRelationships
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 57379
-        excerpt: 'const l = o ? "me/library" : `catalog/${e}`; const c = new it(`/v1/${l}`, i); c.queryString.addParameters({
-          l: n, platform: "web", "omit[resource]": "autos", relate: "library" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 50079
-        excerpt: 'const n = new it("/v1/me/library", t); n.queryString.addParameters({ fields: "artwork,artistName,url,name,playParams,inLibrary,contentRating,requiresSubscription,kind,editorialArtwork,postUrl,movieClips",
-          relate: "library", ... })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `ids[library-songs]`; 400 `40003 No ids specified on the request` without any
-          `ids[...]`.
-        discovery: replay-tested
       description: The 'in library' state of every lockup on a page is resolved through this one call.
         Use explicit `l` and `platform` values with `relate=library` to link catalog ids to library ids.
-      x-callers:
-      - yD (requestLibraryRelationships)
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -7372,7 +6588,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7383,19 +6598,8 @@ paths:
       operationId: addToLibrary
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 57352
-        excerpt: 'const n = new it("/v1/me/library", e); n.queryString.addParameters(SW(t)); n.queryString.shouldIncludeLanguage
-          = false; n.queryString.shouldIncludePlatform = false; n.queryString.addParameters({ representation:
-          "ids" }); At({ url: n.string, method: "POST" }, e)'
-        discovery: static
       description: Items are named entirely through `ids[<type>]` query parameters; the request has no
         body. `representation=ids` asks for a compact response.
-      x-callers:
-      - bD (requestAddToLibrary)
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -7465,30 +6669,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
         musicUserToken: []
   /v1/me/library/{type}/{id}:
+    get:
+      summary: One library item
+      operationId: getLibraryResource
+      tags:
+      - Library
+      description: Fetch one library item by type and id. To fetch several at once, call `/v1/me/library/{type}` with `ids=<id>,<id>`.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - songs
+          - albums
+          - artists
+          - music-videos
+          - playlists
+        description: Library resource type.
+        example: albums
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Library item id.
+        example: l.abc123
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: '`40400 Resource Not Found`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
     delete:
       summary: Remove from library
       operationId: deleteFromLibrary
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 57364
-        excerpt: 'const i = new it(`/v1/me/library/${e}/${t}`, n); i.queryString.shouldIncludeLanguage
-          = false; i.queryString.shouldIncludePlatform = false; i.queryString.shouldIncludeFormatResourcesMap
-          = false; At({ url: i.string, method: "DELETE" }, n)'
-        discovery: static
       description: This request has no query parameters.
-      x-callers:
-      - W3e (requestDeleteFromLibrary)
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -7524,14 +6772,90 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+  /v1/me/library/{type}/{id}/{relationship}:
+    get:
+      summary: Library item relationship
+      operationId: getLibraryResourceRelationship
+      tags:
+      - Library
+      description: List a related collection of a library item, such as the tracks of a library album.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - songs
+          - albums
+          - artists
+          - music-videos
+          - playlists
+        description: Library resource type.
+        example: albums
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Library item id.
+        example: l.abc123
+      - name: relationship
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - tracks
+        description: Relationship name.
+        example: tracks
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Page size.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset.
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: '`40400 Resource Not Found`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7543,18 +6867,6 @@ paths:
       operationId: getLibrarySongs
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 50940
-        excerpt: 'n.queryString.addParameters({ platform: "web", offset: `${t}`, limit: `${e}`, meta:
-          "sorts", "include[library-songs]": "catalog", sort: n })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; paginated through `next`, items typed `library-songs`.
-        discovery: replay-tested
       description: '`meta=sorts` asks the server to return the available sort options.'
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -7590,8 +6902,6 @@ paths:
           - type
           - -type
         description: Sort order. A leading `-` reverses it.
-        x-confidence: medium
-        x-validation-status: enum assembled from the library sort UI; not exhaustively replayed
       - name: meta
         in: query
         required: false
@@ -7635,7 +6945,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7647,18 +6956,6 @@ paths:
       operationId: getLibraryMusicVideos
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 51150
-        excerpt: 'n.queryString.addParameters({ platform: "web", offset: `${t}`, limit: `${e}`, meta:
-          "sorts", "include[library-music-videos]": "catalog", sort: n })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; items typed `library-music-videos`.
-        discovery: replay-tested
       description: List library music videos.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -7694,7 +6991,6 @@ paths:
           - type
           - -type
         description: Sort order.
-        x-confidence: medium
       - name: meta
         in: query
         required: false
@@ -7736,7 +7032,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7748,18 +7043,6 @@ paths:
       operationId: getLibraryArtists
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 51970
-        excerpt: 'n.queryString.addParameters({ platform: "web", offset: `${t}`, limit: `${e}`, include:
-          "catalog", meta: "sorts", sort: n })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; items typed `library-artists` with ids prefixed `r.`.
-        discovery: replay-tested
       description: List library artists.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -7795,7 +7078,6 @@ paths:
           - type
           - -type
         description: Sort order.
-        x-confidence: medium
       - name: meta
         in: query
         required: false
@@ -7834,7 +7116,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7846,19 +7127,6 @@ paths:
       operationId: getLibraryArtist
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 51984
-        excerpt: 'const i = new it(`/v1/me/library/artists/${encodeURIComponent(t)}`, e); i.queryString.addParameters({
-          platform: "web", "include[library-artists]": "albums,catalog", "include[library-albums]": "catalog",
-          "fields[library-artists]": "classicalUrl,name,url", "omit[resource]": "autos" })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for an id taken from `/v1/me/library/artists`.
-        discovery: replay-tested
       description: Percent-encode the id because library artist ids are not always
         numeric.
       parameters:
@@ -7941,14 +7209,76 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+  /v1/me/library/albums:
+    get:
+      summary: Albums
+      operationId: getLibraryAlbums
+      tags:
+      - Library
+      description: List library albums.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Page size.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset.
+      - name: fields[albums]
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        description: Restrict fields on catalog albums.
+        example:
+        - artistName
+        - artistUrl
+        - artwork
+        - contentRating
+        - editorialArtwork
+        - name
+        - playParams
+        - releaseDate
+        - url
+        style: form
+        explode: false
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -7960,23 +7290,6 @@ paths:
       operationId: getLibraryAlbum
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 51690
-        excerpt: 'n.queryString.addParameters({ platform: "web", includeOnly: "catalog,artists,tracks",
-          "include[library-albums]": "artists,tracks", "include[albums]": "artists,tracks", "fields[artists]":
-          "name,url", "extend[albums]": i.join(",") })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: library album request builder
-        excerpt: '"include[music-videos]":"catalog,artists,tracks","include[albums]":"artists,tracks","fields[artists]":"name,url"'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for an id taken from `/v1/me/library/albums`; library album ids are prefixed `l.`.
-        discovery: replay-tested
       description: Fetch one library album.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8059,7 +7372,6 @@ paths:
         - tracks
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - name: fields[artists]
         in: query
         required: false
@@ -8074,7 +7386,6 @@ paths:
         - url
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -8091,14 +7402,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8110,18 +7419,6 @@ paths:
       operationId: getLibraryRecentlyAdded
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 11597
-        excerpt: '"/v1/me/library/recently-added" path literal; the reachable call site builds the URL
-          from a page href'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; a mixed list of library types ordered by date added.
-        discovery: replay-tested
       description: List recently added library items.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8176,7 +7473,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8189,24 +7485,6 @@ paths:
       tags:
       - Library
       - Search
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 42775
-        excerpt: 'const n = new it("/v1/me/library/search", e); n.queryString.addParameters({ term: t,
-          limit: "21", "include[library-artists]": "catalog", "fields[library-artists]": "url,name,artwork"
-          })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64145
-        excerpt: 'i.queryString.addParameters({ term: t, l: e, platform: "web", limit: "21", "include[library-artists]":
-          "catalog", "include[library-songs]": "catalog" })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `results` is keyed by the requested type, each with its own `next`.
-        discovery: replay-tested
       description: Search the library.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8315,7 +7593,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8327,14 +7604,6 @@ paths:
       operationId: getLibraryImportProgress
       tags:
       - Library
-      x-confidence: medium
-      x-validation-status: static only — needs a live import session; an invented session id answers 404
-        `40400 Session or its related contents cannot be found`, which confirms the route
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 66326
-        excerpt: const n = new it(`/v1/me/library/import/jobs/${t.sessionID}/progress`, e)
-        discovery: static
       description: Poll a library import job.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8361,14 +7630,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8380,14 +7647,6 @@ paths:
       operationId: setRating
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64010
-        excerpt: 'const r = new it(`/v1/me/ratings/${e}/${t}`, n); At({ url: r.string, body: ..., method:
-          "PUT" }, n)'
-        discovery: static
       description: Set a love / dislike rating.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8439,7 +7698,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8450,14 +7708,6 @@ paths:
       operationId: deleteRating
       tags:
       - Library
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64020
-        excerpt: 'const r = new it(`/v1/me/ratings/${e}/${t}`, n); At({ url: r.string, method: "DELETE"
-          }, n)'
-        discovery: static
       description: Clear a rating.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8490,7 +7740,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8502,28 +7751,6 @@ paths:
       operationId: getLibraryPlaylists
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 54184
-        excerpt: 'n.queryString.addParameters({ sort: e || "type", platform: "web", "fields[playlists]":
-          "lastModifiedDate", "filter[featured]": "made-for-you", "include[library-playlists]": "catalog",
-          "fields[library-playlists]": "artwork,dateAdded,name,playParams" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 66212
-        excerpt: 'n.queryString.addParameters({ platform: "web", "filter[featured]": "suggested" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 54286
-        excerpt: 'n.queryString.addParameters({ platform: "web", "filter[library-mix]": e, "omit[resource]":
-          "autos" })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; items typed `library-playlists` with ids prefixed `p.`.
-        discovery: replay-tested
       description: '`filter[featured]` selects a curated subset: `made-for-you` backs the Made for You
         shelf and `suggested` backs the suggested-playlist row.'
       parameters:
@@ -8548,7 +7775,6 @@ paths:
           - type
           - -type
         description: Sort order. `type` is a common value.
-        x-confidence: medium
       - name: filter[featured]
         in: query
         required: false
@@ -8558,14 +7784,12 @@ paths:
           - made-for-you
           - suggested
         description: Featured subset.
-        x-confidence: high
       - name: filter[library-mix]
         in: query
         required: false
         schema:
           type: string
         description: Filter to a specific library mix.
-        x-confidence: medium
       - name: include[library-playlists]
         in: query
         required: false
@@ -8647,7 +7871,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8658,20 +7881,8 @@ paths:
       operationId: createLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63737
-        excerpt: 'const s = new it("/v1/me/library/playlists", r); i && s.queryString.addParameters({
-          with: "shared" }); const a = JSON.stringify({ attributes: { name: t, description: e, isPublic:
-          i }, relationships: { tracks: { data: n } } }); At({ url: s.string, body: a, method: "POST"
-          }, r)'
-        discovery: static
       description: '`with=shared` is added when the playlist is being created as a collaborative or public
         playlist.'
-      x-callers:
-      - f2e (requestCreateNewPlaylist)
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -8742,7 +7953,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8754,20 +7964,6 @@ paths:
       operationId: getLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 53223
-        excerpt: 'n.queryString.addParameters({ platform: "web", include: "catalog,artists,tracks", extend:
-          "hasCollaboration,isCollaborativeHost", "extend[library-playlists]": "tags", "extend[playlists]":
-          "editorialArtwork,editorialVideo,extendedAssetUrls", "include[library-playlists]": "catalog,tracks,playlists",
-          "art[library-music-videos:url]": "c,f", relate: "catalog", sort: n, ... })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for an id taken from `/v1/me/library/playlists`.
-        discovery: replay-tested
       description: Fetch one library playlist.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -8855,7 +8051,6 @@ paths:
         schema:
           type: string
         description: Track sort order.
-        x-confidence: medium
       - name: art[library-music-videos:url]
         in: query
         required: false
@@ -8929,14 +8124,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -8947,14 +8140,6 @@ paths:
       operationId: updateLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 64348
-        excerpt: 'const r = new it(`/v1/me/library/playlists/${i}`, n); r.queryString.addParameters({
-          with: "shared" }); At({ url: r.string, body: ..., method: "PATCH" }, n)'
-        discovery: static
       description: Update a library playlist.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -9017,14 +8202,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9036,19 +8219,6 @@ paths:
       operationId: getLibraryPlaylistTracks
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 40945
-        excerpt: 'const n = new it(`/v1/me/library/playlists/${t}/tracks`, e); n.queryString.addParameters({
-          "include[songs]": "artists,composers", "fields[artists]": "name,url", "fields[library-songs]":
-          "id,artwork,url" })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; tracks typed `library-songs`.
-        discovery: replay-tested
       description: List a library playlist's tracks.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -9123,7 +8293,6 @@ paths:
         - url
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -9140,14 +8309,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9158,15 +8325,6 @@ paths:
       operationId: addTracksToLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63847
-        excerpt: 'const i = new it(`/v1/me/library/playlists/${t}/tracks`, n); i.queryString.addParameters({
-          representation: "resources" }); const s = JSON.stringify({ data: e }); At({ url: i.string, body:
-          s, method: "POST" }, n)'
-        discovery: static
       description: Add tracks to a library playlist.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -9211,14 +8369,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9229,16 +8385,6 @@ paths:
       operationId: removeTrackFromLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 57396
-        excerpt: 'const i = new it(`/v1/me/library/playlists/${e}/tracks?ids[library-songs]=${t}&mode=all`,
-          n); i.queryString.shouldIncludeLanguage = false; i.queryString.shouldIncludePlatform = false;
-          i.queryString.shouldIncludeFormatResourcesMap = false; At({ url: i.string, method: "DELETE"
-          }, n)'
-        discovery: static
       description: 'Removes one track from a library playlist.
 
 
@@ -9284,14 +8430,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+    put:
+      summary: Replace tracks
+      operationId: replaceLibraryPlaylistTracks
+      tags:
+      - Playlists
+      description: Replace the tracks of a library playlist with the list in the body, in order.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Library playlist id.
+      - $ref: '#/components/parameters/qL'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipData'
+            example:
+              data:
+              - id: i.abc123
+                type: library-songs
+      responses:
+        '204':
+          description: Applied. No response body is defined.
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        '404':
+          description: '`40400 Resource Not Found`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9303,29 +8496,11 @@ paths:
       operationId: getLibraryPlaylistCatalog
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63809
-        excerpt: const n = new it(`/v1/me/library/playlists/${t}/catalog`, e)
-        discovery: static
-      - asset: replay
-        location: GET /v1/me/library/playlists/{id}/catalog
-        excerpt: 404 40403 'No related resources found for catalog' for an unshared playlist, which is
-          a relationship error rather than a path error
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 'Routed: a library playlist with no catalog counterpart answers 404 `40403 No related
-          resources found for catalog` rather than a path error.'
-        discovery: replay-tested
       description: 'A library playlist that has been shared has a catalog playlist behind it. This reads
         that catalog playlist; the POST on the same path creates one if it does not exist yet.
 
 
         A playlist that has never been shared answers 404 `40403 No related resources found for catalog`.'
-      x-feature: Shared playlists
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9394,14 +8569,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9412,15 +8585,6 @@ paths:
       operationId: publishLibraryPlaylistToCatalog
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63809
-        excerpt: 'const n = new it(`/v1/me/library/playlists/${t}/catalog`, e); n.queryString.shouldIncludePlatform
-          = false; n.queryString.shouldIncludeFormatResourcesMap = false; At({ url: n.string, body: "",
-          method: "POST" }, e) ... [200, 201].includes(o.statusCode)'
-        discovery: static
       description: Sent with an empty string body. Returns 200 or 201 depending on whether the catalog
         playlist already existed.
       parameters:
@@ -9453,14 +8617,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9472,24 +8634,8 @@ paths:
       operationId: getLibraryPlaylistParent
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63871
-        excerpt: const n = new it(`/v1/me/library/playlists/${t}/parent`, e)
-        discovery: static
-      - asset: replay
-        location: GET /v1/me/library/playlists/{id}/parent
-        excerpt: 200 with the containing folder
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; returns the containing folder.
-        discovery: replay-tested
       description: Read the folder containing a playlist.
         A playlist at the top level returns the root folder rather than an empty result.
-      x-feature: Library playlist organisation
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9516,14 +8662,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9534,14 +8678,6 @@ paths:
       operationId: moveLibraryPlaylist
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 63907
-        excerpt: 'const n = new it(`/v1/me/library/playlists/${t}/parent`, e); At({ url: n.string, body:
-          ..., method: "PUT" }, e)'
-        discovery: static
       description: Move a library playlist into a folder.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -9577,14 +8713,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9596,23 +8730,6 @@ paths:
       operationId: getPlaylistFolderChildren
       tags:
       - Playlists
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 53191
-        excerpt: 'const n = new it("/v1/me/library/playlist-folders/p.playlistsroot/children", t); n.queryString.addParameters({
-          platform: "web", include: "catalog", offset: `${e}`, extend: "hasCollaboration", "fields[playlists]":
-          "curatorName", "extend[library-playlists]": "tags", "omit[resource]": "autos" })'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 53209
-        excerpt: const i = new it(`/v1/me/library/playlist-folders/${e}/children`, t)
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for the root folder id `p.playlistsroot`.
-        discovery: replay-tested
       description: The library sidebar uses the reserved root folder id `p.playlistsroot`.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -9719,14 +8836,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '404':
           description: '`40400 Resource Not Found`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9738,24 +8853,8 @@ paths:
       operationId: getLibraryPins
       tags:
       - Pins
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/libraryPinsAPI~e35b6d9d9b.js
-        location: line 234
-        excerpt: 'const n = new h("/v1/me/library/pins", t); n.queryString.addParameters({ meta: "libraryPin",
-          limit: G.toString(), "include[library-songs]": "albums,playlists,artists", "include[library-music-videos]":
-          "albums,playlists,artists", "include[library-artists]": "catalog", "fields[artists]": "artwork"
-          })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; pins come back as the pinned resources themselves, not as pin objects.
-        discovery: replay-tested
       description: Pins are the tiles at the top of the library landing page. The mutating pin operations
         return before the change is visible. Poll this endpoint until the expected pin state appears.
-      x-callers:
-      - GetLibraryPinsIntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9846,7 +8945,6 @@ paths:
         - artists
         style: form
         explode: false
-        x-validation-status: static only; not replayed
       - $ref: '#/components/parameters/qL'
       - $ref: '#/components/parameters/qPlatform'
       - $ref: '#/components/parameters/qFormatResources'
@@ -9863,7 +8961,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9875,27 +8972,11 @@ paths:
       operationId: addOrMoveLibraryPin
       tags:
       - Pins
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/libraryPinsAPI~e35b6d9d9b.js
-        location: line 250
-        excerpt: 'const i = await m({ url: w(t, n).string, body: "", method: "POST" }, n); ... return
-          b((r) => r.some((s) => s.id === t), n)'
-        discovery: static
-      - asset: assets/libraryPinsAPI~e35b6d9d9b.js
-        location: line 259
-        excerpt: 'const r = w(t, i); r.queryString.addParameters({ after: n != null ? n : "top" }); const
-          s = await m({ url: r.string, method: "POST" }, i)'
-        discovery: static
       description: 'One POST covers both actions, distinguished only by the `after` query parameter. Without
         `after` the item is pinned, with an empty string body. With `after` an existing pin is moved:
         `top` puts it first, any other value is the id of the pin to place it behind. Both forms return
         before the change is readable. Poll `GET /v1/me/library/pins` until the
         expected state appears, rather than trusting the response.'
-      x-callers:
-      - AddLibraryPinIntentController
-      - MoveLibraryPinIntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9935,7 +9016,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -9946,18 +9026,7 @@ paths:
       operationId: setLibraryPinAction
       tags:
       - Pins
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/libraryPinsAPI~e35b6d9d9b.js
-        location: line 253
-        excerpt: 'const r = w(t, i); r.queryString.addParameters({ action: n }); const s = await m({ url:
-          r.string, method: "PATCH" }, i); ... b((e) => e.some((a) => a.id === t && a.defaultAction ===
-          n), i)'
-        discovery: static
       description: Set a pin's default action.
-      x-callers:
-      - UpdateLibraryPinIntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -9992,7 +9061,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10003,17 +9071,7 @@ paths:
       operationId: deleteLibraryPin
       tags:
       - Pins
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes library state
-      x-evidence:
-      - asset: assets/libraryPinsAPI~e35b6d9d9b.js
-        location: line 266
-        excerpt: 'const i = w(t, n), r = await m({ url: i.string, method: "DELETE" }, n); ... b((s) =>
-          !s.some((e) => e.id === t), n)'
-        discovery: static
       description: Unpin a library item.
-      x-callers:
-      - DeleteLibraryPinIntentController
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -10038,7 +9096,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10050,28 +9107,6 @@ paths:
       operationId: getSocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 45498
-        excerpt: 'n.queryString.addParameters({ ids: s, include: "followers,followees,pending-followers,shared-playlists,listening-to"
-          }); n.queryString.extend.add("followState").add("pendingFollowersCount")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 46781
-        excerpt: 'n.queryString.addParameters({ include: "shareable-playlists" }); n.queryString.extend.add("hideListeningTo")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 47183
-        excerpt: 'n.queryString.addParameters({ include: "social-profile,followers,pending-followers",
-          extend: "followState", with: "nonOnboarded" })'
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 on its own. Including `followees` or `followers` answers 400 `40013 Invalid Request
-          Signature`.
-        discovery: replay-tested
       description: 'Your own social profile, with the private fields attached.
 
 
@@ -10172,7 +9207,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10183,16 +9217,6 @@ paths:
       operationId: updateSocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 47063
-        excerpt: 'const s = new it("/v1/me/social/profile", e); s.queryString.shouldIncludeFormatResourcesMap
-          = false; t.allowNonSubscribers && s.queryString.addParameters({ with: "nonSubscribers" }); const
-          o = { attributes: t.attributes }; At({ url: s.string, body: JSON.stringify(o), method: "PATCH"
-          }, e) ... v.meta.suggestedHandles[0]'
-        discovery: static
       description: Handle collisions come back as a 4xx whose first error carries `meta.suggestedHandles`,
         which can be shown as a suggestion. This request omits `format[resources]=map`.
       parameters:
@@ -10253,14 +9277,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: inferred from response handling; not replayed
         '403':
           description: '`40300 Forbidden` — no valid `Media-User-Token`.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10272,15 +9294,6 @@ paths:
       operationId: followSocialProfiles
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44889
-        excerpt: 'const n = new it("/v1/me/social/profile/followees", e); const r = { data: t.socialProfileIDs.map((c)
-          => ({ id: c, type: j.SocialProfiles })) }; At({ url: n.string, body: JSON.stringify(r), method:
-          "POST" }, e)'
-        discovery: static
       description: Follow one or more profiles.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10327,7 +9340,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10338,15 +9350,6 @@ paths:
       operationId: unfollowSocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 47018
-        excerpt: 'const n = new it("/v1/me/social/profile/followees", e); const r = { data: [{ id: t.socialProfileID,
-          type: j.SocialProfiles }] }; At({ url: n.string, body: JSON.stringify(r), method: "DELETE" },
-          e)'
-        discovery: static
       description: Unfollow a profile.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10393,27 +9396,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
       - developerToken: []
         musicUserToken: []
   /v1/me/social/profile/followers:
+    post:
+      summary: Add followers
+      operationId: addFollowers
+      tags:
+      - Social
+      description: Post profiles to your followers. Takes the same body as removing a follower.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - id
+                    - type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - social-profiles
+            example:
+              data:
+              - id: '1234567890'
+                type: social-profiles
+      responses:
+        '204':
+          description: Applied. No response body is defined.
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
     delete:
       summary: Remove a follower
       operationId: removeFollower
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 46580
-        excerpt: 'const n = new it("/v1/me/social/profile/followers", e); const r = { data: [{ id: t.socialProfileID,
-          type: j.SocialProfiles }] }; At({ url: n.string, body: JSON.stringify(r), method: "DELETE" },
-          e)'
-        discovery: static
       description: Remove one of your followers.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10460,7 +9509,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10472,15 +9520,6 @@ paths:
       operationId: cancelFollowRequest
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44845
-        excerpt: 'const n = new it("/v1/me/social/profile/pending-followees", e); const r = { data: [{
-          id: t.socialProfileID, type: j.SocialProfiles }] }; At({ url: n.string, body: JSON.stringify(r),
-          method: "DELETE" }, e)'
-        discovery: static
       description: Cancel a pending follow request.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10527,7 +9566,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10539,15 +9577,6 @@ paths:
       operationId: blockSocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44801
-        excerpt: 'const n = new it("/v1/me/social/profile/blocked-profiles", e); const r = { data: [{
-          id: t.socialProfileID, type: j.SocialProfiles }] }; At({ url: n.string, body: JSON.stringify(r),
-          method: "POST" }, e)'
-        discovery: static
       description: Block a profile.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10594,7 +9623,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10605,15 +9633,6 @@ paths:
       operationId: unblockSocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 46974
-        excerpt: 'const n = new it("/v1/me/social/profile/blocked-profiles", e); const r = { data: [{
-          id: t.socialProfileID, type: j.SocialProfiles }] }; At({ url: n.string, body: JSON.stringify(r),
-          method: "DELETE" }, e)'
-        discovery: static
       description: Unblock a profile.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10660,7 +9679,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10672,14 +9690,6 @@ paths:
       operationId: getPendingFollowers
       tags:
       - Social
-      x-confidence: medium
-      x-validation-status: static only — 400 `40013 Invalid Request Signature`. The social graph needs
-        a user token carrying signature data that a token minted outside a full web session does not have
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 11596
-        excerpt: '"/v1/me/social/profile/pending-followers" path literal'
-        discovery: static
       description: List pending follow requests.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10720,7 +9730,118 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+    post:
+      summary: Add pending followers
+      operationId: addPendingFollowers
+      tags:
+      - Social
+      description: Post profiles to your pending follow requests.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - id
+                    - type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - social-profiles
+            example:
+              data:
+              - id: '1234567890'
+                type: social-profiles
+      responses:
+        '204':
+          description: Applied. No response body is defined.
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
+        default:
+          $ref: '#/components/responses/Error'
+      security:
+      - developerToken: []
+        musicUserToken: []
+    delete:
+      summary: Remove pending followers
+      operationId: removePendingFollowers
+      tags:
+      - Social
+      description: Remove profiles from your pending follow requests.
+      parameters:
+      - $ref: '#/components/parameters/hOrigin'
+      - $ref: '#/components/parameters/hReferer'
+      - $ref: '#/components/parameters/qL'
+      - $ref: '#/components/parameters/qPlatform'
+      - $ref: '#/components/parameters/qFormatResources'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - id
+                    - type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - social-profiles
+            example:
+              data:
+              - id: '1234567890'
+                type: social-profiles
+      responses:
+        '204':
+          description: Applied. No response body is defined.
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: '`40300 Forbidden` — no valid `Media-User-Token`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorsResponse'
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10732,15 +9853,6 @@ paths:
       operationId: setSharedPlaylists
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 47134
-        excerpt: 'const n = new it("/v1/me/social/profile/shared-playlists", e); n.queryString.shouldIncludeFormatResourcesMap
-          = false; t.sharedPlaylistIDs.forEach((c) => { i.push({ id: c, type: j.LibraryPlaylists }) });
-          At({ url: n.string, body: JSON.stringify({ data: i }), method: "PUT" }, e)'
-        discovery: static
       description: A PUT that replaces the whole set, so an empty `data` array unshares everything. This
         call site disables `format[resources]=map`.
       parameters:
@@ -10784,7 +9896,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10796,17 +9907,6 @@ paths:
       operationId: getSuggestedHandles
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 45602
-        excerpt: const n = new it("/v1/me/social/suggested-handles", e)
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `results.suggestedHandles` is an array of strings.
-        discovery: replay-tested
       description: Fetch suggested profile handles.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -10827,7 +9927,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -10839,27 +9938,6 @@ paths:
       operationId: getSocialProfiles
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44593
-        excerpt: 'const s = new it(`/v1/social/${r}/social-profiles`, e); s.queryString.addParameters({
-          ids: t.join(",") }); s.queryString.extend.add("followState")'
-        discovery: static
-      - asset: assets/index~8bc3c631ba.js
-        location: line 45533
-        excerpt: 'const n = new it("/v1/social/us/social-profiles", e); n.queryString.addParameters({
-          "filter[handle]": t })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/social/us/social-profiles?filter[handle]=applemusic
-        excerpt: 200 {"data":[],"meta":{"filters":{"handle":{...}}}}
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 for an id taken from `/v1/me/social-profile`.
-        discovery: replay-tested
       description: 'Reachable with only a developer token when looking a profile up by handle: replay
         returned 200 with `meta.filters.handle`. Fetching by `ids` with the follow state extended is what
         a signed-in request does.'
@@ -10947,7 +10025,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/social/{storefront}/search:
@@ -10957,23 +10034,6 @@ paths:
       tags:
       - Social
       - Search
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 42758
-        excerpt: 'const n = new it(`/v1/social/${n}/search`, e); n.queryString.addParameters({ term: t,
-          limit: "21", "art[social-profiles:url]": "c" })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/social/us/search without Media-User-Token
-        excerpt: 403 40300
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with `term` and `types=social-profiles`; 400 `40003 One or more types must be specified`
-          without `types`.
-        discovery: replay-tested
       description: Search social profiles.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11049,7 +10109,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11061,22 +10120,6 @@ paths:
       operationId: getSocialBadgingMap
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 44720
-        excerpt: 'const n = new it("/v1/social/badging-map", e); n.queryString.addParameters({ "omit[resource]":
-          "autos" })'
-        discovery: static
-      - asset: replay
-        location: GET /v1/social/badging-map without Media-User-Token
-        excerpt: 403 40300
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `results.badgingMap` with a `meta.versionHash` for conditional refresh.
-        discovery: replay-tested
       description: Fetch unread-badge counts for social surfaces.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11098,7 +10141,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11110,17 +10152,6 @@ paths:
       operationId: getSocialOnboardingUpsell
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 46467
-        excerpt: const n = new it(`/v1/social/${n}/onboarding-upsell`, e)
-        discovery: static
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200; `results.upsell` is a `social-upsells` resource.
-        discovery: replay-tested
       description: Fetch the social onboarding upsell.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11148,7 +10179,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/social/recommended-friends:
@@ -11157,16 +10187,6 @@ paths:
       operationId: getRecommendedFriends
       tags:
       - Social
-      x-confidence: medium
-      x-validation-status: static only — not routed as a GET — 404 `40401 Path Not Found`, though the
-        bundle builds a GET for it. It may be gated on a storefront or account state this session did
-        not have
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 11595
-        excerpt: '"/v1/social/recommended-friends" path literal; the reachable call site in the archived
-          assets is the DELETE'
-        discovery: static
       description: |
         List recommended friends.
 
@@ -11190,7 +10210,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11201,14 +10220,6 @@ paths:
       operationId: dismissRecommendedFriend
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: static only — not replayed, because it changes social state
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: line 47352
-        excerpt: 'const n = new it("/v1/social/recommended-friends", e); const i = { ids: { socialProfiles:
-          [t.socialProfileID] } }; At({ url: n.string, body: JSON.stringify(i), method: "DELETE" }, e)'
-        discovery: static
       description: Unlike the other social writes, the body is an `ids` object rather than a `data` array.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -11248,7 +10259,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11260,31 +10270,6 @@ paths:
       operationId: getPlayAssets
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26490
-        excerpt: 'const h = yield p.get("/v1/play/assets", { params: { ...e.playParams, keyFormat: "web"
-          } }); if (500 === h.status) throw new MKUniqueError("mk-153", ...); if (403 === h.status) {
-          const d = "40303" === n?.code ? MKUniqueError.Reason.SUBSCRIPTION_ERROR : MKUniqueError.Reason.ACCESS_DENIED
-          }'
-        discovery: static
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 27078
-        excerpt: 'const y = yield d.services.mediaAPI.get("/v1/play/assets", { params: { ...e.playParams,
-          includeLicenseUrls: true, hlsEncryption: n?.hlsEncryption ?? "CBC", ...(n?.hlsEnhancedAsset
-          ? { hlsProfile: "enhancedHls" } : {}) } }); const { results: _ } = yield y.json(); _.assets[0].keyServerUrl'
-        discovery: static
-      - asset: replay
-        location: GET /v1/play/assets without Media-User-Token
-        excerpt: 403 40301 'The music user token is not valid.'
-        discovery: replay-tested
-      - asset: replay
-        location: signed-in replay, 2026-09-21
-        excerpt: 200 with a subscribed account; `results.assets[0]` carries `url`, `keyServerUrl`, `fairPlayKeyCertificateUrl`
-          and `widevineKeyCertificateUrl`.
-        discovery: replay-tested
       description: 'MusicKit''s asset resolution step. The query is the item''s `playParams` object spread
         into query parameters, plus encryption options. Requires a subscribed account: without a `Media-User-Token`
         it returns 403 `40301 Invalid Music User Token`, and MusicKit maps a 403 with body code `40303`
@@ -11293,9 +10278,6 @@ paths:
 
         The response carries signed HLS URLs and key-server URLs; they are omitted from this document
         because they are account-scoped.'
-      x-callers:
-      - fetchRadioStationAssets
-      - resolveCatalogSongAsset
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11337,8 +10319,6 @@ paths:
           - CTR
         description: HLS encryption mode. MusicKit defaults to `CBC`.
         example: CBC
-        x-confidence: medium
-        x-validation-status: '`CBC` seen as the default in the bundle; `CTR` inferred'
       - name: hlsProfile
         in: query
         required: false
@@ -11377,14 +10357,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         '500':
           description: MusicKit raises `mk-153` for this.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: static
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11396,17 +10374,7 @@ paths:
       operationId: getStationNextTracks
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — recovered from static code and not exercised
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 23711
-        excerpt: 'const m = d.buildRequest("/v1/me/stations/next-tracks/" + _, { params: n?.limit !==
-          undefined ? { limit: n.limit } : undefined, method: "POST" })'
-        discovery: static
       description: A POST with no body; `limit` is the only parameter MusicKit sends.
-      x-callers:
-      - loadStationNextTracks
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11436,7 +10404,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11448,21 +10415,9 @@ paths:
       operationId: createContinuousStation
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — recovered from static code and not exercised
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 23780
-        excerpt: 'const h = d.buildRequest("/v1/me/stations/continuous", { params: { "limit[results:tracks]":
-          n?.limit > 1 ? n.limit : undefined, with: n?.withTracks === true ? ["tracks"] : undefined },
-          method: "POST", body: { data: p } }); const { errors: y, results: _ } = yield h.send().then((e)
-          => e.json())'
-        discovery: static
       description: 'Backs autoplay. Each seed is a song or artist; library items are typed `library-songs`
         and catalog items `songs`. The response is `{ results: { station }, errors }` rather than the
         usual resource shape.'
-      x-callers:
-      - createAutoplayStation
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -11543,7 +10498,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11555,13 +10509,6 @@ paths:
       operationId: getRecommendationPivots
       tags:
       - Playback
-      x-confidence: low
-      x-validation-status: static only — found in the public MusicKit bundle, not exercised
-      x-evidence:
-      - asset: js-cdn.music.apple.com/musickit/v3/musickit.js
-        location: line 27147
-        excerpt: const _ = n.buildRequest("/v1/me/recommendations/pivots", { ... })
-        discovery: static
       description: 'Recommendation pivots, from the public MusicKit build only.
 
 
@@ -11595,7 +10542,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11607,21 +10553,6 @@ paths:
       operationId: resolveWebPlaybackAsset
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — recovered from static code and not exercised
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26894
-        excerpt: 'const d = new Headers({ Authorization: "Bearer " + n.developerToken, Accept: "application/json",
-          "Content-Type": "application/json", "X-Apple-Music-User-Token": "" + n.mediaUserToken }), p
-          = String(e.playParams.id), h = e.isLibraryItem ? Object.fromEntries([["purchaseAdamId", e.playParams.purchasedId],
-          ["subscriptionAdamId", ...], ["universalLibraryId", ...]]) : { salableAdamId: p }'
-        discovery: static
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 27155
-        excerpt: 'assetResolver: { staticKeyURLs: m, mzplayAssetEndpoint: `https://${getCommerceHostname("play")}/WebObjects/MZPlay.woa/wa/webPlayback`
-          }'
-        discovery: static
       description: 'The second of MusicKit''s two asset resolvers. `/v1/play/assets` covers catalog streaming;
         this one covers purchased and uploaded library items, which the media API does not serve.
 
@@ -11632,10 +10563,6 @@ paths:
 
         This host takes the user token in `X-Apple-Music-User-Token`, not the `Media-User-Token` header
         the media API uses.'
-      x-feature: Playing purchased, matched and uploaded library items
-      x-callers:
-      - MKPlayableAssetResolver.resolveMZPlayWebAsset
-      - _fetchMZPlayWebAsset
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -11647,7 +10574,6 @@ paths:
         schema:
           type: string
         description: Identifies the signed-in account for playback on this host.
-        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11713,7 +10639,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11724,27 +10649,6 @@ paths:
       operationId: acquireWebPlaybackLicense
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — issuing a license is a state-changing operation and was not replayed.
-        The URL itself was returned by a replayed `/v1/play/assets` call.
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26612
-        excerpt: 'createChallengeBody(e, n, d) { const p = typeof n.licenseChallenge == "string" ? n.licenseChallenge
-          : F(n.licenseChallenge); return { adamId: e.catalogId ?? "-1", isLibrary: e.isLibrary, "user-initiated":
-          d.userInitiated, challenge: p, uri: n.keyuri, "key-system": this.keySystemId } }'
-        discovery: static
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26580
-        excerpt: 'createChallengeHeaders(e, n, d) { const p = { Authorization: "Bearer " + this.developerToken,
-          Accept: "application/json", "Content-Type": "application/json", ...(this.mediaUserToken ? {
-          "X-Apple-Music-User-Token": this.mediaUserToken } : {}) }; return "widevine" === this.services.runtime.preferredKeySystem
-          && (p["X-Apple-Renewal"] = !0), new Headers(p) }'
-        discovery: static
-      - asset: replay
-        location: GET /v1/play/assets?id=...&includeLicenseUrls=true
-        excerpt: '"keyServerUrl": "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense"'
-        discovery: replay-tested
       description: 'The key server named by `keyServerUrl` in a `/v1/play/assets` response. The browser''s
         EME stack produces a key request; base64-encode it as `challenge` and post it here
         with the item it belongs to.
@@ -11756,9 +10660,6 @@ paths:
         Two sibling key servers take a different body. `/v1/radio/streaming-key-delivery` and `/WebObjects/MZPlay.woa/web/radio/versions/1/license`
         accept this request shape; `fpsRequest` and `/v1/hls/streaming-key-delivery`
         do not.'
-      x-feature: Encrypted playback
-      x-callers:
-      - WebPlaybackLicenseManager.requestLicense
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -11770,14 +10671,12 @@ paths:
         schema:
           type: string
         description: Identifies the signed-in account for playback on this host.
-        x-validation-status: static only; not replayed
       - name: X-Apple-Renewal
         in: header
         required: false
         schema:
           type: boolean
         description: Set to `true` for Widevine license renewal.
-        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11823,7 +10722,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11834,16 +10732,6 @@ paths:
       operationId: requestFairPlayStreamingKey
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — issuing a license is a state-changing operation and was not replayed
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26520
-        excerpt: 'createChallengeBody(e, n, d) { const p = this.lastKeyId += 1, h = typeof n.licenseChallenge
-          == "string" ? n.licenseChallenge : F(n.licenseChallenge); return { version: 1, "license-requests":
-          [{ id: p, "adam-id": e.catalogId ?? e.id, challenge: h, uri: n.keyuri, "key-system": this.keySystemId
-          }] } }'
-        discovery: static
       description: 'The older of the two key-request shapes. This request shape applies when the key server URL ends in `fpsRequest`, `/WebObjects/MZPlay.woa/hls/anonymous/fpsRequest`, `/v1/hls/streaming-key-delivery`
         or `/v1/hls/anonymous/streaming-key-delivery`.
 
@@ -11852,9 +10740,6 @@ paths:
 
 
         The `anonymous` variants skip the user token; every other variant requires it.'
-      x-feature: Encrypted playback
-      x-callers:
-      - FairPlayLicenseManager.requestLicense
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -11866,7 +10751,6 @@ paths:
         schema:
           type: string
         description: Identifies the signed-in account for playback on this host.
-        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -11921,7 +10805,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -11932,22 +10815,6 @@ paths:
       operationId: deliverStreamingKey
       tags:
       - Playback
-      x-confidence: medium
-      x-validation-status: static only — the path was recovered from a suffix match, so the host shown
-        here is the one the other key servers use rather than one that was observed for this path
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26466
-        excerpt: 'const m = yield p.makeServerRequest(_, n.keyuri, { method: "POST", headers: p.createChallengeHeaders(e,
-          n, d), body: JSON.stringify(p.createChallengeBody(e, n, { ...d, "lease-action": "start" }))
-          }), g = m["streaming-response"]?.["streaming-keys"][0]; if (0 !== g.status) throw new MKServerDialogError(...)'
-        discovery: static
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 26545
-        excerpt: 'createChallengeBody(e, n, d) { ... return { "streaming-request": { version: 1, "streaming-keys":
-          [{ "lease-action": d["lease-action"], id: p, challenge: h, uri: n.keyuri, "key-system": this.keySystemId,
-          stkn: d.stkn, ...e.keyServerQueryParameters }] } } }'
-        discovery: static
       description: 'The leasing key server. Unlike the other two, it tracks a lease: use `lease-action: start` to acquire a key and `stop` to release it when playback ends, so a key can
         be revoked rather than only expiring.
 
@@ -11958,12 +10825,11 @@ paths:
         token.
 
 
+        Live radio uses `/v1/radio/streaming-key-delivery` instead.
+
+
         The host is not fixed. It comes from `hls-key-server-url` in the asset response, so treat the
         path as the stable part.'
-      x-feature: Encrypted playback with key leasing
-      x-callers:
-      - HLSStreamingLicenseManager.requestLicense
-      - HLSStreamingLicenseManager.revokeLicense
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -11975,7 +10841,6 @@ paths:
         schema:
           type: string
         description: Identifies the signed-in account for playback on this host.
-        x-validation-status: static only; not replayed
       requestBody:
         required: true
         content:
@@ -12055,7 +10920,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12066,28 +10930,11 @@ paths:
       operationId: getWidevineCertificate
       tags:
       - Playback
-      x-confidence: high
-      x-validation-status: static only — a binary certificate fetch, not replayed
-      x-evidence:
-      - asset: includes/js-cdn/musickit/v3/amp/musickit.js
-        location: line 27140
-        excerpt: 'let m = { "hls-key-cert-url": "https://s.mzstatic.com/skdtool_2021_certbundle.bin",
-          "hls-key-server-url": "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense",
-          "widevine-cert-url": "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/widevineCert" }'
-        discovery: static
-      - asset: replay
-        location: GET /v1/play/assets?id=...&includeLicenseUrls=true
-        excerpt: '"widevineKeyCertificateUrl": "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/widevineCert"'
-        discovery: replay-tested
       description: 'The Widevine service certificate, needed before a Widevine key request can be encrypted.
         It is a fixed URL rather than a per-item one, and it takes no authentication.
 
 
         The FairPlay equivalent is not on this host: it is the static bundle at `https://s.mzstatic.com/skdtool_2021_certbundle.bin`.'
-      x-feature: Widevine playback on browsers without FairPlay
-      x-callers:
-      - MusicKit configuration defaults
-      - resolveMZPlayWebAsset
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -12107,7 +10954,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security: []
@@ -12117,15 +10963,6 @@ paths:
       operationId: revokeMusicSDKAuthorization
       tags:
       - Account
-      x-confidence: high
-      x-validation-status: static only — revoking access is a state-changing operation and was not replayed
-      x-evidence:
-      - asset: assets/index~8bc3c631ba.js
-        location: RemoveAppWithAccessIntent
-        excerpt: 'const i = ot.revokeMusicSDKAuthorizationSrv(e) ?? "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/revokeMusicSDKAuthorizationSrv";
-          if (!i) throw new Error("Bag key: revokeMusicSDKAuthorizationSrv was not available"); const
-          r = JSON.stringify({ musicId: t.appID })'
-        discovery: static
       description: 'Backs the "remove app with access" control in account settings. The URL is configurable
         through the bag key `revokeMusicSDKAuthorizationSrv`; the value shown here is the fallback the
         fallback when the bag does not carry one.
@@ -12136,9 +10973,6 @@ paths:
 
         Its read counterpart is the bag key `getMusicSDKAuthorizationsSrv`, which lists the authorized
         apps. Its URL is supplied by the bag and is not documented as a fixed path.'
-      x-feature: Account settings, connected apps
-      x-callers:
-      - RemoveAppWithAccessIntent.perform
       servers:
       - url: https://play.itunes.apple.com
       parameters:
@@ -12170,7 +11004,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12182,14 +11015,6 @@ paths:
       operationId: listRegions
       tags:
       - Storefronts
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: probe
-        location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
-          40401 Path Not Found distinguishes a name the API does not route from one it does
-        discovery: replay-tested
       description: 'The five regions Apple sorts storefronts into.
 
 
@@ -12241,7 +11066,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/regions/{id}:
@@ -12250,14 +11074,6 @@ paths:
       operationId: getRegion
       tags:
       - Storefronts
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: probe
-        location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
-          40401 Path Not Found distinguishes a name the API does not route from one it does
-        discovery: replay-tested
       description: Returns a single-element `data` array, the same shape `/v1/regions` returns.
       parameters:
       - $ref: '#/components/parameters/hOrigin'
@@ -12308,7 +11124,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: not individually replayed for this operation
         default:
           $ref: '#/components/responses/Error'
   /v1/me/social-profile:
@@ -12317,14 +11132,6 @@ paths:
       operationId: getMySocialProfile
       tags:
       - Social
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: probe
-        location: path sweep against amp-api.music.apple.com, 2026-09-21
-        excerpt: candidate path names taken from the archived bundles were requested one at a time; 404
-          40401 Path Not Found distinguishes a name the API does not route from one it does
-        discovery: replay-tested
       description: 'The public view of the signed-in account''s social profile. It returns type `social-profiles`
         with an `href` pointing at `/v1/social/{storefront}/social-profiles/{id}`, where `/v1/me/social/profile`
         returns type `personal-social-profiles` with the private fields attached.
@@ -12374,7 +11181,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12386,13 +11192,6 @@ paths:
       operationId: getSongLyrics
       tags:
       - Lyrics
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: replay
-        location: GET /v1/catalog/hk/songs/1866517055/{relationship}
-        excerpt: 200 with the shape described here, on a subscribed account
-        discovery: replay-tested
       description: 'Line-timed lyrics as a TTML document.
 
 
@@ -12404,7 +11203,6 @@ paths:
         Needs a subscribed account, and `storefront` must match the account''s own storefront. A
         mismatched storefront, an unsubscribed account and a song with no lyrics all return 404
         `40403`, so the cases cannot be told apart from the status.'
-      x-feature: Lyrics panel
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -12474,7 +11272,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12486,17 +11283,6 @@ paths:
       operationId: getSongSyllableLyrics
       tags:
       - Lyrics
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: replay
-        location: GET /v1/catalog/hk/songs/1866517055/{relationship}
-        excerpt: 200 with the shape described here, on a subscribed account
-        discovery: replay-tested
-      - asset: js-cdn.music.apple.com/musickit/v3/components/musickit-components/p-115f12df.entry.js
-        location: syllable-lyrics request builder
-        excerpt: 'n=l?{"l[lyrics]":o,"l[script]":`${t}-${a}`,extend:"ttmlLocalizations"}:{}'
-        discovery: static
       description: 'Word-timed lyrics as a TTML document.
 
 
@@ -12508,7 +11294,6 @@ paths:
         Backs Apple Music Sing. Use `l[lyrics]`, `l[script]` and `extend=ttmlLocalizations`
         together to request localized TTML. Same subscription requirement, same storefront-match
         requirement and same 404 as `lyrics`.'
-      x-feature: Lyrics panel, Apple Music Sing
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -12536,8 +11321,6 @@ paths:
           type: string
         description: Preferred language for localized lyrics. Use with `extend=ttmlLocalizations`.
         example: zh-CN
-        x-confidence: high
-        x-validation-status: static only; not replayed
       - name: l[script]
         in: query
         required: false
@@ -12545,8 +11328,6 @@ paths:
           type: string
         description: Language and script for localized lyrics, such as `zh-Hans`.
         example: zh-Hans
-        x-confidence: high
-        x-validation-status: static only; not replayed
       - name: extend
         in: query
         required: false
@@ -12555,8 +11336,6 @@ paths:
           enum:
           - ttmlLocalizations
         description: Requests `attributes.ttmlLocalizations`. Use with `l[lyrics]` and `l[script]`.
-        x-confidence: high
-        x-validation-status: static only; not replayed
       responses:
         '200':
           description: One `syllable-lyrics` resource.
@@ -12609,7 +11388,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12621,13 +11399,6 @@ paths:
       operationId: getSongCredits
       tags:
       - Catalog
-      x-confidence: high
-      x-validation-status: replay-tested
-      x-evidence:
-      - asset: replay
-        location: GET /v1/catalog/hk/songs/1866517055/{relationship}
-        excerpt: 200 with the shape described here, on a subscribed account
-        discovery: replay-tested
       description: 'Everyone who worked on a recording, grouped by role.
 
 
@@ -12637,7 +11408,6 @@ paths:
 
 
         Needs no `Media-User-Token`, unlike the lyrics relationships on the same song.'
-      x-feature: Credits sheet
       parameters:
       - $ref: '#/components/parameters/hOrigin'
       - $ref: '#/components/parameters/hReferer'
@@ -12754,7 +11524,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorsResponse'
-          x-validation-status: replay-tested
         default:
           $ref: '#/components/responses/Error'
       security:
@@ -12781,8 +11550,6 @@ components:
       description: Required. Must be `https://` on `apple.com` or a subdomain; anything else is a bare
         401.
       example: https://music.apple.com
-      x-confidence: high
-      x-validation-status: replay-tested
     hReferer:
       name: Referer
       in: header
@@ -12791,8 +11558,6 @@ components:
         type: string
       description: Include alongside `Origin`. Not checked on its own.
       example: https://music.apple.com/
-      x-confidence: high
-      x-validation-status: replay-tested
     qL:
       name: l
       in: query
@@ -13111,10 +11876,6 @@ components:
         variants:
           description: Style-specific presentation options; shape varies by style.
       additionalProperties: true
-      x-evidence:
-      - asset: assets/CanvasCollectionSectionBuilder~ac93b14ca8.js
-        location: lines 35-108
-        discovery: static
     CanvasBadge:
       type: object
       properties:
@@ -13129,10 +11890,6 @@ components:
       - variant
       - label
       additionalProperties: true
-      x-evidence:
-      - asset: assets/CanvasSectionsBuilder~75fc7c567d.js
-        location: lines 66-83 and 478-494
-        discovery: static
   responses:
     Error:
       description: Error response.
@@ -13140,48 +11897,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorsResponse'
-x-research:
-  retrieved: '2026-09-20'
-  replayed: '2026-09-21'
-  entry-point: https://music.apple.com/us/new
-  application-bundle: assets/index~8bc3c631ba.js
-  musickit-amp: includes/js-cdn/musickit/v3/amp/musickit.js
-  musickit-public: https://js-cdn.music.apple.com/musickit/v3/musickit.js
-  client-version: 2638.7.0-external
-  source-maps: none published for any archived asset
-  hosts:
-    amp-api.music.apple.com: bag key ampMusicAPIDomains/default; used for every operation in this document
-      unless an operation overrides it
-    amp-api-edge.music.apple.com: bag keys ampMusicAPIDomains/editorialContent, /search, /searchHints,
-      /searchLanding. Search and editorial reads can use this host. Every such operation was verified
-      against amp-api.music.apple.com instead, and all of them work there, so this document uses the default
-      host throughout.
-    amp-api-edge.media.apple.com: MarketingKit base URL; the only host where POST /v1/engagement/{storefront}/upsell
-      succeeds
-    play.itunes.apple.com: commerce host, resolved from getCommerceHostname('play'). Serves asset resolution
-      for purchased and uploaded items and every DRM key exchange.
-    amp-api.podcasts.apple.com: MusicKit podcast realm; out of scope
-  method:
-  - Archived the application entry point, both MusicKit bundles and all 45 reachable chunks, with SHA-256
-    hashes.
-  - 'Traced the shared request layer: the URL builder, the query-string builder and its global injections,
-    the fetch wrapper, and the header/auth layer.'
-  - Extracted every URL-builder construction site and its surrounding declaration, then resolved the enums
-    used in paths and parameters.
-  - Observed live browser traffic on music.apple.com and compared it with the static call graph.
-  - Replayed read-only requests, varying one input at a time to test requiredness and constraints.
-  - Repeated the read-only replay on 2026-09-21 with an authorized Hong Kong storefront account with an
-    active subscription, which covered the personalized surfaces.
-  - Enumerated catalog resource types, relationships and views by probing the path segments, which the
-    API validates before it looks a resource up.
-  - Swept candidate path names from the bundles against the API to find routes absent from the call graph.
-  limits:
-  - No write operation was replayed. Every POST, PUT, PATCH and DELETE in this document comes from the
-    bundles alone.
-  - 'The social graph could not be read: followers and followees answer 40013 Invalid Request Signature
-    with a user token minted outside a full web session.'
-  - Response schemas are described at the envelope level. Per-type attribute schemas are not modelled.
-  - DRM key exchange is documented from static code only; issuing a licence is a state-changing operation
-    and was not replayed.
-  - 'The enumerations of types, relationships and views are floors, not ceilings: they cover the names
-    the probe wordlist contained.'
