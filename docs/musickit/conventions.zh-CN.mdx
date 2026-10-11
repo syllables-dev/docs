@@ -12,7 +12,7 @@ description: 服务地址、参数、分页和缓存
 | 域名 | 用途 |
 | --- | --- |
 | `amp-api.music.apple.com` | 音乐目录、搜索、资料库、账号及其他媒体 API 请求。 |
-| `amp-api-edge.music.apple.com` | 编辑精选内容和搜索的备用地址。 |
+| `amp-api-edge.music.apple.com` | 编辑精选内容和搜索的备用地址。在这里搜索会忽略 `offset`，也不返回 `next`，只能拿到第一页。 |
 | `amp-api-edge.media.apple.com` | `POST /v1/engagement/{storefront}/upsell`。 |
 | `play.itunes.apple.com` | 已购和已上传内容的播放资源，以及 DRM 密钥交换。 |
 
@@ -126,10 +126,12 @@ GET /v1/catalog/{storefront}/{type}/{id}/view/{view}
 分页响应会提供 `next`，其值是路径和查询字符串，不是完整 URL：
 
 ```json
-{ "next": "/v1/catalog/us/playlists/pl.../tracks?offset=2&limit=2", "data": [] }
+{ "next": "/v1/catalog/us/playlists/pl.../tracks?l=en-US&offset=100", "data": [] }
 ```
 
-在同一 API 域名下请求返回的 `next` 路径，即可获取下一页。关联内容单独分页，下一页路径位于关联对象自己的 `next` 字段中。
+在同一 API 域名下请求返回的 `next` 路径，即可获取下一页。`next` 会保留 `offset`、`l` 以及搜索的 `term` 和 `types`，但不带 `limit`、`extend`、`include`、`with` 和 `format[resources]`。想保持同样的每页条数和响应结构，要把这些参数重新带上。
+
+关联内容单独分页，下一页路径位于关联对象自己的 `next` 字段中。用 `include` 取回的关联内容只有第一页，比如歌单的前 100 首歌、艺人的前 25 张专辑，其余部分要顺着 `next` 继续取。
 
 各接口页面会注明每页条目数的上限。
 

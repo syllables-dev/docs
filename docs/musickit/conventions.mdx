@@ -12,7 +12,7 @@ Use the host listed for each endpoint:
 | Host | Used for |
 | --- | --- |
 | `amp-api.music.apple.com` | Catalog, search, library, account, and other media API requests. |
-| `amp-api-edge.music.apple.com` | Alternative host for editorial content and search. |
+| `amp-api-edge.music.apple.com` | Alternative host for editorial content and search. Search here ignores `offset` and returns no `next`, so it stops at the first page. |
 | `amp-api-edge.media.apple.com` | `POST /v1/engagement/{storefront}/upsell`. |
 | `play.itunes.apple.com` | Purchased and uploaded playback assets and DRM key exchange. |
 
@@ -126,10 +126,12 @@ Dropping `format[resources]=map` returns the conventional shape, with full objec
 Paginated responses carry `next`, a path plus query string rather than a full URL:
 
 ```json
-{ "next": "/v1/catalog/us/playlists/pl.../tracks?offset=2&limit=2", "data": [] }
+{ "next": "/v1/catalog/us/playlists/pl.../tracks?l=en-US&offset=100", "data": [] }
 ```
 
-Request the returned `next` path on the same API host to fetch the next page. Relationships paginate independently through a `next` field inside the relationship object.
+Request the returned `next` path on the same API host to fetch the next page. It keeps `offset`, `l`, and search's `term` and `types`, but drops `limit`, `extend`, `include`, `with`, and `format[resources]`. Send those again to keep the same page size and response shape.
+
+Relationships paginate independently through a `next` field inside the relationship object. An included relationship holds only its first page, such as 100 tracks of a playlist or 25 albums of an artist, so follow its `next` to read the rest.
 
 Page-size limits are listed on each endpoint.
 
