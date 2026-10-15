@@ -4,5 +4,5 @@
   "pagesIndex": "index",
   "icon": "Package",
   "root": true,
-  "pages": ["index", "parse", "lyrics", "components"]
+  "pages": ["index", "parse", "lyrics", "components", "amp"]
 }

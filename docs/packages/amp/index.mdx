@@ -1,0 +1,41 @@
+---
+title: Amp
+description: A typed client for the Apple Music web player API.
+---
+
+`@syllables-dev/amp` talks to `amp-api.music.apple.com`, the API behind the Apple Music web player. It has no dependencies, and responses from Apple are fully typed.
+
+```ts
+import { createClient } from "@syllables-dev/amp";
+
+const am = createClient({ developerToken: process.env.AMP_DEVELOPER_TOKEN ?? "" });
+
+const album = await am.albums.get("1752214909");
+console.log(album.name);
+console.log(album.tracks.map((track) => track.name));
+```
+
+<Callout type="warn" title="Unofficial API">
+
+This API is not documented by Apple and can change without notice. Amp does not ship any tokens. You bring your own, taken from your own web player session.
+
+</Callout>
+
+## What it does for you
+
+- Types change with your options. Ask for `include: ["genres"]` and `album.genres` exists. Leave it out and it is a compile error.
+- Results are plain objects. Related resources are already joined in, and the result is safe to pass to `JSON.stringify`.
+- Long relationships load in full. A playlist with 2,000 tracks gives you all 2,000.
+- `get` calls made at the same time are merged into one request, and responses are cached for as long as Apple allows.
+
+## Start here
+
+<Cards>
+  <Card title="Getting started" href="/packages/amp/getting-started" description="Install the package and make your first request." />
+  <Card title="Tokens" href="/packages/amp/tokens" description="Where the developer and user tokens come from." />
+  <Card title="Usage" href="/packages/amp/usage" description="Catalog, search, charts, lyrics, and your library." />
+  <Card title="Options and types" href="/packages/amp/options" description="include, extend, fields, views, and limits." />
+  <Card title="Advanced" href="/packages/amp/advanced" description="Pages, errors, raw requests, and caching." />
+</Cards>
+
+For the endpoints themselves, see the [MusicKit reference](/musickit).

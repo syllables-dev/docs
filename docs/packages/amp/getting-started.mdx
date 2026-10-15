@@ -1,0 +1,59 @@
+---
+title: Getting started
+description: Install Amp and make your first request
+---
+
+## Install
+
+```package-install
+@syllables-dev/amp
+```
+
+The package ships ES modules and TypeScript declarations. No separate `@types` package is needed.
+
+## Run it on a server
+
+Amp must run on a server, in a worker, or in Bun. It will not work in a browser. Apple only accepts the token when the request comes with `Origin: https://music.apple.com`, and browsers do not let a page set that header.
+
+## Get a token
+
+You need a developer token before anything works. [Tokens](./tokens.mdx) shows how to copy one from the web player. Keep it in an environment variable:
+
+```sh title=".env"
+AMP_DEVELOPER_TOKEN=eyJhbGciOi...
+```
+
+## Make a request
+
+```ts
+import { createClient } from "@syllables-dev/amp";
+
+const am = createClient({
+  developerToken: process.env.AMP_DEVELOPER_TOKEN ?? "",
+  storefront: "us",
+});
+
+const results = await am.search("espresso", { types: ["songs"], limit: 5 });
+
+for (const song of results.songs.items) {
+  console.log(song.name, "by", song.artistName);
+}
+```
+
+If the variable is empty, `createClient` throws right away instead of failing on the first request.
+
+`storefront` is the two-letter Apple Music region. Prices, availability, and charts depend on it. It defaults to `us`.
+
+## Fetch something by id
+
+The id is the number at the end of an Apple Music link. For `https://music.apple.com/us/album/short-n-sweet/1752214909`, it is `1752214909`.
+
+```ts
+const album = await am.albums.get("1752214909");
+
+album.name;
+album.artistName;
+album.tracks.length;
+```
+
+Continue with [usage examples](./usage.mdx).

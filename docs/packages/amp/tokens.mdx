@@ -1,0 +1,53 @@
+---
+title: Tokens
+description: Where the developer and user tokens come from
+---
+
+Amp does not ship or fetch tokens. You pass your own to `createClient`, and it throws if `developerToken` is missing.
+
+| Option | What it is | Needed for |
+| --- | --- | --- |
+| `developerToken` | The JWT the web player sends in its `Authorization` header. | Everything. |
+| `userToken` | The `media-user-token` of a signed-in session. | Your library, `me`, and finding your storefront. |
+
+Treat both like passwords. Keep them in environment variables or a secret store, never in source code.
+
+## Copy the developer token
+
+1. Open [music.apple.com](https://music.apple.com) in a desktop browser.
+2. Open the developer tools and switch to the Network tab.
+3. Type `amp-api` in the filter box and click any request.
+4. Under the request headers, find `Authorization: Bearer eyJ...`.
+5. Copy everything after `Bearer `.
+
+The token lasts a few months. When it expires, every request fails with a 401 and you copy a new one.
+
+## Copy the user token
+
+Sign in on music.apple.com, then look in the same request headers for `media-user-token`. It is also stored as a cookie with that name.
+
+## Refresh a token
+
+Either option also accepts a function that returns a string or a promise. Amp calls it before every request, so a token can be swapped without making a new client.
+
+```ts
+const am = createClient({
+  developerToken: () => tokens.current(),
+  userToken: async () => await vault.read("apple-music-user"),
+});
+```
+
+## Storefront and language
+
+```ts
+const am = createClient({
+  developerToken,
+  userToken,
+  storefront: "gb",
+  language: "en-GB",
+});
+```
+
+When `storefront` is left out and a user token is set, Amp asks Apple for the account's storefront once and reuses it. Without a user token it falls back to `us`. `language` defaults to the storefront's own language.
+
+The [authentication reference](/musickit/authentication) explains the headers and why the origin matters.

@@ -1,0 +1,109 @@
+---
+title: Options and types
+description: include, extend, fields, views, and limits
+---
+
+Everything in Apple Music is a resource. It has an `id`, a `type` such as `albums` or `library-songs`, and attributes such as `name` or `artwork`. Resources point at each other through relationships: an album has `artists` and `tracks`, and a song has `albums`.
+
+Apple decides what it sends by default. The options below ask for more or less, and the result type always matches what comes back.
+
+## include
+
+Some relationships arrive as full objects without asking, like an album's `tracks`. Some arrive as bare references with only `id` and `type`. The rest are left out. `include` turns a relationship into full objects:
+
+```ts
+const song = await am.songs.get("1752214910", { include: ["albums", "artists"] });
+
+song.albums[0]?.name;
+song.artists[0]?.name;
+```
+
+Without `include`, `song.albums` is an optional list of `{ id, type }`, so `song.albums[0].name` does not compile.
+
+## extend
+
+`extend` asks for attributes Apple leaves out by default:
+
+```ts
+const album = await am.albums.get("1752214909", { extend: ["editorialArtwork"] });
+
+album.editorialArtwork;
+```
+
+Without `extend`, `album.editorialArtwork` is a compile error. Asking to extend an attribute that is always sent, like `artwork`, is also a compile error.
+
+## fields
+
+`fields` trims the response to the attributes you name. The rest disappear from the type.
+
+```ts
+const album = await am.albums.get("1752214909", { fields: ["name", "artwork"] });
+
+album.name;
+album.artwork;
+```
+
+An extended attribute must be listed in `fields` too, or Apple drops it.
+
+## views
+
+Views are editorial shelves on a resource, like "More by Sabrina Carpenter". Ask for them with `views`:
+
+```ts
+const album = await am.albums.get("1752214909", { views: ["more-by-artist"] });
+
+album.views.moreByArtist.items[0]?.name;
+```
+
+Only the views you ask for are on the type, and their items are typed. To page through one view on its own, use `view()` instead.
+
+## Names
+
+Apple uses kebab-case names. On results, they become camelCase: `record-labels` is `recordLabels`, and `more-by-artist` is `moreByArtist`. Options keep Apple's names.
+
+## Complete relationships
+
+Apple cuts long relationships short. A playlist's `tracks` stops at 100, and an artist's `albums` stops at 25. `get` loads the rest for you, so `playlist.tracks` holds every track.
+
+```ts
+const playlist = await am.playlists.get("pl.f4d106fed2bd41149aaacabb233eb5eb");
+playlist.tracks.length;
+```
+
+Pass `complete: false` to keep only Apple's first page, which is faster for large playlists:
+
+```ts
+await am.playlists.get(id, { complete: false });
+```
+
+## Limits
+
+`limit` is typed with Apple's maximum for each call. Going over it does not compile:
+
+```ts
+await am.search("espresso", { limit: 50 });
+await am.search("espresso", { limit: 51 });
+```
+
+The second call is a type error, because Apple rejects search limits above 50.
+
+## Invalid combinations
+
+The types also catch requests Apple would reject:
+
+```ts
+await am.library.albums.list({ include: ["tracks"] });
+await am.library.songs.get(id, { include: ["playlists"] });
+```
+
+The first fails because Apple only includes library album tracks when fetching one album. The second fails because library songs have no `playlists` relationship.
+
+## Types for your own code
+
+Every resource type is exported. `Resource<"albums">` is an album with its default attributes:
+
+```ts
+import type { Resource } from "@syllables-dev/amp";
+
+const title = (album: Resource<"albums">) => `${album.name} by ${album.artistName}`;
+```

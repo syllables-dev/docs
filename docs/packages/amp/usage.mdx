@@ -1,0 +1,124 @@
+---
+title: Usage
+description: Catalog, search, charts, lyrics, and your library
+---
+
+## Catalog
+
+Every catalog type has the same four methods: `albums`, `songs`, `artists`, `playlists`, `musicVideos`, `stations`, `curators`, `appleCurators`, `recordLabels`, and `genres`.
+
+```ts
+const artist = await am.artists.get("1315912589");
+
+const albums = await am.albums.getMany(["1752214909", "1440818839"]);
+
+const topAlbums = await am.artists.related("1315912589", "albums", { limit: 25 });
+topAlbums.items.map((album) => album.name);
+
+const topSongs = await am.artists.view("1315912589", "top-songs");
+topSongs.items.map((song) => song.name);
+```
+
+- `get` fetches one resource.
+- `getMany` fetches several of the same type in one request.
+- `related` lists a relationship, such as an artist's albums or a playlist's tracks.
+- `view` lists an editorial shelf, such as "Top Songs" or "More by Artist".
+
+A missing id rejects with an `AmpError` whose `status` is `404`.
+
+## Search
+
+```ts
+const results = await am.search("espresso", {
+  types: ["songs", "artists"],
+  limit: 10,
+});
+
+results.songs.items[0]?.name;
+results.artists.items[0]?.name;
+```
+
+Search results are grouped by type, and each group is a [page](./advanced.mdx#pages). For a search box, use the faster helpers:
+
+```ts
+await am.search.hints("tay");
+await am.search.suggestions("tay", { types: ["songs"] });
+```
+
+`hints` returns plain search terms. `suggestions` also returns matching resources in `topResults`.
+
+## Charts
+
+```ts
+const charts = await am.charts({ types: ["songs", "albums"] });
+
+for (const chart of charts.songs) {
+  console.log(chart.name, chart.items.length);
+}
+```
+
+Each type can hold several charts, so `charts.songs` is a list.
+
+## Lyrics and credits
+
+```ts
+const ttml = await am.songs.syllableLyrics("1752214910");
+const lineTtml = await am.songs.lyrics("1752214910");
+const credits = await am.songs.credits("1752214910");
+```
+
+Both lyrics calls return a TTML string. `syllableLyrics` has word-level timing when Apple has it. Read the TTML with [`@syllables-dev/parse`](/packages/parse):
+
+```ts
+import { parse } from "@syllables-dev/parse";
+
+const { doc } = parse(await am.songs.syllableLyrics("1752214910"));
+doc.lines[0]?.p.map((part) => part.text).join("");
+```
+
+## Your library
+
+Library calls need a `userToken`. They throw before sending anything if it is missing.
+
+```ts
+const page = await am.library.songs.list({ sort: "-dateAdded", limit: 50 });
+page.total;
+page.items.map((song) => song.name);
+```
+
+To go through the whole library, use `all()`. It loads pages in the background and gives you songs one at a time, in order:
+
+```ts
+for await (const song of am.library.songs.all()) {
+  console.log(song.name);
+}
+```
+
+The library has `songs`, `albums`, `artists`, `playlists`, and `musicVideos`, plus a few extras:
+
+```ts
+await am.library.playlists.get("p.abc123", { include: ["tracks"] });
+await am.library.search("taylor");
+await am.library.recentlyAdded();
+await am.me.storefront();
+```
+
+To get the catalog version of a library item, include `catalog`:
+
+```ts
+const page = await am.library.songs.list({ include: ["catalog"] });
+page.items[0]?.catalog?.[0]?.id;
+```
+
+## Storefronts
+
+```ts
+const all = await am.storefronts.list();
+const japan = await am.storefronts.get("jp");
+```
+
+Any single call can also override the client's storefront or language:
+
+```ts
+await am.albums.get("1752214909", { storefront: "jp", language: "ja" });
+```

@@ -1,0 +1,90 @@
+---
+title: Advanced
+description: Pages, errors, raw requests, and caching
+---
+
+## Pages
+
+List calls such as `related`, `view`, `search`, and `library.*.list` return a page:
+
+```ts
+const page = await am.playlists.related(id, "tracks");
+
+page.items;
+page.total;
+const nextPage = await page.next?.();
+```
+
+`next` is only there when more items exist. `total` is only there when Apple reports one. To walk every item, wrap the page with `paginate`:
+
+```ts
+for await (const track of am.paginate(am.playlists.related(id, "tracks"))) {
+  console.log(track.id);
+}
+```
+
+Every next page keeps the options of the first one, such as `language`.
+
+## Errors
+
+Failed requests throw `AmpError`:
+
+```ts
+import { AmpError } from "@syllables-dev/amp";
+
+try {
+  await am.albums.get("0");
+} catch (error) {
+  if (error instanceof AmpError && error.status === 404) {
+    console.log("No such album");
+  }
+}
+```
+
+| Field | What it holds |
+| --- | --- |
+| `status` | The HTTP status, such as `404`. |
+| `code` | Apple's error code, such as `"40400"`. |
+| `parameter` | The option Apple rejected, when there is one. |
+| `correlationId` | Apple's id for the request, useful when reporting a problem. |
+
+An empty 401 means the developer token is invalid or expired. The [errors reference](/musickit/errors) lists Apple's codes.
+
+## Faster search
+
+Search, suggestions, and hints can use Apple's edge host, like the web player does:
+
+```ts
+await am.search("espresso", { edge: true });
+await am.search.hints("tay", { edge: true });
+```
+
+Edge search is several times faster but only returns the first page.
+
+## Any other endpoint
+
+`request` reaches every endpoint in the [MusicKit reference](/musickit). Path and query parameters are typed from the spec:
+
+```ts
+const document = await am.request("GET /v1/catalog/{storefront}/songs/{id}", {
+  id: "1752214910",
+  extend: ["lyricsExcerpt"],
+});
+```
+
+`{storefront}` is filled in for you. The result is Apple's raw JSON, not a hydrated object.
+
+## Caching and batching
+
+Amp keeps requests to a minimum without any setup:
+
+- `get` calls for the same type and options made at the same time become one request. Ten `songs.get` calls in a `Promise.all` cost one round trip.
+- Responses are cached in memory for as long as Apple's `Cache-Control` header allows. Identical requests in flight share one fetch.
+- `library.*.all()` loads up to six pages at once and still yields items in order.
+
+Turn the cache off when you need fresh data on every call:
+
+```ts
+const am = createClient({ developerToken, cache: false });
+```
+
