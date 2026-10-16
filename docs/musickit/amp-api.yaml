@@ -1982,7 +1982,7 @@ paths:
           type: string
         description: Per-display-style override, written as `<displayStyle>:<limit>`.
         example: artist-featured-track-lockup:24
-      - name: filter[canvas-shelves-collection.contents.type]
+      - name: filter[canvas-shelves-collection:contents{type}]
         in: query
         required: false
         schema:
