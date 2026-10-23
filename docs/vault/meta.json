@@ -2,7 +2,7 @@
   "title": "Vault",
   "description": "Community TTML library",
   "pagesIndex": "index",
-  "icon": "Vault",
+  "icon": "archivebox",
   "root": true,
   "pages": ["index", "guidelines", "ttml"]
 }

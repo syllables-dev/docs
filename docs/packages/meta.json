@@ -2,7 +2,7 @@
   "title": "Packages",
   "description": "Packages by Syllables",
   "pagesIndex": "index",
-  "icon": "Package",
+  "icon": "shippingbox",
   "root": true,
   "pages": ["index", "parse", "lyrics", "components", "amp"]
 }

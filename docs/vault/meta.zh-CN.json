@@ -2,7 +2,7 @@
   "title": "Vault",
   "description": "社区共建的 TTML 歌词库",
   "pagesIndex": "index",
-  "icon": "Vault",
+  "icon": "archivebox",
   "root": true,
   "pages": ["index", "guidelines", "ttml"]
 }
