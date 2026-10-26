@@ -2,7 +2,7 @@
   "title": "开发包",
   "description": "Syllables 提供的开发包",
   "pagesIndex": "index",
-  "icon": "Package",
+  "icon": "shippingbox",
   "root": true,
   "pages": ["index", "parse", "lyrics", "components", "amp"]
 }
