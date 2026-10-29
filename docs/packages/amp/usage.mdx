@@ -59,6 +59,19 @@ for (const chart of charts.songs) {
 
 Each type can hold several charts, so `charts.songs` is a list.
 
+City charts and the daily top 100 by country are playlists Apple only sends when asked with `with`:
+
+```ts
+const charts = await am.charts({
+  types: ["songs"],
+  with: ["cityCharts", "dailyGlobalTopCharts"],
+});
+
+for (const chart of charts.cityCharts) {
+  console.log(chart.name, chart.items.length);
+}
+```
+
 ## Lyrics and credits
 
 ```ts
