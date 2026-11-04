@@ -1,6 +1,6 @@
 ---
 title: Usage
-description: Catalog, search, charts, lyrics, and your library
+description: Catalog, search, charts, lyrics, concerts, and your library
 ---
 
 ## Catalog
@@ -102,6 +102,49 @@ import { parse } from "@syllables-dev/parse";
 
 const { doc } = parse(await am.songs.syllableLyrics("1752214910"));
 doc.lines[0]?.p.map((part) => part.text).join("");
+```
+
+## Concerts
+
+Upcoming concerts for an artist are a view that needs a location. Apple takes the location as a geohash, and `concertCities` gives you the cities the web player offers for a storefront:
+
+```ts
+import { concertCities } from "@syllables-dev/amp";
+
+const [city] = concertCities("gb");
+
+const concerts = await am.artists.view("1315912589", "nearby-upcoming-concerts", {
+  geoHash: city?.geoHash ?? "gcpv",
+});
+
+for (const concert of concerts.items) {
+  console.log(concert.name, concert.startISODateTime);
+}
+```
+
+`concertCities` returns `{ city, geoHash }` pairs. Storefronts without their own list get the nearest region's cities, or a global list. Any geohash works, so you can also compute one from coordinates.
+
+The same view can come along with the artist. `geoHash` is required when you ask for it, and a compile error with any other view:
+
+```ts
+const artist = await am.artists.get("1315912589", {
+  views: ["nearby-upcoming-concerts"],
+  geoHash: "gcpv",
+});
+
+artist.views.nearbyUpcomingConcerts.items;
+```
+
+To get the venue and ticket links for one concert, fetch it:
+
+```ts
+const concert = await am.concerts.get(id, {
+  include: ["venues"],
+  extend: ["tickets"],
+});
+
+concert.venues[0]?.structuredAddress.city;
+concert.tickets.map((ticket) => ticket.url);
 ```
 
 ## Your library
