@@ -1,6 +1,6 @@
 ---
 title: Advanced
-description: Pages, errors, raw requests, and caching
+description: Pages, errors, raw requests, caching, and custom fetch
 ---
 
 ## Pages
@@ -88,3 +88,19 @@ Turn the cache off when you need fresh data on every call:
 const am = createClient({ developerToken, cache: false });
 ```
 
+
+## Custom fetch
+
+Every request goes through the global `fetch` unless you pass your own. Use it to log requests, route through a proxy, or answer from fixtures in tests:
+
+```ts
+const am = createClient({
+  developerToken,
+  fetch: async (input, init) => {
+    console.log(init?.method ?? "GET", input);
+    return await fetch(input, init);
+  },
+});
+```
+
+Amp still sets the headers, so your function only has to send the request and return the response.
