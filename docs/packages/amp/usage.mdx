@@ -47,6 +47,21 @@ await am.search.suggestions("tay", { types: ["songs"] });
 
 `hints` returns plain search terms. `suggestions` also returns matching resources in `topResults`.
 
+### Search by lyrics
+
+`search.lyrics` finds songs by a line of their lyrics. It returns a page of songs, and each song carries the lines that matched:
+
+```ts
+const page = await am.search.lyrics("i'm working late cause i'm a singer");
+
+for (const song of page.items) {
+  console.log(song.name, "by", song.artistName);
+  console.log(song.meta?.snippets?.map((snippet) => snippet.text));
+}
+```
+
+Snippet text wraps the matched words in `<mark>` tags. `limit` goes up to 50.
+
 ## Charts
 
 ```ts
