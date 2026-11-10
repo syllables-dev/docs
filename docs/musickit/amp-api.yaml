@@ -1642,6 +1642,7 @@ paths:
           type: string
           enum:
           - appears-on-albums
+          - compilation-albums
           - featured-albums
           - featured-playlists
           - featured-release
@@ -1665,6 +1666,13 @@ paths:
           type: integer
           maximum: 100
         description: Page size, 100 or less. `latest-release` and `featured-release` take only 1.
+        example: 20
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. Apple leaves a `next` link on the last page, and the page after it returns 404.
         example: 20
       - name: with
         in: query
@@ -2043,6 +2051,39 @@ paths:
         schema:
           type: integer
         description: Top songs returned per artist.
+      - name: views
+        in: query
+        required: false
+        schema:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum:
+            - all-upcoming-concerts
+            - appears-on-albums
+            - compilation-albums
+            - featured-albums
+            - featured-playlists
+            - featured-release
+            - full-albums
+            - latest-release
+            - live-albums
+            - more-to-hear
+            - more-to-see
+            - nearby-upcoming-concerts
+            - playlists
+            - radio-shows
+            - similar-artists
+            - singles
+            - top-music-videos
+            - top-songs
+        description: Shelves to embed on the artist, 10 items each unless `limit[artists:<view>]` asks for more. A shelf with more items carries a `next` link.
+        style: form
+        explode: false
+        example:
+        - top-songs
+        - all-upcoming-concerts
       - name: geoHashLocation
         in: query
         required: false
