@@ -1,0 +1,27 @@
+---
+title: Motion
+description: The timings and distances Numeric uses, taken from SwiftUI
+---
+
+Every number here comes from SwiftUI in iOS 27.2, read from `ContentTransition.NumericTextConfiguration` and the RenderBox transition it builds. Numeric uses the same values, so the motion matches the system's own definition instead of an approximation by eye.
+
+## Effects
+
+| Effect | SwiftUI | Numeric |
+| --- | --- | --- |
+| Opacity, blur, and scale | Spring with stiffness 344, damping 37, mass 1 | The same spring as a CSS `linear()` easing |
+| Vertical slide | Spring with stiffness 470, damping 34, mass 2 | The same spring, so it overshoots slightly |
+| Slide distance | 0.594 of the glyph height | `translate` by 59.4% |
+| Blur | 0.25 of the glyph height, as a radius | Half of that, as the CSS standard deviation |
+| Scale | 0.398 | 0.398 |
+| Order | Leading to trailing, across 0.15 of the transition | Staggered by up to 75 ms |
+
+The two springs are why the motion feels like iOS. The fade is critically damped, so glyphs never flash past full opacity. The slide uses a heavier spring with a damping ratio near 0.55, so each glyph settles with a small bounce.
+
+## Which glyphs move
+
+Numeric lines up the old and new text with the fewest edits, and prefers to keep the trailing glyphs in place. Going from `9` to `10` replaces the `9` with a `0` and grows a new leading `1`, the way a place value is added. Going from `2 days` to `1 day` changes the digit, keeps ` day` still, and removes the `s`.
+
+## Width
+
+When a glyph changes width, its slot springs from the old width to the new one on the fade spring, so the glyphs after it slide along instead of jumping.

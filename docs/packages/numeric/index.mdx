@@ -1,0 +1,24 @@
+---
+title: Numeric
+description: Faithful SwiftUI numeric text on the web.
+---
+
+`@syllables-dev/numeric` animates text the way SwiftUI's `.contentTransition(.numericText())` does. Glyphs that change blur, shrink, and slide out while their replacements slide in, and the text reflows on a spring as its width changes. Glyphs that stay the same never move.
+
+```tsx
+import { NumericText } from "@syllables-dev/numeric/react";
+
+export const Seconds = ({ seconds }: { seconds: number }) => (
+  <NumericText countsDown value={`${seconds} sec`} />
+);
+```
+
+It works with React, Vue, Svelte, or plain DOM, and has no dependencies.
+
+## Start here
+
+<Cards>
+  <Card title="Getting started" href="/packages/numeric/getting-started" description="Install the package and animate your first value." />
+  <Card title="Usage" href="/packages/numeric/usage" description="Style parts of the text, pick a direction, and drive it from any framework." />
+  <Card title="Motion" href="/packages/numeric/motion" description="Every timing and distance, and where it comes from in SwiftUI." />
+</Cards>

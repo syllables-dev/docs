@@ -1,0 +1,35 @@
+---
+title: Getting started
+description: Install Numeric and animate your first value
+---
+
+## Install
+
+```package-install
+@syllables-dev/numeric
+```
+
+The package ships ES modules and TypeScript declarations. React and Vue are optional peer dependencies, so install only the one you use.
+
+## Animate a value
+
+Render `NumericText` with a string and change it. Each change animates from the old text to the new one.
+
+```tsx
+"use client";
+
+import { NumericText } from "@syllables-dev/numeric/react";
+import { useState } from "react";
+
+export const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)} type="button">
+      <NumericText value={String(count)} />
+    </button>
+  );
+};
+```
+
+On the server, the component renders the text as plain markup, so the value is in the page before any script runs.

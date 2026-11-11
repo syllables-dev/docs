@@ -4,5 +4,5 @@
   "pagesIndex": "index",
   "icon": "shippingbox",
   "root": true,
-  "pages": ["index", "parse", "lyrics", "components", "amp"]
+  "pages": ["index", "parse", "lyrics", "components", "amp", "numeric"]
 }

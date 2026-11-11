@@ -1,0 +1,72 @@
+---
+title: Usage
+description: Style runs, pick a direction, and use Numeric from any framework
+---
+
+## Direction
+
+`countsDown` sets which way glyphs travel. Off, new glyphs rise from below and old ones leave upward, as a number counting up does. On, new glyphs drop in from above.
+
+```tsx
+<NumericText countsDown value={`${minutes} min`} />
+```
+
+## Styled runs
+
+Pass an array of runs to style parts of the text differently. Each glyph keeps its run's class, so a number and its unit can differ in size and color and still animate as one string.
+
+```tsx
+<NumericText
+  countsDown
+  value={[
+    { className: "font-semibold tabular-nums", text: String(hours) },
+    { className: "text-muted", text: hours === 1 ? " hr" : " hrs" },
+  ]}
+/>
+```
+
+Use tabular digits for anything that ticks, so the text does not shift sideways on every change.
+
+## Vue
+
+```vue
+<script setup lang="ts">
+import { NumericText } from "@syllables-dev/numeric/vue";
+
+defineProps<{ seconds: number }>();
+</script>
+
+<template>
+  <NumericText counts-down :value="`${seconds} sec`" />
+</template>
+```
+
+## Svelte
+
+Numeric ships a Svelte action, so it needs no compiled component.
+
+```svelte
+<script lang="ts">
+  import { numericText } from "@syllables-dev/numeric/svelte";
+
+  let { seconds }: { seconds: number } = $props();
+</script>
+
+<span use:numericText={{ countsDown: true, value: `${seconds} sec` }}></span>
+```
+
+## DOM
+
+Without a framework, give `NumericText` an element. It takes over the element's children.
+
+```ts
+import { NumericText } from "@syllables-dev/numeric";
+
+const seconds = new NumericText(element, "10 sec", { countsDown: true });
+seconds.update("9 sec");
+seconds.destroy();
+```
+
+## Accessibility
+
+Screen readers read the whole value from a visually hidden copy, and the animated glyphs are hidden from them. With reduced motion on, glyphs cross-fade instead of moving.
