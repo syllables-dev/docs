@@ -2,7 +2,7 @@
   "title": "MusicKit",
   "description": "Apple Music API reference",
   "pagesIndex": "index",
-  "icon": "radio",
+  "icon": "music-note",
   "root": true,
   "pages": ["index", "authentication", "conventions", "errors", "reference"]
 }
