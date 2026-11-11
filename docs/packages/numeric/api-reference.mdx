@@ -1,0 +1,57 @@
+---
+title: API reference
+description: Components, options, and types for every entry point
+---
+
+Every entry point takes the same two inputs: a `value` to show and an optional `countsDown` direction.
+
+| Import | Export | Kind |
+| --- | --- | --- |
+| `@syllables-dev/numeric/react` | `NumericText` | React component |
+| `@syllables-dev/numeric/vue` | `NumericText` | Vue component |
+| `@syllables-dev/numeric/svelte` | `numericText` | Svelte action |
+| `@syllables-dev/numeric` | `NumericText` | DOM class |
+
+## Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `NumericValue` | Required | The text to show. Changing it animates from the old text to the new one. |
+| `countsDown` | `boolean` | `false` | When `true`, new glyphs drop in from above instead of rising from below. |
+
+## React and Vue
+
+`NumericText` renders a `span`. Any other attribute, such as `className` or `style`, goes on that `span`. It takes no children; the text comes from `value`.
+
+## Svelte
+
+`numericText` is an action. Pass the options as its parameter, and it updates whenever they change.
+
+```svelte
+<span use:numericText={{ value: `${seconds} sec` }}></span>
+```
+
+## DOM
+
+`NumericText` takes over the children of the element you give it.
+
+| Member | Description |
+| --- | --- |
+| `new NumericText(element, value, { countsDown })` | Renders `value` into `element`. |
+| `update(value, { countsDown })` | Animates to `value`. Leave out `countsDown` to keep the current direction. |
+| `destroy()` | Stops any running animation. Call it before you remove the element. |
+
+## Types
+
+All four entry points export these types.
+
+```ts
+type NumericValue = string | readonly NumericRun[];
+
+interface NumericRun {
+  className?: string;
+  text: string;
+}
+```
+
+A string animates as one run. An array of runs lets each part of the text keep its own class, as in [styled runs](/packages/numeric/usage#styled-runs).
