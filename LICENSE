@@ -1,0 +1,39 @@
+Copyright (c) 2026 syllables-dev. All rights reserved.
+
+This documentation, including its text, examples, translations, images, and
+accompanying assets, is proprietary. It is made publicly visible for reading
+only.
+
+No license is granted to copy, modify, merge, publish, distribute, mirror,
+sublicense, sell, translate, or create derivative works from this
+documentation or any portion of it, except under a separate written
+agreement signed by the copyright holder.
+
+You may read this documentation, link to it, and quote short excerpts with
+attribution, by hand or through software tools, in order to use the
+syllables-dev projects it describes. Contributions submitted through pull
+requests are accepted under these same terms, and the contributor grants the
+copyright holder the right to use them without restriction.
+
+The restrictions above apply regardless of the method or tooling used. This
+includes, without limitation, the use of artificial intelligence systems,
+machine learning models, large language models, scrapers, automated agents,
+or any other automated process to:
+
+  (a) train, fine-tune, evaluate, or otherwise incorporate this
+      documentation into a model, dataset, or corpus;
+
+  (b) reproduce, republish, or translate this documentation or a
+      substantial portion of it;
+
+  (c) generate derivative or substantially equivalent documentation,
+      whether or not the output reproduces the original text verbatim.
+
+Output produced by such processes is a derivative work and is subject to
+these same restrictions. No permission is granted for any of the foregoing,
+and the absence of technical measures preventing it does not imply consent.
+
+THE DOCUMENTATION IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE DOCUMENTATION OR ITS USE.
