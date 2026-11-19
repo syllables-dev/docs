@@ -1,0 +1,26 @@
+name: press
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: press
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: syllables-dev/press
+          token: ${{ secrets.SYLLABLES_TOKEN }}
+          submodules: true
+      - run: git submodule update --remote content
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: sync content to syllables-dev/docs@${GITHUB_SHA::7}" || exit 0
+          git push
