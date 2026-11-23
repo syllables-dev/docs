@@ -1,0 +1,23 @@
+---
+title: Hanzi
+description: 简繁互转，并判断一行文字是简体还是繁体。
+---
+
+`@syllables-dev/hanzi` 用于简体中文与繁体中文互相转换，也能判断一行文字是简体还是繁体。繁体采用香港的用字习惯。
+
+```ts
+import { toHant } from "@syllables-dev/hanzi/hant";
+
+toHant("头发很长"); // "頭髮很長"
+toHant("出发"); // "出發"
+```
+
+它只转换字形，不改动用词，原文怎么说就怎么保留。这个开发包没有任何依赖，可以在任何 JavaScript 环境中运行，包括 Cloudflare Workers。
+
+## 从哪里开始
+
+<Cards>
+  <Card title="快速上手" href="/zh-CN/packages/hanzi/getting-started" description="安装开发包，转换第一行文字。" />
+  <Card title="用法" href="/zh-CN/packages/hanzi/usage" description="逐行转换歌词、判断繁简，以及转换时会改动什么。" />
+  <Card title="API 参考" href="/zh-CN/packages/hanzi/api-reference" description="所有函数、入口和类型。" />
+</Cards>

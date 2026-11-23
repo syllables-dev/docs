@@ -1,0 +1,52 @@
+---
+title: API 参考
+description: 函数、入口和类型
+---
+
+## 入口
+
+每个函数也可以从各自的入口单独导入。
+
+| 导入路径 | 导出内容 |
+| --- | --- |
+| `@syllables-dev/hanzi` | `convert`、`toHant`、`toHans`、`detect`、`Script`、`Target` |
+| `@syllables-dev/hanzi/hant` | `toHant` |
+| `@syllables-dev/hanzi/hans` | `toHans` |
+| `@syllables-dev/hanzi/detect` | `detect`、`Script` |
+
+## 函数
+
+所有函数都接受一个字符串或一组行，返回值的形式与传入的相同。
+
+| 函数 | 返回值 | 说明 |
+| --- | --- | --- |
+| `toHant(text)` | `string` 或 `string[]` | 转换为繁体中文，采用香港字形。 |
+| `toHans(text)` | `string` 或 `string[]` | 转换为简体中文。 |
+| `convert(text, target)` | `string` 或 `string[]` | 按 `target` 转换，等同于调用 `toHant` 或 `toHans`。 |
+| `detect(text)` | `Script` 或 `Script[]` | 判断每一行是简体还是繁体。 |
+
+```ts
+function toHant(text: string): string;
+function toHant(lines: readonly string[]): string[];
+
+function toHans(text: string): string;
+function toHans(lines: readonly string[]): string[];
+
+function convert(text: string, target: Target): string;
+function convert(lines: readonly string[], target: Target): string[];
+
+function detect(text: string): Script;
+function detect(lines: readonly string[]): Script[];
+```
+
+转换前后的字数总是相同。英文、数字、标点、表情符号等非中文内容原样输出。
+
+## 类型
+
+```ts
+type Target = "hans" | "hant";
+
+type Script = "hans" | "hant" | "both" | "none";
+```
+
+`Script` 各个值的含义见[判断繁简](./usage.mdx#判断繁简)。

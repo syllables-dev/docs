@@ -1,0 +1,35 @@
+---
+title: 快速上手
+description: 安装 Hanzi，转换第一行文字
+---
+
+## 安装
+
+```package-install
+@syllables-dev/hanzi
+```
+
+开发包提供 ES 模块和 TypeScript 类型声明。
+
+## 转换一行文字
+
+按需要的方向导入函数，传入字符串即可。
+
+```ts
+import { toHans } from "@syllables-dev/hanzi/hans";
+import { toHant } from "@syllables-dev/hanzi/hant";
+
+toHant("我们回家吧"); // "我們回家吧"
+toHans("我們回家吧"); // "我们回家吧"
+```
+
+## 判断要不要转换
+
+`detect` 会告诉你一行文字是简体还是繁体，据此决定是否需要转换。
+
+```ts
+import { detect } from "@syllables-dev/hanzi/detect";
+
+detect("我们回家吧"); // "hans"
+detect("我們回家吧"); // "hant"
+```
