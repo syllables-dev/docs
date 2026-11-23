@@ -1,0 +1,23 @@
+---
+title: Hanzi
+description: Convert between Simplified and Traditional Chinese, and tell which one a line is in.
+---
+
+`@syllables-dev/hanzi` converts Chinese text between Simplified and Traditional script and detects which script a line is written in. Traditional follows Hong Kong usage.
+
+```ts
+import { toHant } from "@syllables-dev/hanzi/hant";
+
+toHant("头发很长"); // "頭髮很長"
+toHant("出发"); // "出發"
+```
+
+It converts characters, never vocabulary, so the words stay the writer's own. It has no dependencies and runs anywhere JavaScript does, including Cloudflare Workers.
+
+## Start here
+
+<Cards>
+  <Card title="Getting started" href="/packages/hanzi/getting-started" description="Install the package and convert your first line." />
+  <Card title="Usage" href="/packages/hanzi/usage" description="Convert lyrics line by line, detect a script, and know what changes." />
+  <Card title="API reference" href="/packages/hanzi/api-reference" description="Every function, entry point, and type." />
+</Cards>

@@ -4,5 +4,5 @@
   "pagesIndex": "index",
   "icon": "shippingbox",
   "root": true,
-  "pages": ["index", "parse", "amp", "numeric"]
+  "pages": ["index", "parse", "amp", "numeric", "hanzi"]
 }

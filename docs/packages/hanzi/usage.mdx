@@ -1,0 +1,82 @@
+---
+title: Usage
+description: Convert lyrics line by line, detect a script, and know what changes
+---
+
+## Lines
+
+Every function takes either one string or an array of lines, and returns the same shape. A string with line breaks converts line by line, and the breaks are kept exactly as they were.
+
+```ts
+toHant(["以后见", "干杯"]); // ["以後見", "乾杯"]
+toHant("第一行\r\n第二行"); // "第一行\r\n第二行"
+```
+
+Pass lyrics as one array per song, a line per entry, so each line is judged on its own.
+
+## Characters that depend on the word
+
+Many Simplified characters stand for more than one Traditional character. Hanzi picks the one the surrounding word needs.
+
+```ts
+toHant(["头发", "出发"]); // ["頭髮", "出發"]
+toHant(["尽快", "尽力"]); // ["儘快", "盡力"]
+```
+
+## Characters, not vocabulary
+
+Only the form of each character changes. Words that differ between regions stay as written, so the output always has the same number of characters as the input.
+
+```ts
+toHant("软件和视频"); // "軟件和視頻", not "軟體和影片"
+```
+
+## Hong Kong forms
+
+Traditional output uses Hong Kong glyphs, and one modern form where Hong Kong text uses two for the same meaning.
+
+```ts
+toHant("线着说里面"); // "綫着説裏面"
+toHant(["台湾", "香烟", "了解"]); // ["台灣", "香煙", "了解"]
+```
+
+Going to Simplified, `著` stays `著`.
+
+```ts
+toHans("笑著哭"); // "笑著哭"
+```
+
+## Cantonese
+
+Lines written in colloquial Cantonese convert the way Cantonese writes them. Characters that only Cantonese uses stay as they are in both directions.
+
+```ts
+toHant(["梗系上集好睇", "我哋嗰只猫"]); // ["梗係上集好睇", "我哋嗰隻貓"]
+toHans(["嗰阵时", "攞晒"]); // ["嗰阵时", "攞晒"]
+```
+
+## Lines already in the target script
+
+A line already in the target script keeps its text. Only characters of the other script convert, plus shared characters a word clearly needs changed.
+
+```ts
+toHant(["皇后與國王们", "我們心里"]); // ["皇后與國王們", "我們心裏"]
+```
+
+## Detecting a script
+
+`detect` returns one of four values.
+
+| Value | Meaning |
+| --- | --- |
+| `"hans"` | Simplified |
+| `"hant"` | Traditional |
+| `"both"` | Chinese, but nothing in it tells the scripts apart |
+| `"none"` | No Chinese characters |
+
+```ts
+detect(["我们回家吧", "我們回家吧", "人山人海", "Hello"]);
+// ["hans", "hant", "both", "none"]
+```
+
+`"both"` text usually reads correctly in either script as it is.

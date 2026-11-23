@@ -1,0 +1,52 @@
+---
+title: API reference
+description: Functions, entry points, and types
+---
+
+## Entry points
+
+Each function is also available from its own entry point.
+
+| Import | Exports |
+| --- | --- |
+| `@syllables-dev/hanzi` | `convert`, `toHant`, `toHans`, `detect`, `Script`, `Target` |
+| `@syllables-dev/hanzi/hant` | `toHant` |
+| `@syllables-dev/hanzi/hans` | `toHans` |
+| `@syllables-dev/hanzi/detect` | `detect`, `Script` |
+
+## Functions
+
+Every function accepts a string or an array of lines and returns the same shape.
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| `toHant(text)` | `string` or `string[]` | Converts to Traditional Chinese with Hong Kong forms. |
+| `toHans(text)` | `string` or `string[]` | Converts to Simplified Chinese. |
+| `convert(text, target)` | `string` or `string[]` | Converts to `target`. The same as calling `toHant` or `toHans`. |
+| `detect(text)` | `Script` or `Script[]` | Names the script of each line. |
+
+```ts
+function toHant(text: string): string;
+function toHant(lines: readonly string[]): string[];
+
+function toHans(text: string): string;
+function toHans(lines: readonly string[]): string[];
+
+function convert(text: string, target: Target): string;
+function convert(lines: readonly string[], target: Target): string[];
+
+function detect(text: string): Script;
+function detect(lines: readonly string[]): Script[];
+```
+
+Conversion always returns text with the same number of characters as its input. Text that is not Chinese, such as English, numbers, punctuation, and emoji, passes through unchanged.
+
+## Types
+
+```ts
+type Target = "hans" | "hant";
+
+type Script = "hans" | "hant" | "both" | "none";
+```
+
+`Script` is explained in [detecting a script](/packages/hanzi/usage#detecting-a-script).

@@ -1,0 +1,35 @@
+---
+title: Getting started
+description: Install Hanzi and convert your first line
+---
+
+## Install
+
+```package-install
+@syllables-dev/hanzi
+```
+
+The package ships ES modules and TypeScript declarations.
+
+## Convert a line
+
+Import the direction you need and pass it a string.
+
+```ts
+import { toHans } from "@syllables-dev/hanzi/hans";
+import { toHant } from "@syllables-dev/hanzi/hant";
+
+toHant("我们回家吧"); // "我們回家吧"
+toHans("我們回家吧"); // "我们回家吧"
+```
+
+## Detect a script
+
+`detect` tells you which script a line is in, so you can decide whether it needs converting.
+
+```ts
+import { detect } from "@syllables-dev/hanzi/detect";
+
+detect("我们回家吧"); // "hans"
+detect("我們回家吧"); // "hant"
+```
